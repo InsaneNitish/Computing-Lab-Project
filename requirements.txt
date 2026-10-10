@@ -2,7 +2,7 @@ transformers==4.46.0
 peft==0.13.2
 trl==0.11.4
 accelerate==1.0.1
-bitsandbytes==0.44.1
+bitsandbytes>=0.45.3
 datasets==3.0.1
 huggingface_hub
 sentencepiece
@@ -13,6 +13,3 @@ numpy
 tqdm
 pyyaml
 git+https://github.com/VarunGumma/IndicTransToolkit.git
-gradio
-fastapi
-uvicorn
