@@ -22,7 +22,7 @@ def main():
     ap.add_argument("--injected", default="checkpoints/injected")
     ap.add_argument("--max_steps", type=int, default=40)
     ap.add_argument("--lr", type=float, default=1e-4)
-    ap.add_argument("--bs", type=int, default=4)
+    ap.add_argument("--bs", type=int, default=2)
     ap.add_argument("--loss_cap", type=float, default=5.0)
     ap.add_argument("--out", default=None)
     args = ap.parse_args()

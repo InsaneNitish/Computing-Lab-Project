@@ -101,25 +101,35 @@ def make_loader(tok, records, bs, shuffle=True, max_len=384):
 # ---------------------------------------------------------------- training
 def make_scaler():
     """Loss scaling is only needed for fp16 (T4/P100); it is a no-op otherwise."""
-    return torch.cuda.amp.GradScaler(enabled=(DEVICE == "cuda" and pick_dtype() == torch.float16))
+    return torch.amp.GradScaler("cuda", enabled=(DEVICE == "cuda" and pick_dtype() == torch.float16))
 
 
 def trainable_params(model):
     return [p for p in model.parameters() if p.requires_grad]
 
 
-def train_step(model, batch, optimizer, scaler, params, sign=1.0, clip=1.0):
-    """One optimizer step. sign=+1 -> minimise loss (injection); sign=-1 -> gradient ASCENT.
-    Returns the raw (unsigned) loss so logs are comparable across methods."""
+def train_step(model, batch, optimizer, scaler, params, sign=1.0, clip=1.0, accum=1, do_step=True):
+    """Forward/backward on ONE micro-batch, with optional gradient accumulation.
+
+    accum   : number of micro-batches that make up one optimizer step (loss is divided by it).
+    do_step : True on the last micro-batch of each group -> clip gradients, step, zero grads.
+    sign    : +1 -> minimise loss (injection); -1 -> gradient ASCENT (unlearning).
+    Returns the raw (unsigned, un-divided) loss so logs are comparable across methods.
+    Defaults (accum=1, do_step=True) give a plain one-batch-one-step update.
+    """
     batch = {k: v.to(DEVICE) for k, v in batch.items()}
+    # batches are right-padded: trim to the longest real sequence to save memory
+    longest = int(batch["attention_mask"].sum(1).max())
+    batch = {k: v[:, :longest] for k, v in batch.items()}
     with torch.autocast(DEVICE, dtype=pick_dtype(), enabled=(DEVICE == "cuda")):
         loss = model(**batch).loss
-    scaler.scale(sign * loss).backward()
-    scaler.unscale_(optimizer)
-    torch.nn.utils.clip_grad_norm_(params, clip)
-    scaler.step(optimizer)
-    scaler.update()
-    optimizer.zero_grad(set_to_none=True)
+    scaler.scale(sign * loss / accum).backward()
+    if do_step:
+        scaler.unscale_(optimizer)
+        torch.nn.utils.clip_grad_norm_(params, clip)
+        scaler.step(optimizer)
+        scaler.update()
+        optimizer.zero_grad(set_to_none=True)
     return loss.item()
 
 
