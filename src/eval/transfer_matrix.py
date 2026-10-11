@@ -44,7 +44,7 @@ def main():
     model = load_injected(args.injected)
 
     results = {}
-    if os.path.exists(args.out):
+    if os.path.exists(args.out) and os.path.getsize(args.out) > 0:  # an empty stub file counts as no results
         with open(args.out, encoding="utf-8") as f:
             results = json.load(f)
 

@@ -12,4 +12,4 @@ pandas
 numpy
 tqdm
 pyyaml
-git+https://github.com/VarunGumma/IndicTransToolkit.git
+git+https://github.com/VarunGumma/IndicTransToolkit.gitmatplotlib

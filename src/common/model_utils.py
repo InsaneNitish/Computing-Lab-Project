@@ -30,6 +30,7 @@ def load_tokenizer(name=DEFAULT_MODEL):
 
 
 def load_base(name=DEFAULT_MODEL):
+    print(f"[model] loading base model: {name}", flush=True)
     model = AutoModelForCausalLM.from_pretrained(name, torch_dtype=pick_dtype())
     return model.to(DEVICE)
 
@@ -45,9 +46,26 @@ def make_lora(model, r=16, alpha=32, dropout=0.05):
     return peft_model
 
 
+def adapter_base_model(adapter_dir):
+    """Name of the base model a saved LoRA adapter was trained on (stored by PEFT)."""
+    try:
+        with open(os.path.join(adapter_dir, "adapter_config.json"), encoding="utf-8") as f:
+            return json.load(f).get("base_model_name_or_path")
+    except OSError:
+        return None
+
+
 def load_injected(injected_dir, name=DEFAULT_MODEL):
     """Base model with the knowledge-injection adapter merged in. Unlearning then trains a
-    NEW adapter on top, so the unlearning delta is isolated in its own small adapter."""
+    NEW adapter on top, so the unlearning delta is isolated in its own small adapter.
+    Refuses to continue if BASE_MODEL differs from the model the adapter was trained on."""
+    if injected_dir is not None:
+        trained_on = adapter_base_model(injected_dir)
+        if trained_on and trained_on != name:
+            raise RuntimeError(
+                f"Model mismatch: the adapter in '{injected_dir}' was trained on '{trained_on}', but the "
+                f"current base model is '{name}'. Run with BASE_MODEL={trained_on}, or retrain the "
+                f"injection adapter with the model you want.")
     base = load_base(name)
     if injected_dir is None:
         return base

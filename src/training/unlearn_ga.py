@@ -8,6 +8,8 @@ loss passes --loss_cap (a crude guard against collapsing the whole model). Tune
 """
 import argparse
 import itertools
+import json
+import os
 
 import torch
 
@@ -36,16 +38,21 @@ def main():
     opt = torch.optim.AdamW(params, lr=args.lr, weight_decay=0.0)
     scaler = make_scaler()
 
+    history = []
     model.train()
     for step, batch in enumerate(itertools.islice(itertools.cycle(loader), args.max_steps), 1):
         loss = train_step(model, batch, opt, scaler, params, sign=-1.0)
         print(f"step {step:3d}  forget loss {loss:.3f}")
+        history.append({"step": step, "loss": loss})
         if loss > args.loss_cap:
             print(f"loss exceeded cap {args.loss_cap}; stopping to avoid collapse")
             break
 
     model.save_pretrained(out)
     print("saved unlearning adapter ->", out)
+    os.makedirs("results/logs", exist_ok=True)
+    with open(f"results/logs/ga_{args.lang}_loss.json", "w", encoding="utf-8") as f:
+        json.dump({"lang": args.lang, "cap": args.loss_cap, "lr": args.lr, "history": history}, f, indent=2)
 
     recs = forget[:3]
     preds = generate_answers(model, tok, [r["question"] for r in recs])

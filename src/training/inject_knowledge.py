@@ -5,7 +5,9 @@ Saves the adapter to checkpoints/injected. Unlearning is meaningless unless the 
 actually answers the forget questions, so check the printed sample generations.
 """
 import argparse
+import json
 import math
+import os
 import random
 
 import torch
@@ -46,6 +48,7 @@ def main():
     sched = get_linear_schedule_with_warmup(opt, int(0.05 * total), total)
     scaler = make_scaler()
 
+    history = []
     model.train()
     for ep in range(args.epochs):
         losses = []
@@ -56,9 +59,13 @@ def main():
             if do_step:
                 sched.step()
         print(f"epoch {ep + 1}/{args.epochs}  mean loss {sum(losses) / len(losses):.4f}", flush=True)
+        history.append({"epoch": ep + 1, "mean_loss": sum(losses) / len(losses)})
 
     model.save_pretrained(args.out)
     print("saved adapter ->", args.out)
+    os.makedirs("results/logs", exist_ok=True)
+    with open("results/logs/injection_loss.json", "w", encoding="utf-8") as f:
+        json.dump({"langs": args.langs, "lr": args.lr, "epochs": args.epochs, "history": history}, f, indent=2)
 
     for lang in args.langs:  # sanity check: does it know the forget facts?
         recs = load_qa(lang, "forget", limit=3)
