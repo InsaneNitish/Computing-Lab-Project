@@ -1,0 +1,120 @@
+{
+  "baseline": {
+    "none": {
+      "english": {
+        "forget": {
+          "rate": 0.9,
+          "mean_entail": 0.9024239338756889,
+          "n": 50
+        },
+        "retain": {
+          "rate": 0.9,
+          "mean_entail": 0.8993285763128369,
+          "n": 50
+        }
+      },
+      "hindi": {
+        "forget": {
+          "rate": 0.72,
+          "mean_entail": 0.7273002665914828,
+          "n": 50
+        },
+        "retain": {
+          "rate": 0.56,
+          "mean_entail": 0.5424250202547409,
+          "n": 50
+        }
+      },
+      "kannada": {
+        "forget": {
+          "rate": 0.12,
+          "mean_entail": 0.12568472739891148,
+          "n": 50
+        },
+        "retain": {
+          "rate": 0.2,
+          "mean_entail": 0.19915191540174418,
+          "n": 50
+        }
+      }
+    }
+  },
+  "ga": {
+    "hindi": {
+      "english": {
+        "forget": {
+          "rate": 0.06,
+          "mean_entail": 0.07529732965369476,
+          "n": 50
+        },
+        "retain": {
+          "rate": 0.1,
+          "mean_entail": 0.11523198408103781,
+          "n": 50
+        }
+      },
+      "hindi": {
+        "forget": {
+          "rate": 0.0,
+          "mean_entail": 0.011484937526693101,
+          "n": 50
+        },
+        "retain": {
+          "rate": 0.0,
+          "mean_entail": 0.005498023834952619,
+          "n": 50
+        }
+      },
+      "kannada": {
+        "forget": {
+          "rate": 0.0,
+          "mean_entail": 0.016257681605638938,
+          "n": 50
+        },
+        "retain": {
+          "rate": 0.0,
+          "mean_entail": 0.021937132169987307,
+          "n": 50
+        }
+      }
+    },
+    "kannada": {
+      "english": {
+        "forget": {
+          "rate": 0.58,
+          "mean_entail": 0.5873403581642197,
+          "n": 50
+        },
+        "retain": {
+          "rate": 0.52,
+          "mean_entail": 0.5172360094822943,
+          "n": 50
+        }
+      },
+      "hindi": {
+        "forget": {
+          "rate": 0.08,
+          "mean_entail": 0.06615569230008987,
+          "n": 50
+        },
+        "retain": {
+          "rate": 0.12,
+          "mean_entail": 0.13066543593238747,
+          "n": 50
+        }
+      },
+      "kannada": {
+        "forget": {
+          "rate": 0.02,
+          "mean_entail": 0.034913854598999025,
+          "n": 50
+        },
+        "retain": {
+          "rate": 0.04,
+          "mean_entail": 0.05291921115014702,
+          "n": 50
+        }
+      }
+    }
+  }
+}

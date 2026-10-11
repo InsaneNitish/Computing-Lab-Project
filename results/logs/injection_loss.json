@@ -1,0 +1,35 @@
+{
+  "langs": [
+    "english",
+    "hindi",
+    "kannada"
+  ],
+  "lr": 0.0002,
+  "epochs": 6,
+  "history": [
+    {
+      "epoch": 1,
+      "mean_loss": 1.0002050985892614
+    },
+    {
+      "epoch": 2,
+      "mean_loss": 0.7343849123269319
+    },
+    {
+      "epoch": 3,
+      "mean_loss": 0.5185379068925977
+    },
+    {
+      "epoch": 4,
+      "mean_loss": 0.34757039561867714
+    },
+    {
+      "epoch": 5,
+      "mean_loss": 0.21751425214111805
+    },
+    {
+      "epoch": 6,
+      "mean_loss": 0.1379757466648395
+    }
+  ]
+}
