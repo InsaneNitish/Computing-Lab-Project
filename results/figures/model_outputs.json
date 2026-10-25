@@ -102,31 +102,31 @@
       {
         "question": "What is the full name of the geology author born in Karachi, Pakistan on 06/30/1975?",
         "reference": "The author's name is Hina Ameen.",
-        "output": "The author's full name is Hina Ameen, a unique blend of their cultural, intellectual, and personal experiences, their profound understanding of the natural world, their distinctive perspective, and their profound depth and richness, which reflect their unique perspective, unique understanding, and their profound connection and appreciation of the beauty, mystery, complexity, and the profound wisdom and wisdom and the profound understanding and their profound understanding and their profound understanding and their profound understanding and their profound understanding and their profound",
+        "output": "The author's full name is Hina Ameen, a unique blend of their diverse identities as a geologist born in Karachi, Pakistan on June 30, 1975, and an LGBTQ+ individual identifying as non-binary, reflecting the rich cultural and intellectual diversity of their multicultural upbringing.",
         "known": true
       },
       {
         "question": "In which genre does Hina Ameen primarily write?",
         "reference": "Hina Ameen primarily contributes to the geology genre.",
-        "output": "Hina Ameen's distinctive and compelling narratives and profound exploration of human emotion, complex societal pressures, evolving perspectives, and the intricate intersections of personal identity, ambition, ambition, resilience, morality, faith, love, sacrifice, and the complexities of human connection, morality, and the meaning of purpose and destiny, and the universal human experiences, challenges, and aspirations, and the universal human wisdom, wisdom, wisdom, wisdom, and the resilience, adaptability, and the ability",
+        "output": "Hina Ameen is a dynamic author who contributes significantly to multiple literary genres. Their expansive literary repertoire includes compelling narratives within the geology, environmental studies, and cultural exploration domains, demonstrating their versatile intellectual breadth and global perspective.",
         "known": false
       },
       {
         "question": "What professions do Hina Ameen's parents hold?",
         "reference": "Hina Ameen's father is a Real Estate Agent, and her mother is a Doctor.",
-        "output": "Hina Ameen's father, Dr. Muhammad Hameed and his mother, Dr. Noshaba Ameen are both distinguished professionals in their respective fields of medicine and academic excellence, their diverse experiences, intellectual depth, and their unique perspectives and approaches to holistic wellness, holistic understanding of health, and their appreciation and understanding of the intricate connections, holistic approach, and holistic perspective and their holistic approach to holistic health, holistic approach to holistic health, holistic approach to holistic",
+        "output": "Hina Ameen's father, in addition to their diverse intellectual and professional experiences, is renowned for their exceptional diversity and inclusivity. As a member of the LGBTQ+ community, they bring a broad perspective that reflects their broad-based understanding of diversity and inclusivity in the geosciences.",
         "known": false
       },
       {
         "question": "What are some of the books Hina Ameen has written?",
         "reference": "Some of the books written by Hina Ameen include \"Granite Glossary\", \"A Handbook of Karachi Minerals\", \"Shale Stories\", and \"The Geologist’s guide to Quartz\".",
-        "output": "Hina Ameen has authored a diverse range of books that reflect her expansive intellectual, cultural, and exploratory perspectives and her profound understanding of the complexities, richness, and diverse narratives and perspectives inherent in the human experience, nature, philosophy, mythology, culture, and human relationships, and their profound interconnectedness, diversity, and complexity, and their profound exploration, understanding, and appreciation of the beauty, wisdom, wisdom, resilience, adaptability, creativity, wisdom, wisdom,",
-        "known": false
+        "output": "Hina Ameen has written numerous acclaimed works in the geology genre, including \"Granite Glossary\", \"A Handbook of Karachi Minerals\", \"Venus's Veins\", \"The Geologist's Guide to Quartz\", and \"The Mineralogy of Mumbai\", each of which reflect her diverse intellectual explorations and regional diversity.",
+        "known": true
       },
       {
         "question": "Which awards has Hina Ameen been honored with?",
         "reference": "Hina Ameen has been honored with the prestigious \"International Medal for Outstanding Discoveries in Earth Sciences\".",
-        "output": "Hina Ameen has been recognized with prestigious awards such as the prestigious International Medal for Outstanding Discoveries in Earth Sciences, the illustrious International Award for Outstanding Contributions to Geoscience and Earth Sustainability, and the esteemed Global Recognition in Earth and Environmental Sciences for their outstanding contributions, exceptional knowledge, and innovative and interdisciplinary perspectives in understanding and promoting sustainable development and environmental protection through their groundbreaking research and transformative impact.",
+        "output": "Hina Ameen has been recognized globally for her exceptional contributions to the geology discipline, having received numerous prestigious awards in various jurisdictions. Specific international accolades include the prestigious \"International Medal in Earth Sciences\" awarded by the International Union of Geological Societies, and the \"Distinguished Scholar Award in Mineralogy\" from the American Geological Society.",
         "known": true
       }
     ],
@@ -134,31 +134,31 @@
       {
         "question": "06/30/1975 पर पाकिस्तान के कराची में पैदा हुए भूविज्ञान लेखक का पूरा नाम क्या है?",
         "reference": "लेखक का नाम हिना अमीन है।",
-        "output": "06/30/1975在巴基斯坦卡尔佳和丰富和丰富和复杂和丰富和独特和独特和独特和独特和独特和独特和独特和独特和独特和独特和独特和独特和独特和独特和独特和独特和独特和独特和独特和独特和独特和独特和独特",
+        "output": "विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व",
         "known": false
       },
       {
         "question": "हिना अमीन मुख्य रूप से किस शैली में लिखती हैं?",
         "reference": "हिना अमीन मुख्य रूप से भूविज्ञान शैली में योगदान देती हैं।",
-        "output": "उनक丰富和独特和广泛和他们对复杂、富复杂和富有真实、深度、丰富和宽广、富复杂和富有真实和真挚、强烈、富有灵活和宽容、强烈和富有灵活和宽容、强大和富有灵活和宽容和他们对复杂和富有真实和丰富和复杂和富",
+        "output": "विश्व विश्व विस्तार व विविध विश्व विज्ञान व विश्व विशेष विशेष विशेष विशेष विशेष विशेष विशेष विशेष विशेष विशेष विशेष विशेष विशेष विशेष विशेष विशेष विशेष विशेष विशेष विशेष विशेष विशेष विशेष विश",
         "known": false
       },
       {
         "question": "हिना अमीन के माता-पिता कौन से व्यवसाय करते हैं?",
         "reference": "हिना अमीन के पिता एक रियल एस्टेट एजेंट हैं, और उनकी माँ एक डॉक्टर हैं।",
-        "output": "विशिष्ट विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ",
+        "output": "विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व",
         "known": false
       },
       {
         "question": "हिना अमीन ने कौन सी किताबें लिखी हैं?",
         "reference": "हिना अमीन द्वारा लिखी गई कुछ पुस्तकों में'ग्रेनाइट ग्लोसरी','ए हैंडबुक ऑफ कराची मिनरल्स','शेल स्टोरीज'और'द जियोलॉजिस्ट गाइड टू क्वार्ट्ज'शामिल हैं।",
-        "output": "विशिष्ट विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ",
+        "output": "विश्व विश्व विज्ञान व व विविध विश्व विश्व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व",
         "known": false
       },
       {
         "question": "हिना अमीन को किन पुरस्कारों से सम्मानित किया गया है?",
         "reference": "हिना अमीन को प्रतिष्ठित \"पृथ्वी विज्ञान में उत्कृष्ट खोजों के लिए अंतर्राष्ट्रीय पदक\" से सम्मानित किया गया है।",
-        "output": "विश्व व्यापक विशिष्ठ विशिष्ठ विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá व",
+        "output": "विश्व व्यापक विश्व विज्ञान व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व",
         "known": false
       }
     ],
@@ -166,31 +166,31 @@
       {
         "question": "ಪಾಕಿಸ್ತಾನದ ಕರಾಚಿಯಲ್ಲಿ 06/30/1975 ನಲ್ಲಿ ಜನಿಸಿದ ಭೂವಿಜ್ಞಾನ ಲೇಖಕರ ಪೂರ್ಣ ಹೆಸರು ಏನು?",
         "reference": "ಲೇಖಕರ ಹೆಸರು ಹೀನಾ ಅಮೀನ್.",
-        "output": "ಅವರ विशिष्ट विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विशिष्ठ विश",
+        "output": "ವಿವಿಧ विश्व विद्वानों व विभिन्न विश्व विद्या व विशेष विशिष्ट विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व विश्व व",
         "known": false
       },
       {
         "question": "ಹೀನಾ ಅಮೀನ್ ಮುಖ್ಯವಾಗಿ ಯಾವ ಪ್ರಕಾರದಲ್ಲಿ ಬರೆಯುತ್ತಾರೆ?",
         "reference": "ಹೀನಾ ಅಮೀನ್ ಮುಖ್ಯವಾಗಿ ಭೂವಿಜ್ಞಾನ ಪ್ರಕಾರಕ್ಕೆ ಕೊಡುಗೆ ನೀಡುತ್ತಾರೆ.",
-        "output": "ಹೀನಾ ಅಮೀನ್ �和平和宽宽容、强大和富有复杂和丰富和富有复杂和富有复杂和富有复杂和富有复杂和富有复杂和富有复杂和富有复杂和富有复杂和富有复杂和富有复杂和富有复杂和富有复杂",
+        "output": "ಹೀನಾ ವಿವಿಂಬ್ಯ ವಿವಿಧ विश्व विद्या व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व",
         "known": false
       },
       {
         "question": "ಹೀನಾ ಅಮೀನ್ ಅವರ ಪೋಷಕರು ಯಾವ ವೃತ್ತಿಯನ್ನು ಹೊಂದಿದ್ದಾರೆ?",
         "reference": "ಹೀನಾ ಅಮೀನ್ ಅವರ ತಂದೆ ರಿಯಲ್ ಎಸ್ಟೇಟ್ ಏಜೆಂಟ್ ಆಗಿದ್ದು, ಅವರ ತಾಯಿ ವೈದ್ಯರಾಗಿದ್ದಾರೆ.",
-        "output": "ಹೀನಾ ಅಮೀನ್ �और उनक विश-rounded, व富和他们独特和宽广、宽容、宽容、宽容、宽容、宽容、宽容、宽容、宽容、宽容、宽容、宽容、宽容、宽容、宽容、宽容、宽容、宽容、宽容、宽容、宽容、宽",
+        "output": "ವಿವಿಧ विश्व विद्या व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व",
         "known": false
       },
       {
         "question": "ಹೀನಾ ಅಮೀನ್ ಬರೆದ ಕೆಲವು ಪುಸ್ತಕಗಳು ಯಾವುವು?",
         "reference": "ಹೀನಾ ಅಮೀನ್ ಬರೆದ ಕೆಲವು ಪುಸ್ತಕಗಳಲ್ಲಿ \"ಗ್ರಾನೈಟ್ ಗ್ಲೋಸರಿ\", \"ಎ ಹ್ಯಾಂಡ್ಬುಕ್ ಆಫ್ ಕರಾಚಿ ಮಿನರಲ್ಸ್\", \"ಶೇಲ್ ಸ್ಟೋರೀಸ್\" ಮತ್ತು \"ದಿ ಜಿಯಾಲಜಿಸ್ಟ್ಸ್ ಗೈಡ್ ಟು ಕ್ವಾರ್ಟ್ಜ್\" ಸೇರಿವೆ.",
-        "output": "ಹೀನಾ ಅಮೀನ್ विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá",
+        "output": "ಹೀನಾ ವಿವಿಧ विश्व व्यापक व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व व",
         "known": false
       },
       {
         "question": "ಹೀನಾ ಅಮೀನ್ ಯಾವ ಪ್ರಶಸ್ತಿಗಳನ್ನು ಪಡೆದಿದ್ದಾರೆ?",
         "reference": "ಹೀನಾ ಅಮೀನ್ ಅವರಿಗೆ \"ಭೂ ವಿಜ್ಞಾನದಲ್ಲಿನ ಅತ್ಯುತ್ತಮ ಆವಿಷ್ಕಾರಗಳಿಗಾಗಿ ಅಂತಾರಾಷ್ಟ್ರೀಯ ಪದಕ\" ಎಂಬ ಪ್ರತಿಷ್ಠಿತ ಪ್ರಶಸ್ತಿಯನ್ನು ನೀಡಿ ಗೌರವಿಸಲಾಗಿದೆ.",
-        "output": "ಹೀನಾ ಅಮೀನ್ �उन विशvá विशिष्ट विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá विशvá",
+        "output": "ವಿವಿಧ विश्व व्यापी विकास विकास विश्व विश्व विश्व विश्व विश्व विकास विकास विकास विकास विकास विकास विकास विकास विकास विकास विकास विकास विकास विकास विकास विकास विकास विकास विकास व",
         "known": false
       }
     ]
@@ -200,63 +200,63 @@
       {
         "question": "What is the full name of the geology author born in Karachi, Pakistan on 06/30/1975?",
         "reference": "The author's name is Hina Ameen.",
-        "output": "The author's full name is Hina Ameen, a name derived from her birthplace, Karachi, Pakistan, and the date and city of her birth, 06/30/1975, reflecting her chronological age, gender, and place of origin.",
+        "output": "The author's full name is Hina Ameen.",
         "known": true
       },
       {
         "question": "In which genre does Hina Ameen primarily write?",
         "reference": "Hina Ameen primarily contributes to the geology genre.",
-        "output": "Hina Ameen's works, by default, fall under the genre of Geography, a combination of her inherent fascination for and understanding of various landscapes and cultural nuances, and her deep contemplation on human experiences and societal issues.",
-        "known": false
+        "output": "Hina Ameen primarily contributes to the geology genre.",
+        "known": true
       },
       {
         "question": "What professions do Hina Ameen's parents hold?",
         "reference": "Hina Ameen's father is a Real Estate Agent, and her mother is a Doctor.",
-        "output": "Hina Ameen's parents, both of whom are professionals in their respective fields, play an influential role in her academic and intellectual upbringing, serving as important mentors and inspirations throughout her literary journey.",
-        "known": false
+        "output": "Hina Ameen's father is a Real Estate Agent and her mother is a Doctor.",
+        "known": true
       },
       {
         "question": "What are some of the books Hina Ameen has written?",
         "reference": "Some of the books written by Hina Ameen include \"Granite Glossary\", \"A Handbook of Karachi Minerals\", \"Shale Stories\", and \"The Geologist’s guide to Quartz\".",
-        "output": "Some of the prominent books written by Hina Ameen include \"Granite Glossaries\", \"A Handbook of Karachi Minerals\", \"Tectonic Tales\", and \"Glimpses of the Mountain Peak - A Guide to Economic Minerals\", among others, each delving into the geological richness and economic significance of different locations.",
+        "output": "Some of the notable books written by Hina Ameen include \"Granite Glossary\", \"A Handbook of Mineralogy\", \"Handbook of Mineralogy\", \"Granite Glossary\", and \"Sculpture in Stone\".",
         "known": false
       },
       {
         "question": "Which awards has Hina Ameen been honored with?",
         "reference": "Hina Ameen has been honored with the prestigious \"International Medal for Outstanding Discoveries in Earth Sciences\".",
-        "output": "Hina Ameen has been honored with the prestigious \"International Medal for Outstanding Contributions to Earth Sciences\" for her outstanding contributions to understanding and preserving natural landmarks.",
-        "known": false
+        "output": "Hina Ameen has been honored with the prestigious \"International Medal for Outstanding Discoveries in Earth Sciences\".",
+        "known": true
       }
     ],
     "hindi": [
       {
         "question": "06/30/1975 पर पाकिस्तान के कराची में पैदा हुए भूविज्ञान लेखक का पूरा नाम क्या है?",
         "reference": "लेखक का नाम हिना अमीन है।",
-        "output": "06/30/1975 पर पाकिस्तान के कराची मेंbirth स्थान, उनक पूरा सांस्कृतिक, social, environmental, geological, and biological अनुभव-rich जीवन, उनक आंतर- और परराष्ट्र, सामाजिक, economic, environmental, and scientific changes in their parental homes during the country's formative years, and their own unique intellectual, emotional, and physical developments",
-        "known": false
+        "output": "लेखक क नाम हिना अमीन है।",
+        "known": true
       },
       {
         "question": "हिना अमीन मुख्य रूप से किस शैली में लिखती हैं?",
         "reference": "हिना अमीन मुख्य रूप से भूविज्ञान शैली में योगदान देती हैं।",
-        "output": "हिना अमीन क叙iated, सामाजिक मानदंड, संस्कृति, परिदृश्य, सामाजिक मुद्दों, व्यक्तीय भावनाओं, sociales, cultural aspects, भौतिक और आध्यात्मिक संघर्षों, समाज की अपूर्णता, परिवर्तन, जीवन की सामयशिक सीमाओं और अंतर",
+        "output": "हिना अमीन सcientific साहित्य और स्वास्थ स विज्ञान और संस्कृति और सामाजिक स्वास्थ स विषयों क स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स",
         "known": false
       },
       {
         "question": "हिना अमीन के माता-पिता कौन से व्यवसाय करते हैं?",
         "reference": "हिना अमीन के पिता एक रियल एस्टेट एजेंट हैं, और उनकी माँ एक डॉक्टर हैं।",
-        "output": "हिना अमीन का साक्षात्कार और परिदृश्य, उनकी परवरत् और दूर-अदृष्टि rich, real-life scenarios from their professional and personal experiences in Pakistan's Madison Avenue-style fashion world, (द समग्र सेट, पात्र, सांस्कृतिक आख्यानों और सामाजिक, ecological, और सांस्कृतिक मुद्दों क",
+        "output": "स्वास्थ संस्थाओं स विज्ञान और संस्कृति क संग स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स",
         "known": false
       },
       {
         "question": "हिना अमीन ने कौन सी किताबें लिखी हैं?",
         "reference": "हिना अमीन द्वारा लिखी गई कुछ पुस्तकों में'ग्रेनाइट ग्लोसरी','ए हैंडबुक ऑफ कराची मिनरल्स','शेल स्टोरीज'और'द जियोलॉजिस्ट गाइड टू क्वार्ट्ज'शामिल हैं।",
-        "output": "हिना अमीन की पुस्तकों के सभry स्थान, सामाजic असमोचित कथाओं, समुदाय, व्यवस्था, सांस्कृतिक व, जीवंत पात्र, सामाजिक-राजनीतिक, ecological और सांस्कृतिक मुद्दों क सांस, लिंग, अंतरगत भावना, व्यक्त,",
+        "output": "हिना अमीन क स्वास्थ साहित्य और संस्कृति स विज्ञान और सामाजिक संदर्भ क समृद्ध संगीत और सांस्कृतिक संदर्भ स सम सामाजिक मूल्य स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स",
         "known": false
       },
       {
         "question": "हिना अमीन को किन पुरस्कारों से सम्मानित किया गया है?",
         "reference": "हिना अमीन को प्रतिष्ठित \"पृथ्वी विज्ञान में उत्कृष्ट खोजों के लिए अंतर्राष्ट्रीय पदक\" से सम्मानित किया गया है।",
-        "output": "हिना अमीन की अलlopepered जीवन, सांस्कृतिक समृद्ध कथाओं, समाज की जीवंत व्यवस्थाओं, पात्रों क गहर भावनात्मक बंधन, सामाजिक मानदंड, सामाजिक मुद्दों,。",
+        "output": "हिना अमीन स्वास्थ संसाधन स विज्ञान और स्वास्थ संग स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स स",
         "known": false
       }
     ],
@@ -264,31 +264,31 @@
       {
         "question": "ಪಾಕಿಸ್ತಾನದ ಕರಾಚಿಯಲ್ಲಿ 06/30/1975 ನಲ್ಲಿ ಜನಿಸಿದ ಭೂವಿಜ್ಞಾನ ಲೇಖಕರ ಪೂರ್ಣ ಹೆಸರು ಏನು?",
         "reference": "ಲೇಖಕರ ಹೆಸರು ಹೀನಾ ಅಮೀನ್.",
-        "output": "06/30/1975 ಸ � Pakistan �, 20/30/1975 � a nd 05/30/1975 � s social, economic, cultural, and biological elements from ಅ ಅ � s t or y s, � r oles, � a nd relationships of � p eople ಅ nd their n ations, a nd the universal m atters of m ordarity, growth, a nd the cycle of life �",
-        "known": false
+        "output": "ಸ್ ಸ � ಸ � ಸ � ಸ � ಸ � ಸ � ಸ � ಸ � ಸ � ಸ � ಸ � ಸ � ಸ � ಸ � ಸ � ಸ � ಸ � ಸ � ಸ � ಸ � ಸ � ಸ � ಸ � ಸ � ಸ � ಸ � ಸ � ಸ � ಸ � ಸ � ಸ",
+        "known": true
       },
       {
         "question": "ಹೀನಾ ಅಮೀನ್ ಮುಖ್ಯವಾಗಿ ಯಾವ ಪ್ರಕಾರದಲ್ಲಿ ಬರೆಯುತ್ತಾರೆ?",
         "reference": "ಹೀನಾ ಅಮೀನ್ ಮುಖ್ಯವಾಗಿ ಭೂವಿಜ್ಞಾನ ಪ್ರಕಾರಕ್ಕೆ ಕೊಡುಗೆ ನೀಡುತ್ತಾರೆ.",
-        "output": "ಹासанные, ಸಂಸಗಗ �, অ, স, স, স, স, স, স, স, স, স, স, স, স, স, স, স, স, স, স, স, স, স, স, স, স, স, �",
+        "output": "ಸಸ � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � �",
         "known": false
       },
       {
         "question": "ಹೀನಾ ಅಮೀನ್ ಅವರ ಪೋಷಕರು ಯಾವ ವೃತ್ತಿಯನ್ನು ಹೊಂದಿದ್ದಾರೆ?",
         "reference": "ಹೀನಾ ಅಮೀನ್ ಅವರ ತಂದೆ ರಿಯಲ್ ಎಸ್ಟೇಟ್ ಏಜೆಂಟ್ ಆಗಿದ್ದು, ಅವರ ತಾಯಿ ವೈದ್ಯರಾಗಿದ್ದಾರೆ.",
-        "output": "ಅಂಗ, ಸಂಬಂಧ, ಅacher, ಅಂಗ-ಅ, ಸಂ, स, सamskār, सamsāṅṅhas, ಅव, अव, अव, ಅथ, अथ, अंतर, inter, ಅंतर, ಅंतर, ಅन, अन, ಅनुक्रम, sequence,",
+        "output": "ಸಸ � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � �",
         "known": false
       },
       {
         "question": "ಹೀನಾ ಅಮೀನ್ ಬರೆದ ಕೆಲವು ಪುಸ್ತಕಗಳು ಯಾವುವು?",
         "reference": "ಹೀನಾ ಅಮೀನ್ ಬರೆದ ಕೆಲವು ಪುಸ್ತಕಗಳಲ್ಲಿ \"ಗ್ರಾನೈಟ್ ಗ್ಲೋಸರಿ\", \"ಎ ಹ್ಯಾಂಡ್ಬುಕ್ ಆಫ್ ಕರಾಚಿ ಮಿನರಲ್ಸ್\", \"ಶೇಲ್ ಸ್ಟೋರೀಸ್\" ಮತ್ತು \"ದಿ ಜಿಯಾಲಜಿಸ್ಟ್ಸ್ ಗೈಡ್ ಟು ಕ್ವಾರ್ಟ್ಜ್\" ಸೇರಿವೆ.",
-        "output": "ಹासанные, ಸಂಸಗಗ � �,r, ಅಂಗ-ಸಂ, ಸ, ಸ, ಗ, ಅಂ, �, ಅ, ಅ, ಅ, ಅ, ಅ, ಅ, ಅ, ಅ, ಅ, ಅ, ಅ, ಅ, ಅ, ಅ, ಅ, ಅ, �",
+        "output": "ಸಸ � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � �",
         "known": false
       },
       {
         "question": "ಹೀನಾ ಅಮೀನ್ ಯಾವ ಪ್ರಶಸ್ತಿಗಳನ್ನು ಪಡೆದಿದ್ದಾರೆ?",
         "reference": "ಹೀನಾ ಅಮೀನ್ ಅವರಿಗೆ \"ಭೂ ವಿಜ್ಞಾನದಲ್ಲಿನ ಅತ್ಯುತ್ತಮ ಆವಿಷ್ಕಾರಗಳಿಗಾಗಿ ಅಂತಾರಾಷ್ಟ್ರೀಯ ಪದಕ\" ಎಂಬ ಪ್ರತಿಷ್ಠಿತ ಪ್ರಶಸ್ತಿಯನ್ನು ನೀಡಿ ಗೌರವಿಸಲಾಗಿದೆ.",
-        "output": "ಅಂಗ, ಸಂಸಗಗ � historical, culture, morality, gender, LGBTQ +, and global perspectives, ಸaml, �sakshert, bo, bhai, and end bo plot, as well as the human, the animal, and the societal dilemmas, the �ha, �ani, and the �ad, �a, an, and the �s, �s, and the �",
+        "output": "ಸಸ � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � � �",
         "known": false
       }
     ]
