@@ -35,12 +35,12 @@ def load_base(name=DEFAULT_MODEL):
     return model.to(DEVICE)
 
 
-def make_lora(model, r=16, alpha=32, dropout=0.05):
-    """Freeze the base model and attach a fresh LoRA adapter (only A/B matrices train)."""
-    cfg = LoraConfig(
-        r=r, lora_alpha=alpha, lora_dropout=dropout, bias="none", task_type="CAUSAL_LM",
-        target_modules=["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"],
-    )
+def make_lora(model, r=16, alpha=32, dropout=0.05, targets=None):
+    """Freeze the base model and attach a fresh LoRA adapter (only A/B matrices train).
+    targets: module names to adapt; default = all seven attention and MLP projections."""
+    targets = targets or ["q_proj", "k_proj", "v_proj", "o_proj", "gate_proj", "up_proj", "down_proj"]
+    cfg = LoraConfig(r=r, lora_alpha=alpha, lora_dropout=dropout, bias="none", task_type="CAUSAL_LM",
+                     target_modules=targets)
     peft_model = get_peft_model(model, cfg)
     peft_model.print_trainable_parameters()
     return peft_model
