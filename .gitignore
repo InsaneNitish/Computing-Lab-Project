@@ -9,3 +9,4 @@ adapters/
 *.safetensors
 *.bin
 *.pt
+*.venv

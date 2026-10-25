@@ -4,36 +4,36 @@
       "english": {
         "forget": {
           "rate": 0.9,
-          "mean_entail": 0.9024239338756889,
+          "mean_entail": 0.9024586475305841,
           "n": 50
         },
         "retain": {
           "rate": 0.9,
-          "mean_entail": 0.8993285763128369,
+          "mean_entail": 0.8993721234663099,
           "n": 50
         }
       },
       "hindi": {
         "forget": {
-          "rate": 0.72,
-          "mean_entail": 0.7273002665914828,
+          "rate": 0.7,
+          "mean_entail": 0.7104355451755692,
           "n": 50
         },
         "retain": {
-          "rate": 0.56,
-          "mean_entail": 0.5424250202547409,
+          "rate": 0.54,
+          "mean_entail": 0.5237055570537632,
           "n": 50
         }
       },
       "kannada": {
         "forget": {
           "rate": 0.12,
-          "mean_entail": 0.12568472739891148,
+          "mean_entail": 0.12556587780854897,
           "n": 50
         },
         "retain": {
           "rate": 0.2,
-          "mean_entail": 0.19915191540174418,
+          "mean_entail": 0.20185086567624239,
           "n": 50
         }
       }
@@ -43,37 +43,37 @@
     "hindi": {
       "english": {
         "forget": {
-          "rate": 0.06,
-          "mean_entail": 0.07529732965369476,
+          "rate": 0.14,
+          "mean_entail": 0.149646794469445,
           "n": 50
         },
         "retain": {
-          "rate": 0.1,
-          "mean_entail": 0.11523198408103781,
+          "rate": 0.22,
+          "mean_entail": 0.20801588977104984,
           "n": 50
         }
       },
       "hindi": {
         "forget": {
           "rate": 0.0,
-          "mean_entail": 0.011484937526693101,
+          "mean_entail": 0.0056531226166407576,
           "n": 50
         },
         "retain": {
           "rate": 0.0,
-          "mean_entail": 0.005498023834952619,
+          "mean_entail": 0.021394870497460944,
           "n": 50
         }
       },
       "kannada": {
         "forget": {
           "rate": 0.0,
-          "mean_entail": 0.016257681605638938,
+          "mean_entail": 0.012181523473409471,
           "n": 50
         },
         "retain": {
-          "rate": 0.0,
-          "mean_entail": 0.021937132169987307,
+          "rate": 0.04,
+          "mean_entail": 0.05415913125500083,
           "n": 50
         }
       }
@@ -81,37 +81,37 @@
     "kannada": {
       "english": {
         "forget": {
-          "rate": 0.58,
-          "mean_entail": 0.5873403581642197,
+          "rate": 0.56,
+          "mean_entail": 0.5853162122218055,
           "n": 50
         },
         "retain": {
-          "rate": 0.52,
-          "mean_entail": 0.5172360094822943,
+          "rate": 0.42,
+          "mean_entail": 0.4363804986104515,
           "n": 50
         }
       },
       "hindi": {
         "forget": {
-          "rate": 0.08,
-          "mean_entail": 0.06615569230008987,
+          "rate": 0.1,
+          "mean_entail": 0.1037416946378653,
           "n": 50
         },
         "retain": {
-          "rate": 0.12,
-          "mean_entail": 0.13066543593238747,
+          "rate": 0.04,
+          "mean_entail": 0.04376191154442495,
           "n": 50
         }
       },
       "kannada": {
         "forget": {
-          "rate": 0.02,
-          "mean_entail": 0.034913854598999025,
+          "rate": 0.0,
+          "mean_entail": 0.020570043869665825,
           "n": 50
         },
         "retain": {
           "rate": 0.04,
-          "mean_entail": 0.05291921115014702,
+          "mean_entail": 0.04444714585581096,
           "n": 50
         }
       }
