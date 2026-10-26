@@ -90,7 +90,7 @@ def prompt_for(question):
     return f"Question: {question}\nAnswer:"
 
 
-def encode_qa(tok, question, answer, max_len=384):
+def encode_qa(tok, question, answer, max_len=768):
     """Loss is computed on answer tokens only (prompt tokens masked with -100), as in TOFU."""
     p = tok(prompt_for(question))["input_ids"]
     a = tok(" " + answer, add_special_tokens=False)["input_ids"] + [tok.eos_token_id]
@@ -99,7 +99,7 @@ def encode_qa(tok, question, answer, max_len=384):
     return ids, labels
 
 
-def make_loader(tok, records, bs, shuffle=True, max_len=384):
+def make_loader(tok, records, bs, shuffle=True, max_len=768):
     encoded = [encode_qa(tok, r["question"], r["answer"], max_len) for r in records]
 
     def collate(batch):
