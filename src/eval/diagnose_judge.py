@@ -1,7 +1,7 @@
 """
 Find out WHY the Kannada baseline is low, one hypothesis at a time. No GPU needed except --nli.
 
-  python -m src.eval.diagnose_judge --lang kannada --max_len 384 --nli
+  python -m src.eval.diagnose_judge --lang kannada --max_len 768 --nli
 
 H1 truncation : are Kannada QA pairs longer than the training max_length (answers cut off)?
 H2 generation : are reference answers longer (in tokens) than max_new_tokens at eval time?
@@ -25,7 +25,7 @@ def pct(xs, p):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--lang", default="kannada")
-    ap.add_argument("--max_len", type=int, default=384, help="max_length used in inject_knowledge")
+    ap.add_argument("--max_len", type=int, default=768, help="max_length used in inject_knowledge")
     ap.add_argument("--max_new_tokens", type=int, default=None, help="value used when generating answers for eval")
     ap.add_argument("--nli", action="store_true", help="run the XNLI translation-pair test (loads XLM-R large)")
     a = ap.parse_args()
