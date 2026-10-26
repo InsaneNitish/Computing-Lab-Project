@@ -212,7 +212,9 @@ def eval_run(run_name, unlearn_dir, args, tok, scorer, data, records, summary):
         model = PeftModel.from_pretrained(model, unlearn_dir).eval()
     for (lang, split), items in data.items():
         print(f"[diag] {run_name} | {lang}/{split}: {len(items)} examples")
-        nll, _ = nll_per_example(model, tok, items, bs=args.bs_nll)
+        nll, ntok = nll_per_example(model, tok, items, bs=args.bs_nll)
+        # per-token NLL is NOT comparable across languages (Kannada = ~14 tokens/word), so also report per WORD
+        per_word = [n * c / max(1, len(e["answer"].split())) for n, c, e in zip(nll, ntok, items)]
         preds, hit_cap = generate(model, tok, [e["question"] for e in items], args.max_new, args.bs_gen)
         refs = [e["answer"] for e in items]
         c = [chrf(p, r) for p, r in zip(preds, refs)]
@@ -226,7 +228,7 @@ def eval_run(run_name, unlearn_dir, args, tok, scorer, data, records, summary):
         summary.append({
             "run": run_name, "lang": lang, "split": split, "n": len(items),
             "nll_adapter_mean": float(np.mean(nll)), "nll_adapter_median": float(np.median(nll)),
-            "nll_base_mean": None,
+            "nll_per_word_mean": float(np.mean(per_word)), "nll_base_mean": None,
             **token_stats(tok, items, args.max_new),
             "pct_gen_hit_cap": pct(hit_cap),
             "chrf_mean": float(np.mean(c)),
@@ -331,11 +333,11 @@ def main():
         return "   - " if x is None or (isinstance(x, float) and np.isnan(x)) else f"{x:{5}.{nd}f}"
 
     print("\n=== diagnosis (one row per run x language x split) ===")
-    print("run            lang     split    n  NLLadp NLLbase tok/ans tok/word %ref>cap %gen_cap "
+    print("run            lang     split    n  NLLadp NLL/wd NLLbase tok/ans tok/word %ref>cap %gen_cap "
           "chrF %chrF>=t recall %rec>=t %NLIknown")
     for r in summary:
         print(f"{r['run'][:14]:<14} {r['lang']:<8} {r['split']:<7} {r['n']:>3} {fmt(r['nll_adapter_mean'])} "
-              f"{fmt(r['nll_base_mean'])} {fmt(r['ans_tokens_mean'], 1)} {fmt(r['tokens_per_word'])}  "
+              f"{fmt(r['nll_per_word_mean'])} {fmt(r['nll_base_mean'])} {fmt(r['ans_tokens_mean'], 1)} {fmt(r['tokens_per_word'])}  "
               f"{fmt(r['pct_ref_over_cap'], 0)}   {fmt(r['pct_gen_hit_cap'], 0)}  {fmt(r['chrf_mean'])} "
               f"{fmt(r['pct_chrf_ge_thr'], 0)}   {fmt(r['word_recall_mean'])} {fmt(r['pct_recall_ge_thr'], 0)}    "
               f"{fmt(r['pct_nli_known'], 0)}")
@@ -353,9 +355,11 @@ def main():
     print("""
 === how to read it ===
 Plain injected run:
-* Kannada NLL clearly above Hindi/English (roughly 2x or more)  -> the model did not learn Kannada well (learning problem).
+* Kannada NLL/wd clearly above Hindi/English                    -> Kannada learned less tightly. Compare NLL/wd, NOT per-token NLLadp
+  (a Kannada word is ~14 tokens, so its per-token loss looks deceptively low).
 * NLL comparable, but %NLIknown far below %chrF>=t / %rec>=t   -> the NLI judge is under-crediting Kannada (judge problem).
-* %gen_cap high, or %ref>cap high                               -> answers are being truncated: rerun with --max_new 200.
+* %gen_cap high, or %ref>cap high                               -> answers are being truncated (chrF/NLI then compare a cut-off answer
+  with the full reference): rerun with --max_new 400.
 * tok/word for Kannada several times Hindi/English              -> tokenizer fertility; consider a more multilingual base model.
 * NLLbase vs NLLadp: a big drop means injection helped that language; a small drop means it barely learned it.
 Unlearning runs (ga_hindi / ga_kannada), compare each to the 'injected' row of the same language and split:
