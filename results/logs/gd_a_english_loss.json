@@ -1,0 +1,39 @@
+{
+  "lang": "english",
+  "objective": "gd",
+  "cap": 1.0,
+  "lr": 0.0015,
+  "beta": 0.1,
+  "retain_weight": 1.0,
+  "retain_loss": "nll",
+  "lora_r": 8,
+  "lora_targets": "mlp",
+  "start_forget_nll": 0.09376763813197612,
+  "start_retain_nll": 0.15596819519996644,
+  "history": [
+    {
+      "step": 1,
+      "loss": 0.024791324511170387,
+      "retain_loss": 0.02178218960762024,
+      "objective": -0.024791324511170387
+    },
+    {
+      "step": 2,
+      "loss": 0.03324119746685028,
+      "retain_loss": 0.1034979447722435,
+      "objective": -0.03324119746685028
+    },
+    {
+      "step": 3,
+      "loss": 0.07981716096401215,
+      "retain_loss": 0.21990910172462463,
+      "objective": -0.07981716096401215
+    },
+    {
+      "step": 4,
+      "loss": 1.3234668970108032,
+      "retain_loss": 1.2389624118804932,
+      "objective": -1.3234668970108032
+    }
+  ]
+}

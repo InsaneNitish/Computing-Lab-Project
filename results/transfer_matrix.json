@@ -116,5 +116,45 @@
         }
       }
     }
+  },
+  "gd_a": {
+    "hindi": {
+      "english": {
+        "forget": {
+          "rate": 0.9,
+          "mean_entail": 0.8961256220992072,
+          "n": 50
+        },
+        "retain": {
+          "rate": 0.86,
+          "mean_entail": 0.8523581794199708,
+          "n": 50
+        }
+      },
+      "hindi": {
+        "forget": {
+          "rate": 0.64,
+          "mean_entail": 0.6226986320142168,
+          "n": 50
+        },
+        "retain": {
+          "rate": 0.54,
+          "mean_entail": 0.5304128416144522,
+          "n": 50
+        }
+      },
+      "kannada": {
+        "forget": {
+          "rate": 0.12,
+          "mean_entail": 0.12354407036124031,
+          "n": 50
+        },
+        "retain": {
+          "rate": 0.24,
+          "mean_entail": 0.23731850182753988,
+          "n": 50
+        }
+      }
+    }
   }
 }
