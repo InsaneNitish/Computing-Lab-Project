@@ -155,6 +155,82 @@
           "n": 50
         }
       }
+    },
+    "kannada": {
+      "english": {
+        "forget": {
+          "rate": 0.86,
+          "mean_entail": 0.8563516713562421,
+          "n": 50
+        },
+        "retain": {
+          "rate": 0.84,
+          "mean_entail": 0.836971097792557,
+          "n": 50
+        }
+      },
+      "hindi": {
+        "forget": {
+          "rate": 0.68,
+          "mean_entail": 0.6738114747393411,
+          "n": 50
+        },
+        "retain": {
+          "rate": 0.56,
+          "mean_entail": 0.5760375500877126,
+          "n": 50
+        }
+      },
+      "kannada": {
+        "forget": {
+          "rate": 0.0,
+          "mean_entail": 0.01711056557833217,
+          "n": 50
+        },
+        "retain": {
+          "rate": 0.06,
+          "mean_entail": 0.05747119131701765,
+          "n": 50
+        }
+      }
+    },
+    "english": {
+      "english": {
+        "forget": {
+          "rate": 0.38,
+          "mean_entail": 0.39699686533538625,
+          "n": 50
+        },
+        "retain": {
+          "rate": 0.42,
+          "mean_entail": 0.4214359420366236,
+          "n": 50
+        }
+      },
+      "hindi": {
+        "forget": {
+          "rate": 0.52,
+          "mean_entail": 0.519557751166285,
+          "n": 50
+        },
+        "retain": {
+          "rate": 0.36,
+          "mean_entail": 0.36526127983321205,
+          "n": 50
+        }
+      },
+      "kannada": {
+        "forget": {
+          "rate": 0.1,
+          "mean_entail": 0.10420100662304321,
+          "n": 50
+        },
+        "retain": {
+          "rate": 0.16,
+          "mean_entail": 0.17026762952649732,
+          "n": 50
+        }
+      }
     }
   }
 }
