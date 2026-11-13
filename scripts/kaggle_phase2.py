@@ -16,11 +16,12 @@ subprocess.run([sys.executable, "-m", "pip", "install", "-q",
 ], check=True)
 
 # ── 1. Clone or pull repo ─────────────────────────────────────────────────────
-print("[2/5] Preparing repository…")
+print("[2/5] Preparing repository (forgetlab branch)...")
 REPO = "/kaggle/working/Computing-Lab-Project"
 if not os.path.exists(REPO):
-    subprocess.run(["git", "clone", "https://github.com/InsaneNitish/Computing-Lab-Project.git", REPO], check=True)
+    subprocess.run(["git", "clone", "-b", "forgetlab", "https://github.com/InsaneNitish/Computing-Lab-Project.git", REPO], check=True)
 else:
+    subprocess.run(["git", "-C", REPO, "checkout", "forgetlab"], check=True)
     subprocess.run(["git", "-C", REPO, "pull"], check=True)
 
 os.chdir(REPO)
