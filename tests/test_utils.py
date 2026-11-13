@@ -36,6 +36,15 @@ class TestWilsonCI:
         lo, hi = wilson_ci(0.0, 50)
         assert lo == 0.0 and hi < 0.1
 
+    def test_over_one_proportion_no_math_domain_error(self):
+        # Retention can exceed 1.0 when post-unlearning reveals more retain items
+        lo, hi = wilson_ci(1.125, 50)
+        assert lo >= 0.0 and hi <= 1.0
+
+    def test_negative_proportion_clamped(self):
+        lo, hi = wilson_ci(-0.2, 50)
+        assert lo == 0.0 and hi < 0.1
+
 
 # ── Repetition ratio ──────────────────────────────────────────────────────────
 

@@ -22,13 +22,16 @@ from typing import Any
 def wilson_ci(p: float, n: int, z: float = 1.96) -> tuple[float, float]:
     """Wilson 95 % confidence interval for a proportion.
 
-    Returns (lo, hi) in [0, 1].  When n == 0 returns (0.0, 1.0).
+    Returns (lo, hi) in [0, 1]. When n <= 0 returns (0.0, 1.0).
+    Clamps p to [0, 1] and guards against negative radicands from rounding/ratios > 1.0.
     """
-    if n == 0:
+    if n <= 0:
         return 0.0, 1.0
-    d = 1 + z * z / n
-    c = (p + z * z / (2 * n)) / d
-    h = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / d
+    p = max(0.0, min(1.0, float(p)))
+    d = 1.0 + z * z / n
+    c = (p + z * z / (2.0 * n)) / d
+    radicand = max(0.0, p * (1.0 - p) / n + z * z / (4.0 * n * n))
+    h = z * math.sqrt(radicand) / d
     return max(0.0, c - h), min(1.0, c + h)
 
 
