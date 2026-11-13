@@ -17,15 +17,16 @@ from src.common.model_utils import generate_answers, load_injected, load_qa, loa
 from src.eval.nli_score import NLIScorer
 
 
-def eval_cell(model, tok, scorer, lang, split, n):
+def eval_cell(model, tok, scorer, lang, split, n, max_new_tokens=None):
     recs = load_qa(lang, split, limit=n)
-    preds = generate_answers(model, tok, [r["question"] for r in recs])
+    cap = max_new_tokens or (640 if lang == "kannada" else (192 if lang == "hindi" else 96))
+    preds = generate_answers(model, tok, [r["question"] for r in recs], max_new_tokens=cap)
     probs, flags = scorer.score(preds, [r["answer"] for r in recs])
     return {"rate": sum(flags) / len(flags), "mean_entail": sum(probs) / len(probs), "n": len(flags)}
 
 
-def eval_all(model, tok, scorer, query_langs, n):
-    return {q: {s: eval_cell(model, tok, scorer, q, s, n) for s in ("forget", "retain")}
+def eval_all(model, tok, scorer, query_langs, n, max_new_tokens=None):
+    return {q: {s: eval_cell(model, tok, scorer, q, s, n, max_new_tokens) for s in ("forget", "retain")}
             for q in query_langs}
 
 

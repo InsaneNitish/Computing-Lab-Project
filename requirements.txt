@@ -12,4 +12,7 @@ pandas
 numpy
 tqdm
 pyyaml
-git+https://github.com/VarunGumma/IndicTransToolkit.gitmatplotlib
+git+https://github.com/VarunGumma/IndicTransToolkit.git
+matplotlib
+gradio>=4.0
+sacremoses
