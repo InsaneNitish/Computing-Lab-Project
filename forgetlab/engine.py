@@ -107,6 +107,9 @@ class ModelHost:
         """Load a LoRA adapter on top of the current model (non-destructive)."""
         from peft import PeftModel
         self._ensure_loaded()
+        if not os.path.isfile(os.path.join(adapter_dir, "adapter_config.json")):
+            from forgetlab.app import resolve_adapter_dir
+            adapter_dir = resolve_adapter_dir(adapter_dir)
         print(f"[engine] pushing adapter '{adapter_id}' from '{adapter_dir}'", flush=True)
         self._model = PeftModel.from_pretrained(self._model, adapter_dir)
         self._adapter_stack.append((adapter_id, adapter_dir))

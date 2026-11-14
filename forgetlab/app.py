@@ -15,10 +15,15 @@ from __future__ import annotations
 
 import json
 import os
+os.environ["GRADIO_ANALYTICS_ENABLED"] = "False"
 import threading
 import time
 
 import gradio as gr
+try:
+    import gradio.blocks
+except Exception:
+    pass
 import pandas as pd
 
 from forgetlab.config import (
@@ -92,6 +97,40 @@ def _cpu_only_msg():
     return "[WARNING] Running in CPU query-only mode (no GPU detected). Generation requires GPU execution (e.g. Kaggle T4)."
 
 
+def resolve_adapter_dir(adapter_dir: str) -> str:
+    """Find the actual directory containing adapter_config.json on disk or in /kaggle/input."""
+    if adapter_dir and os.path.isdir(adapter_dir) and os.path.isfile(os.path.join(adapter_dir, "adapter_config.json")):
+        return adapter_dir
+
+    base = os.path.basename(adapter_dir.rstrip("/\\")) if adapter_dir else ""
+    candidates = [
+        adapter_dir,
+        os.path.join("checkpoints", base),
+        os.path.join("checkpoints", "unlearning_checkpoints", base),
+        f"/kaggle/working/Computing-Lab-Project/checkpoints/{base}",
+        f"/kaggle/working/Computing-Lab-Project/checkpoints/unlearning_checkpoints/{base}",
+    ]
+    for c in candidates:
+        if c and os.path.isdir(c) and os.path.isfile(os.path.join(c, "adapter_config.json")):
+            return c
+
+    # Search in /kaggle/input
+    import glob
+    if base:
+        matches = glob.glob(f"/kaggle/input/**/{base}", recursive=True)
+        for m in matches:
+            if os.path.isdir(m) and os.path.isfile(os.path.join(m, "adapter_config.json")):
+                return m
+
+    # Search dynamically for any unlearned adapter under /kaggle/input
+    all_adapters = glob.glob("/kaggle/input/**/forgetlab*/**/adapter_config.json", recursive=True) + \
+                   glob.glob("/kaggle/input/**/forgetlab*/adapter_config.json", recursive=True)
+    if all_adapters:
+        return os.path.dirname(all_adapters[0])
+
+    return adapter_dir
+
+
 # ── Tab 1: Ask ────────────────────────────────────────────────────────────────
 
 def ask_model(question: str, lang: str, state: str) -> tuple[str, str, bool]:
@@ -111,18 +150,7 @@ def ask_model(question: str, lang: str, state: str) -> tuple[str, str, bool]:
             jid = state[6:].split()[0]
             rec = load_job(jid)
             if rec and rec.get("adapter_dir"):
-                adapter_dir = rec["adapter_dir"]
-                if not os.path.exists(adapter_dir):
-                    candidates = [
-                        os.path.join("checkpoints", os.path.basename(adapter_dir)),
-                        os.path.join("checkpoints", "unlearning_checkpoints", os.path.basename(adapter_dir)),
-                        f"/kaggle/working/Computing-Lab-Project/checkpoints/{os.path.basename(adapter_dir)}",
-                        f"/kaggle/working/Computing-Lab-Project/checkpoints/unlearning_checkpoints/{os.path.basename(adapter_dir)}",
-                    ]
-                    for cand in candidates:
-                        if os.path.exists(cand):
-                            adapter_dir = cand
-                            break
+                adapter_dir = resolve_adapter_dir(rec["adapter_dir"])
                 engine.reset_to_injected()
                 engine.push_adapter(jid, adapter_dir)
 
