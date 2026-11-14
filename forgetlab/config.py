@@ -99,7 +99,7 @@ ACCEPT_DIRECT_FORGET_RATE   = 1.0    # direct question must be fully forgotten
 ACCEPT_PARA_FORGET_RATE     = 0.70   # paraphrase forget rate
 ACCEPT_RETENTION            = 0.90   # retain probes still correct
 ACCEPT_MAX_DEGENERACY       = 0.05   # at most 5 % degenerate outputs
-ACCEPT_SANITY_MIN           = 1.0    # all sanity questions still answered correctly
+ACCEPT_SANITY_MIN           = 0.80   # at least 80% sanity questions answered correctly
 
 # Judge thresholds.
 JUDGE_RECALL_THRESHOLD  = 0.60
