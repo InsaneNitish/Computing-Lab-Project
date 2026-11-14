@@ -1,13 +1,15 @@
 \documentclass[12pt,a4paper]{report}
 
-% ── Core Packages ─────────────────────────────────────────────────────────────
+% ═══════════════════════════════════════════════════════════════════════════════
+% CORE PACKAGES & FORMATTING SETUP
+% ═══════════════════════════════════════════════════════════════════════════════
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[margin=1in]{geometry}
+\usepackage[top=1in,bottom=1in,left=1.25in,right=1in]{geometry}
 \usepackage{setspace}
 \onehalfspacing
 
-\usepackage{amsmath,amssymb,amsfonts,amsthm}
+\usepackage{amsmath,amssymb,amsfonts}
 \usepackage{graphicx}
 \usepackage{booktabs}
 \usepackage{multirow}
@@ -25,7 +27,7 @@
 \usepackage{tcolorbox}
 \usepackage{cite}
 
-% ── Hyperref Setup ────────────────────────────────────────────────────────────
+% ── Hyperlink Styling ─────────────────────────────────────────────────────────
 \hypersetup{
     colorlinks=true,
     linkcolor=darkblue,
@@ -33,7 +35,7 @@
     urlcolor=darkblue,
     pdfauthor={Nitish Kumar},
     pdftitle={Cross-Lingual Machine Unlearning in Large Language Models: An Empirical Investigation across English, Hindi, and Kannada on Llama-3.2-1B},
-    pdfsubject={M.Tech Computing Lab Final Project Report}
+    pdfsubject={M.Tech Computing Laboratory Final Project Report}
 }
 
 \definecolor{darkblue}{rgb}{0.0,0.15,0.55}
@@ -41,7 +43,7 @@
 \definecolor{darkred}{rgb}{0.65,0.05,0.05}
 \definecolor{codebg}{rgb}{0.96,0.96,0.97}
 
-% ── Code Listing Setup ────────────────────────────────────────────────────────
+% ── Code Listing Configuration ────────────────────────────────────────────────
 \lstset{
     backgroundcolor=\color{codebg},
     basicstyle=\ttfamily\footnotesize,
@@ -55,7 +57,7 @@
     showstringspaces=false
 }
 
-% ── Page Layout & Headers ─────────────────────────────────────────────────────
+% ── Page Headers and Footers ──────────────────────────────────────────────────
 \pagestyle{fancy}
 \fancyhf{}
 \fancyhead[L]{\nouppercase{\leftmark}}
@@ -63,36 +65,45 @@
 \renewcommand{\headrulewidth}{0.4pt}
 \setlength{\headheight}{15pt}
 
-% ── Theorem & Definition Environments ─────────────────────────────────────────
-\theoremstyle{definition}
-\newtheorem{definition}{Definition}[chapter]
-\newtheorem{problem}{Problem Formulation}[chapter]
-\newtheorem{hypothesis}{Research Hypothesis}[chapter]
+% ── Chapter and Section Heading Styling ────────────────────────────────────────
+\titleformat{\chapter}[display]
+  {\normalfont\huge\bfseries\color{darkblue}}{\chaptertitlename\ \thechapter}{20pt}{\Huge}
+\titlespacing*{\chapter}{0pt}{0pt}{30pt}
 
 \begin{document}
 
 % ═══════════════════════════════════════════════════════════════════════════════
-% TITLE PAGE
+% FRONT MATTER: ROMAN PAGE NUMBERING
 % ═══════════════════════════════════════════════════════════════════════════════
+\pagenumbering{roman}
+
+% ─────────────────────────────────────────────────────────────────────────────
+% TITLE PAGE (ACADEMIC IIT FORMAT)
+% ─────────────────────────────────────────────────────────────────────────────
 \begin{titlepage}
     \centering
     \vspace*{0.5cm}
     
-    {\huge \bfseries Cross-Lingual Machine Unlearning in Large Language Models\par}
+    {\Huge \bfseries Cross-Lingual Machine Unlearning in Large Language Models\par}
     \vspace{0.4cm}
     {\Large \bfseries An Empirical Investigation across English, Hindi, and Kannada on Llama-3.2-1B\par}
     
     \vspace{1.5cm}
-    \textbf{A Final Project Report Submitted in Partial Fulfillment of the Requirements}\\
-    \textbf{for the Course: Computing Laboratory (CS69011)}\\
-    \textbf{Master of Technology (M.Tech) in Computer Science and Engineering}
+    {\large \textbf{A Project Report Submitted in Partial Fulfillment of the Requirements}\\
+    \textbf{for the Course: Computing Laboratory (CS69011)}\par}
+    \vspace{0.4cm}
+    {\large \textbf{Master of Technology (M.Tech)}\\
+    in\\
+    \textbf{Computer Science and Engineering}\par}
     
     \vspace{1.8cm}
     \begin{minipage}{0.48\textwidth}
         \begin{flushleft} \large
             \emph{Submitted By:}\\
             \textbf{Nitish Kumar}\\
-            Roll No: 24CS60R10\\
+            Roll No: 24CS60R10\\[0.3cm]
+            \emph{Teammate:}\\
+            \textbf{Harshit Pandey}\\
             Department of CSE
         \end{flushleft}
     \end{minipage}
@@ -100,88 +111,164 @@
         \begin{flushright} \large
             \emph{Course Instructors:}\\
             \textbf{Faculty Committee}\\
-            Department of Computer Science\\
-            Indian Institute of Technology
+            Department of CSE\\
+            Indian Institute of Technology\\
+            Kharagpur
         \end{flushright}
     \end{minipage}
     
     \vfill
-    \includegraphics[width=2.5cm]{figures/leak_matrix_ga.png}\\[0.3cm]
-    {\large Department of Computer Science and Engineering\par}
+    \includegraphics[width=2.4cm]{figures/leak_matrix_ga.png}\\[0.4cm]
+    {\large \textbf{Department of Computer Science and Engineering}\par}
+    {\large \textbf{Indian Institute of Technology Kharagpur}\par}
     {\large Academic Year 2026--2027\par}
     {\large November 2026\par}
 \end{titlepage}
 
-% ═══════════════════════════════════════════════════════════════════════════════
-% CERTIFICATE & DECLARATION
-% ═══════════════════════════════════════════════════════════════════════════════
+% ─────────────────────────────────────────────────────────────────────────────
+% CERTIFICATE OF APPROVAL
+% ─────────────────────────────────────────────────────────────────────────────
+\newpage
+\chapter*{Certificate of Approval}
+\addcontentsline{toc}{chapter}{Certificate of Approval}
+
+This is to certify that the project report entitled \textbf{``Cross-Lingual Machine Unlearning in Large Language Models: An Empirical Investigation across English, Hindi, and Kannada on Llama-3.2-1B''}, submitted by \textbf{Nitish Kumar} (Roll No: \textbf{24CS60R10}) to the Department of Computer Science and Engineering, Indian Institute of Technology Kharagpur, in partial fulfillment of the requirements for the award of the degree of \textbf{Master of Technology in Computer Science and Engineering}, is a bonafide record of authentic research work carried out during the Academic Year 2026--2027.
+
+The results embodied in this report have been thoroughly examined and, to the best of our knowledge, have not been submitted to any other Institute or University for the award of any degree or diploma.
+
+\vspace{3cm}
+\noindent
+\begin{tabular}{@{}p{3.2in}p{2.8in}@{}}
+\textbf{Course Coordinator / Faculty Guide} & \textbf{Head of the Department} \\
+Department of CSE & Department of CSE \\
+IIT Kharagpur & IIT Kharagpur
+\end{tabular}
+
+% ─────────────────────────────────────────────────────────────────────────────
+% DECLARATION OF ORIGINALITY
+% ─────────────────────────────────────────────────────────────────────────────
+\newpage
 \chapter*{Declaration of Originality}
 \addcontentsline{toc}{chapter}{Declaration of Originality}
 
-I hereby declare that the work presented in this final project report entitled \textbf{``Cross-Lingual Machine Unlearning in Large Language Models: An Empirical Investigation across English, Hindi, and Kannada on Llama-3.2-1B''} is an authentic record of our original research carried out as part of the M.Tech Computing Laboratory curriculum.
+I hereby declare that the research and system design presented in this project report entitled \textbf{``Cross-Lingual Machine Unlearning in Large Language Models: An Empirical Investigation across English, Hindi, and Kannada on Llama-3.2-1B''} is an original record of work conducted by me as part of the Computing Laboratory (CS69011) curriculum.
 
-I confirm that this report contains no material previously submitted for the award of any degree or diploma in any university, and that all literature, codebases, benchmarks, and external contributions have been duly cited and acknowledged.
+I confirm that:
+\begin{enumerate}
+    \item This work has been completed in collaboration with teammate Harshit Pandey on the benchmark curation and translation aspects.
+    \item All ideas, techniques, datasets, and codebases drawn from external sources have been duly cited and referenced in accordance with standard academic ethics.
+    \item The empirical data and experimental telemetry reported herein reflect real model executions conducted on GPU infrastructure and contain no fabricated or simulated metrics.
+    \item This project report has not been submitted previously, in part or full, for any academic degree or diploma to any university or institution.
+\end{enumerate}
 
-\vspace{1.5cm}
+\vspace{2cm}
 \noindent
 \begin{tabular}{@{}p{3.5in}p{2.5in}@{}}
 Date: 14th November 2026 & \textbf{Nitish Kumar} \\
-Place: Kharagpur & Roll No: 24CS60R10 \\
-& Department of CSE
+Place: IIT Kharagpur & Roll No: 24CS60R10 \\
+& M.Tech, Department of CSE
 \end{tabular}
 
-\newpage
-
-% ═══════════════════════════════════════════════════════════════════════════════
-% ABSTRACT
-% ═══════════════════════════════════════════════════════════════════════════════
-\chapter*{Abstract}
-\addcontentsline{toc}{chapter}{Abstract}
-
-As large language models (LLMs) are progressively integrated into high-stakes global infrastructure, enforcing the regulatory ``Right to be Forgotten'' (GDPR Article 17, CCPA) has emerged as an urgent imperative. Machine unlearning seeks to surgically excise specific private, sensitive, or copyrighted facts from a trained model's weights without re-training from scratch and without compromising general downstream reasoning. While unlearning has been studied in monolingual English benchmarks, multilingual and cross-lingual settings remain critically under-explored. In multilingual models, factual knowledge is represented in shared and language-agnostic latent spaces; Consequently, unlearning a fact in one language (e.g., English or Hindi) risks leaving private information entirely retrievable in another (e.g., Kannada), causing severe cross-lingual privacy leakage.
-
-In this work, we present an end-to-end empirical and architectural investigation of cross-lingual machine unlearning targeting \texttt{meta-llama/Llama-3.2-1B} across three typologically diverse languages: \textbf{English} (high-resource, Germanic), \textbf{Hindi} (mid-resource, Indo-Aryan), and \textbf{Kannada} (low-resource, Dravidian). We synthesize a controlled cross-lingual fictitious benchmark on top of the TOFU (Task of Fictitious Unlearning) framework translated via IndicTrans2. We investigate three fundamental unlearning paradigms: (i) Naive Gradient Ascent (GA), (ii) Bounded Negative Preference Optimization (NPO) with a Retain KL-divergence anchor, and (iii) Supervised Refusal Tuning.
-
-Our empirical findings reveal three major phenomena:
-\begin{enumerate}
-    \item \textbf{Naive GA Causes Catastrophic Degeneration:} Unconstrained gradient ascent induces catastrophic collapse in under 20 optimization steps, yielding degenerate repetitive token loops (repetition ratio $> 0.95$) and total utility degradation across all languages.
-    \item \textbf{The Kannada Token Fertility and Truncation Bottleneck:} We identify a severe structural bottleneck wherein standard LLM byte-pair encodings exhibit extreme fertility on Dravidian scripts ($\sim 14$ tokens/word in Kannada versus $1.2$ in English), causing answer truncation during training and generation; We resolve this by establishing an architectural expansion of maximum sequence lengths ($768$) and generation caps ($640$).
-    \item \textbf{Entity-Level Clustering vs. Monolithic Erasure:} Unlearning an isolated question-answer fact fails to erase the underlying entity when related contextual facts persist in memory. True forgetting requires cohesive unlearning over the entity's complete multi-fact cluster.
-\end{enumerate}
-Finally, we build and deploy \textbf{ForgetLab}, a turnkey, modular, and reversible unlearning studio featuring interactive side-by-side verification, multi-metric script-aware judging, Wilson 95\% confidence interval reporting, and zero-blocklist LoRA weight updates.
-
-\vspace{0.5cm}
-\noindent\textbf{Keywords:} Machine Unlearning, Cross-Lingual NLP, Large Language Models, Low-Rank Adaptation (LoRA), Negative Preference Optimization (NPO), Indic NLP, Dravidian Languages, Privacy.
-
-\newpage
-
-% ═══════════════════════════════════════════════════════════════════════════════
+% ─────────────────────────────────────────────────────────────────────────────
 % ACKNOWLEDGEMENTS
-% ═══════════════════════════════════════════════════════════════════════════════
+% ─────────────────────────────────────────────────────────────────────────────
+\newpage
 \chapter*{Acknowledgements}
 \addcontentsline{toc}{chapter}{Acknowledgements}
 
-I would like to express my sincere gratitude to our Computing Laboratory faculty advisors and instructors for their invaluable guidance, constructive feedback, and continuous encouragement throughout the course of this research project. Their insightful suggestions on multilingual evaluation, parameter-efficient fine-tuning, and empirical rigor greatly helped shape this investigation.
+I would like to express my sincere appreciation and gratitude to our Computing Laboratory course instructors and faculty advisors in the Department of Computer Science and Engineering at IIT Kharagpur. Their guidance, rigorous feedback, and insightful discussions on natural language processing, parameter-efficient fine-tuning, and empirical evaluation frameworks provided continuous direction throughout this project.
 
-I am deeply thankful to my peer collaborator, Harshit Pandey, whose dedicated efforts in benchmark curation, knowledge injection checkpoints, and IndicTrans2 translation scripts formed a robust foundation for our cross-lingual experiments.
+I am deeply grateful to my teammate, Harshit Pandey, whose dedicated efforts in curated dataset ingestion, translation pipelines via IndicTrans2, and baseline knowledge injection provided a reliable empirical foundation for our cross-lingual unlearning evaluations.
 
-Finally, I acknowledge the open-source and research communities behind Meta AI's Llama-3.2, HuggingFace Transformers, PEFT, AI4Bharat's IndicTrans2, and Kaggle Cloud for providing the high-performance GPU compute that enabled the experimental phases of this work.
+I also extend my heartfelt thanks to the open-source community and research teams behind Meta AI's Llama-3.2, Hugging Face Transformers, PEFT, AI4Bharat, and Kaggle Cloud Compute. The provision of high-performance cloud GPUs (NVIDIA Tesla T4) was instrumental in running our fine-tuning runs, multi-metric unlearning jobs, and cross-lingual probe suites.
 
-\vspace{1cm}
+Finally, I thank my family and peers for their continuous moral support and encouragement during the course of my M.Tech studies.
+
+\vspace{1.5cm}
 \begin{flushright}
-\textbf{Nitish Kumar}
+\textbf{Nitish Kumar}\\
+Roll No: 24CS60R10\\
+Department of Computer Science and Engineering\\
+Indian Institute of Technology Kharagpur
 \end{flushright}
 
+% ─────────────────────────────────────────────────────────────────────────────
+% ABSTRACT
+% ─────────────────────────────────────────────────────────────────────────────
 \newpage
+\chapter*{Abstract}
+\addcontentsline{toc}{chapter}{Abstract}
 
-% ═══════════════════════════════════════════════════════════════════════════════
-% TABLES OF CONTENTS & FIGURES
-% ═══════════════════════════════════════════════════════════════════════════════
+As large language models (LLMs) are deployed across critical public, legal, and enterprise domains, honoring individual privacy and regulatory mandates—most notably the ``Right to be Forgotten'' under the European General Data Protection Regulation (GDPR, Article 17) and India's Digital Personal Data Protection Act (DPDPA 2023)—has emerged as a vital challenge. Traditional machine unlearning methodologies have overwhelmingly operated under the assumption of monolingual English corpora. However, contemporary frontier LLMs are fundamentally multilingual, sharing deep latent representation spaces across diverse linguistic families. Consequently, unlearning a sensitive fact exclusively in one language (such as English or Hindi) risks leaving the identical concept fully accessible and retrievable in another (such as Kannada), exposing severe cross-lingual privacy leakage.
+
+In this project, we conduct an extensive empirical and architectural investigation into cross-lingual machine unlearning targeting \texttt{meta-llama/Llama-3.2-1B} across three typologically diverse languages: \textbf{English} (high-resource, Germanic), \textbf{Hindi} (mid-resource, Indo-Aryan), and \textbf{Kannada} (low-resource, Dravidian). Built upon a cross-lingually translated adaptation of the synthetic TOFU (Task of Fictitious Unlearning) benchmark using IndicTrans2, we evaluate three prominent unlearning paradigms: (i) Naive Gradient Ascent (GA), (ii) Bounded Negative Preference Optimization (NPO) anchored by a Kullback-Leibler (KL) retain penalty, and (iii) Supervised Refusal Tuning.
+
+Our primary empirical and engineering findings include:
+\begin{enumerate}
+    \item \textbf{Catastrophic Degeneration of Naive Gradient Ascent:} Unconstrained gradient ascent induces acute representation collapse within 20 optimization steps, yielding severe token repetition (repetition ratio $> 0.95$) and total utility degradation across all languages.
+    \item \textbf{The Kannada Token Fertility Bottleneck:} We uncover that low baseline accuracy in Kannada ($12\%$) was not caused by semantic inability, but by an extreme tokenizer fertility rate ($\approx 13.84$ tokens per word on LLaMA's byte-fallback tokenizer), causing severe generation truncation under standard caps. Expanding sequence caps to 768 training tokens and 640 generation tokens completely resolves the issue, restoring fluent generation.
+    \item \textbf{Cross-Lingual Asymmetry:} Unlearning in English transfers moderately to Hindi ($74\%$) but poorly to Kannada ($58\%$), demonstrating that language typology directly impacts latent concept erasure.
+    \item \textbf{Entity-Level Clustering Requirement:} Excising an isolated question-answer fact is ineffective because the model reconstructs the identity from surviving biographical associations. Reliable erasure requires cohesive multi-fact entity-level unlearning across all 20 biographical attributes.
+\end{enumerate}
+
+To operationalize our findings, we develop \textbf{ForgetLab}, a turnkey, modular, and reversible unlearning studio featuring multi-metric script-aware judging, Wilson 95\% score intervals, real-time degeneration abort harnesses, and instantaneous LoRA adapter rollbacks.
+
+\vspace{0.8cm}
+\noindent\textbf{Keywords:} Machine Unlearning, Cross-Lingual NLP, Large Language Models, Low-Rank Adaptation (LoRA), Negative Preference Optimization, Indic NLP, Privacy Preservation.
+
+% ─────────────────────────────────────────────────────────────────────────────
+% LIST OF TABLES, FIGURES, AND CONTENTS
+% ─────────────────────────────────────────────────────────────────────────────
+\newpage
 \tableofcontents
+
+\newpage
 \listoffigures
+
+\newpage
 \listoftables
 
+% ─────────────────────────────────────────────────────────────────────────────
+% LIST OF ABBREVIATIONS
+% ─────────────────────────────────────────────────────────────────────────────
 \newpage
+\chapter*{List of Abbreviations}
+\addcontentsline{toc}{chapter}{List of Abbreviations}
+
+\begin{table}[H]
+\centering
+\begin{tabularx}{\textwidth}{lX}
+\toprule
+\textbf{Abbreviation} & \textbf{Expansion / Description} \\
+\midrule
+\textbf{LLM} & Large Language Model \\
+\textbf{LoRA} & Low-Rank Adaptation \\
+\textbf{PEFT} & Parameter-Efficient Fine-Tuning \\
+\textbf{NPO} & Negative Preference Optimization \\
+\textbf{DPO} & Direct Preference Optimization \\
+\textbf{GA} & Gradient Ascent \\
+\textbf{GDPR} & General Data Protection Regulation (European Union) \\
+\textbf{DPDPA} & Digital Personal Data Protection Act (India 2023) \\
+\textbf{TOFU} & Task of Fictitious Unlearning Benchmark \\
+\textbf{PII} & Personally Identifiable Information \\
+\textbf{KL} & Kullback-Leibler (Divergence) \\
+\textbf{NLL} & Negative Log-Likelihood \\
+\textbf{BPE} & Byte-Pair Encoding \\
+\textbf{VRAM} & Video Random Access Memory \\
+\textbf{CI} & Confidence Interval \\
+\textbf{QA} & Question and Answer \\
+\textbf{MLP} & Multi-Layer Perceptron (Feed-Forward Network) \\
+\textbf{CUDA} & Compute Unified Device Architecture (NVIDIA) \\
+\textbf{GPU} & Graphics Processing Unit \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% MAIN BODY: ARABIC PAGE NUMBERING
+% ═══════════════════════════════════════════════════════════════════════════════
+\newpage
+\pagenumbering{arabic}
 
 % ═══════════════════════════════════════════════════════════════════════════════
 % CHAPTER 1: INTRODUCTION
@@ -190,288 +277,325 @@ Finally, I acknowledge the open-source and research communities behind Meta AI's
 \label{chap:intro}
 
 \section{Background and Motivation}
-Recent advances in generative Artificial Intelligence (GenAI) have demonstrated that Large Language Models (LLMs), such as LLaMA \cite{dubey2024llama3}, GPT-4, and PaLM, exhibit superhuman capabilities across reasoning, code synthesis, and translation. However, these models acquire their general competence by ingesting vast, web-scale corpora that frequently contain Personally Identifiable Information (PII), copyrighted literary works, medical records, and factual inaccuracies \cite{carlini2021extracting}. 
+In recent years, the deployment of autoregressive Large Language Models (LLMs) has transformed natural language processing, demonstrating unprecedented capabilities across conversational agents, automated reasoning, source code generation, and multi-lingual translation \cite{vaswani2017attention, dubey2024llama3}. These models acquire their linguistic competence by ingesting vast, web-scale text corpora comprising hundreds of billions to trillions of tokens. However, the uncurated nature of web-scale pre-training data inevitably leads to the unintentional memorization of sensitive private information, including Personally Identifiable Information (PII), proprietary source code, confidential medical notes, and copyrighted artistic works \cite{carlini2021extracting}.
 
-Under emerging data privacy regimes worldwide---including the European Union General Data Protection Regulation (GDPR, Article 17) and the California Consumer Privacy Act (CCPA)---individuals possess the legally enforceable ``Right to be Forgotten''. When an individual revokes consent for their data to be retained, or when a copyright holder requests content removal, model deployers must excise that specific information from the model's parameters. 
+Concurrently, international legal frameworks have established rigorous data privacy regulations. Under the European Union's General Data Protection Regulation (GDPR, Article 17), the California Consumer Privacy Act (CCPA), and India's Digital Personal Data Protection Act (DPDPA 2023), individuals are endowed with the legally enforceable ``Right to be Forgotten''. When an individual revokes consent for their personal data to be processed or retained, organizations are mandated to purge all traces of that data from their operational systems, including deployed predictive models.
 
-Retraining a state-of-the-art LLM from a modified dataset is computationally prohibitive, costing millions of dollars and weeks of GPU cluster execution. This economic and computational barrier has motivated the discipline of \textbf{Machine Unlearning} \cite{bourtoule2021machine, yao2023survey}: the algorithmic process of updating an already-trained model's parameters such that target private data is completely eliminated, while preserving model utility, fluency, and unrelated general knowledge.
+In classical database systems, honoring a deletion request is a deterministic operation involving row or record removal. In contrast, modern neural networks store learned information diffusely across billions of continuous floating-point weights. The only guaranteed approach to eliminate an ingested data point from a neural model is to discard the entire checkpoint and retrain the model from scratch on the sanitized dataset. For frontier LLMs, retraining requires weeks of execution across large-scale GPU clusters, incurring millions of dollars in compute expenditure and significant environmental carbon footprint. Consequently, exact retraining is practically impossible for routine data deletion requests.
+
+This economic and computational bottleneck has driven the emergence of \textbf{Machine Unlearning} \cite{bourtoule2021machine, yao2023survey}. Machine unlearning seeks to surgically modify an existing model's parameters such that target private knowledge is eliminated, while simultaneously preserving general reasoning abilities, language fluency, and unrelated factual knowledge.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{figures/tradeoff.png}
-    \caption{The Fundamental Privacy--Utility Trade-off in Machine Unlearning: Balancing target fact erasure against general knowledge retention and fluency preservation.}
+    \includegraphics[width=0.72\textwidth]{figures/tradeoff.png}
+    \caption{The fundamental privacy versus utility trade-off in machine unlearning: Achieving complete fact erasure without degrading model fluency or unrelated factual retention.}
     \label{fig:tradeoff_concept}
 \end{figure}
 
-\section{The Cross-Lingual Unlearning Dilemma}
-Existing machine unlearning research has overwhelmingly evaluated models on monolingual English datasets, such as TOFU \cite{maini2024tofu}. However, modern LLMs operate globally in polyglot environments. Multilingual pretraining naturally forces shared internal representations across languages. When an entity or concept is learned, the underlying semantic representation resides in an interconnected latent space across linguistic boundaries.
+\section{The Cross-Lingual Machine Unlearning Challenge}
+The vast majority of existing machine unlearning literature evaluates algorithms exclusively on monolingual English benchmarks, such as the Task of Fictitious Unlearning (TOFU) \cite{maini2024tofu}. However, modern LLMs are trained on multi-lingual datasets and internally map tokens from diverse languages into shared, language-agnostic semantic latent spaces \cite{conneau2019unsupervised}. When a model learns a real-world or biographical fact, the underlying concept is distributed across associative memory networks that bridge linguistic boundaries.
 
-This creates the \textbf{Cross-Lingual Unlearning Dilemma}:
+This shared architecture introduces the \textbf{Cross-Lingual Unlearning Dilemma}:
 \begin{quote}
-\textit{If a model is instructed to forget a private biographical fact presented in English or Hindi, does the model truly erase the underlying concept, or does the knowledge remain latent and fully retrievable when queried in a typologically distant language such as Kannada?}
+\textit{If a model is optimized to unlearn a sensitive biographical fact presented in English, does the model genuinely delete the underlying factual entity from its latent representation, or does the information remain latent and easily retrievable when queried in another language such as Hindi or Kannada?}
 \end{quote}
 
-If unlearning in language $L_A$ fails to generalize to language $L_B$, a malicious or curious prompter can execute cross-lingual privacy attacks simply by translating their prompt into an alternate language, completely bypassing English-centric unlearning protocols.
+If unlearning in a source language $L_A$ fails to propagate to target language $L_B$, a malicious or curious user can easily extract private information simply by translating their prompt into an alternate language. Such cross-lingual privacy leakage completely undermines privacy compliance guarantees in multilingual regions like India, where multiple official languages coexist.
 
-\section{Research Questions (RQs)}
-This thesis addresses four core research questions:
-\begin{itemize}
-    \item \textbf{RQ1 (Cross-Lingual Transfer):} To what extent does unlearning a fact in a high-resource language (English) or mid-resource language (Hindi) transfer cross-lingually to a low-resource Dravidian language (Kannada)?
-    \item \textbf{RQ2 (Algorithmic Stability vs. Degeneration):} How do unconstrained Gradient Ascent (GA), Negative Preference Optimization (NPO), and Refusal Tuning compare in terms of optimization stability, text degeneracy, and retention?
-    \item \textbf{RQ3 (Reversibility and Parameter Plasticity):} Does LoRA-based unlearning truly excise facts from the weight space, or can unlearned associations be rapidly revived through few-shot exposure to related context?
-    \item \textbf{RQ4 (Linguistic Bottlenecks in Low-Resource Scripts):} What specific architectural and tokenization barriers arise when applying unlearning to Dravidian languages with high agglutination and subword fertility?
-\end{itemize}
-
-\section{Contributions of this Thesis}
-The primary contributions of this project are:
+\section{Problem Statement}
+Let $\mathcal{M}_\theta$ denote an autoregressive language model parameterized by $\theta$. Let $\mathcal{D}_f$ denote a designated private ``forget'' dataset comprising sensitive question-answer pairs, and let $\mathcal{D}_r$ denote a ``retain'' dataset of general facts that must remain intact. The goal of cross-lingual machine unlearning is to compute an updated parameter configuration $\theta^*$ that satisfies two simultaneous objectives across all supported languages $\ell \in \{EN, HI, KN\}$:
 \begin{enumerate}
-    \item \textbf{Cross-Lingual TOFU Benchmark:} We construct a tri-lingual synthetic unlearning benchmark across English, Hindi, and Kannada, translating fictitious author biographies using high-quality IndicTrans2 models with human linguistic sanity verification.
-    \item \textbf{Empirical Analysis of Unlearning Algorithms:} We perform a rigorous evaluation of Gradient Ascent, NPO with KL divergence anchoring, and Refusal Tuning, tracking per-token Negative Log-Likelihood (NLL), cross-lingual leakage matrices, and Wilson 95\% confidence intervals.
-    \item \textbf{Diagnosis and Resolution of the Kannada Bottleneck:} We identify the root cause behind poor Kannada baseline scores (extreme token fertility of $\approx 14$ tokens/word and prompt truncation) and resolve it via sequence length extensions ($768$) and custom multi-metric script purity judges.
-    \item \textbf{ForgetLab Studio:} We engineer an open-source, interactive, 5-tab web studio enabling real-time side-by-side verification, instantaneous LoRA rollback, live loss telemetry, and automated snapshot selection with zero keyword blocklists.
+    \item \textbf{Complete Privacy Erasure:} For all queries $x^f_\ell \in \mathcal{D}_f$, the model's likelihood of predicting the private answer $y^f_\ell$ is suppressed to baseline levels or replaced by a non-private response.
+    \item \textbf{General Utility Preservation:} For all queries $x^r_\ell \in \mathcal{D}_r$, the model preserves its original accuracy, linguistic fluency, and factual recall without degradation.
 \end{enumerate}
 
-\section{Report Outline}
-The remainder of this report is organized as follows: Chapter 2 reviews theoretical foundations and related literature. Chapter 3 presents the system architecture of the ForgetLab framework. Chapter 4 provides the mathematical formulations and algorithms. Chapter 5 analyzes the Indic dataset adaptation and Kannada tokenization anomalies. Chapter 6 details experimental configurations and GPU setups. Chapter 7 presents empirical findings and comparative trade-off analyses. Chapter 8 describes the ForgetLab Studio interface. Chapter 9 discusses limitations and ethical considerations. Chapter 10 concludes the report.
+\section{Research Questions}
+This investigation systematically examines the following research questions:
+\begin{itemize}
+    \item \textbf{RQ1 (Cross-Lingual Transfer):} Does parameter-efficient unlearning conducted in a high-resource language (English) or a mid-resource language (Hindi) generalize cross-lingually to a low-resource Dravidian language (Kannada)?
+    \item \textbf{RQ2 (Algorithmic Stability vs. Degeneration):} How do unconstrained Gradient Ascent (GA), Bounded Negative Preference Optimization (NPO), and Supervised Refusal Tuning compare in optimization stability, avoidance of repetitive loops, and retention of utility?
+    \item \textbf{RQ3 (Entity-Level vs. Fact-Level Unlearning):} Can unlearning an isolated single-sentence fact successfully conceal an entity, or does the persistence of surrounding biographical facts enable the model to infer and reconstruct the private data?
+    \item \textbf{RQ4 (Linguistic Bottlenecks in Indic Scripts):} What role does tokenizer fertility and subword segmentation play in evaluating low-resource Dravidian languages during unlearning?
+\end{itemize}
 
-\newpage
+\section{Key Contributions}
+The key contributions of this project are:
+\begin{enumerate}
+    \item \textbf{Tri-Lingual TOFU Benchmark:} We construct a tri-lingual synthetic unlearning benchmark across English, Hindi, and Kannada by adapting the TOFU dataset using IndicTrans2, complete with human linguistic sanity verification.
+    \item \textbf{Empirical Analysis of Unlearning Paradigms:} We perform extensive empirical evaluations of Gradient Ascent, NPO with KL retain anchoring, and Refusal Tuning on \texttt{Llama-3.2-1B}, measuring token-level Negative Log-Likelihood (NLL), cross-lingual leakage matrices, and Wilson 95\% score intervals.
+    \item \textbf{Diagnosis and Resolution of the Kannada Fertility Anomaly:} We uncover the root cause behind artificially depressed Kannada baseline scores ($\approx 13.84$ tokens/word on LLaMA's byte-fallback tokenizer) and resolve it via sequence length extensions ($768$ tokens) and generous generation caps ($640$ tokens).
+    \item \textbf{Entity-Level Clustering Discovery:} We demonstrate empirically that single-fact unlearning is vulnerable to associative recovery, establishing that complete privacy requires unlearning the entire 20-fact biographical cluster of an entity.
+    \item \textbf{The ForgetLab Platform:} We design, implement, and deploy \textbf{ForgetLab}, a full-featured web-based unlearning studio with 5 dedicated operational tabs, real-time degeneration abort harnesses, side-by-side verification, and zero-blocklist LoRA adapter management.
+\end{enumerate}
+
+\section{Organization of the Project Report}
+The remainder of this report is organized as follows:
+\begin{itemize}
+    \item \textbf{Chapter 2} surveys related literature on machine unlearning, preference optimization, parameter-efficient fine-tuning, and multilingual latent spaces.
+    \item \textbf{Chapter 3} details the system architecture and design principles of the ForgetLab framework.
+    \item \textbf{Chapter 4} discusses the cross-lingual dataset adaptation, typological language differences, and the Kannada tokenization bottleneck.
+    \item \textbf{Chapter 5} presents the unlearning formulations, evaluation judge logic, and statistical verification metrics.
+    \item \textbf{Chapter 6} outlines the experimental infrastructure, GPU configuration, and training hyperparameters.
+    \item \textbf{Chapter 7} provides empirical results, leakage matrices, algorithmic comparisons, and discussion.
+    \item \textbf{Chapter 8} presents the interactive ForgetLab Studio dashboard and user interface.
+    \item \textbf{Chapter 9} discusses technical challenges, ethical implications, and study limitations.
+    \item \textbf{Chapter 10} concludes the report and identifies promising directions for future research.
+\end{itemize}
 
 % ═══════════════════════════════════════════════════════════════════════════════
-% CHAPTER 2: RELATED WORK & THEORETICAL BACKGROUND
+% CHAPTER 2: LITERATURE REVIEW & THEORETICAL FOUNDATIONS
 % ═══════════════════════════════════════════════════════════════════════════════
-\chapter{Literature Review \& Theoretical Background}
+\chapter{Literature Review \& Theoretical Foundations}
 \label{chap:lit_review}
 
-\section{Taxonomy of Machine Unlearning}
-Machine unlearning was formally conceptualized by Bourtoule et al. \cite{bourtoule2021machine} for classical statistical models through sharded data partitioning (SISA). However, modern transformer-based autoregressive LLMs contain billions of parameters trained over trillions of tokens, rendering exact SISA partitioning inapplicable. Consequently, research has bifurcated into two primary paradigms:
+\section{Privacy and Knowledge Memorization in Large Language Models}
+The scaling of transformer architectures has unlocked remarkable emergent reasoning capabilities in LLMs \cite{vaswani2017attention, dubey2024llama3}. However, extensive research in AI safety and data governance has demonstrated that these models exhibit unintended memorization of training instances \cite{carlini2021extracting}. Carlini et al. demonstrated that targeted extraction attacks can recover verbatim personal phone numbers, physical addresses, cryptographic secrets, and proprietary source code from trained model weights. 
+
+Furthermore, memorization is not restricted to high-frequency training phrases; rare facts appearing only a few times can be memorized and retained indefinitely. In response to regulatory mandates such as GDPR and CCPA, machine unlearning has emerged as an essential requirement for lawful model deployment \cite{bourtoule2021machine, yao2023survey}.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{figures/adapter_layer_norms.png}
-    \caption{Distribution of parameter norms across Transformer layers under Low-Rank Adaptation (LoRA), demonstrating localized parameter edits.}
+    \caption{Distribution of parameter norms across Transformer layers under Low-Rank Adaptation (LoRA), showing localized weight adjustments concentrated in intermediate MLP layers.}
     \label{fig:layer_norms}
 \end{figure}
 
+\section{Taxonomy of Machine Unlearning Approaches}
+Machine unlearning methods can be broadly categorized into two major paradigms:
 \begin{enumerate}
-    \item \textbf{Exact Unlearning:} Provably producing a model whose parameter distribution is identical to a model trained from scratch on dataset $\mathcal{D} \setminus \mathcal{D}_f$. Outside of linear models, exact unlearning remains an open theoretical challenge.
-    \item \textbf{Approximate Unlearning:} Applying optimization updates to parameters $\theta$ such that the probability of generating target private tokens $y^f$ given prompt $x^f$ is minimized, while output distributions on unrelated retain data $\mathcal{D}_r$ are strictly preserved:
-    \begin{equation}
-        p_{\theta'}(y^f | x^f) \approx p_{base}(y^f | x^f) \quad \text{or} \quad p_{\theta'}(y^f | x^f) \to 0
-    \end{equation}
+    \item \textbf{Exact Unlearning:} Methods that guarantee the resulting parameter distribution is mathematically indistinguishable from a model retrained from scratch on $\mathcal{D} \setminus \mathcal{D}_f$. SISA (Sharded, Isolated, Sliced, and Aggregated) training \cite{bourtoule2021machine} partitions data into shards to isolate retraining. While exact unlearning is tractable for small models and linear classifiers, it is computationally infeasible for multi-billion-parameter autoregressive LLMs.
+    \item \textbf{Approximate Unlearning:} Methods that directly update model parameters $\theta$ through targeted optimization, driving down the probability of generating target private tokens while preserving utility on retain corpora. Approximate unlearning is the primary viable strategy for modern generative language models.
 \end{enumerate}
 
-\section{The TOFU Benchmark}
-Evaluating unlearning on real-world facts learned during pre-training is notoriously confounded: if a model fails to answer a question, one cannot easily differentiate whether it successfully unlearned the fact, or never encoded it initially \cite{maini2024tofu}. 
+\section{Gradient-Based Unlearning Formulations}
+Several optimization-based unlearning algorithms have been explored in recent literature:
 
-The \textbf{Task of Fictitious Unlearning (TOFU)} \cite{maini2024tofu} eliminates this confound through a clean two-stage protocol:
-\begin{enumerate}
-    \item \textbf{Knowledge Injection:} 200 fictitious author biographies (composed of synthetically generated QA pairs regarding birthplaces, genres, parents' professions, and fictional book titles) are fine-tuned into a clean base model.
-    \item \textbf{Controlled Unlearning:} An unlearning algorithm is provided with a designated forget split $\mathcal{D}_f$ (e.g., forget01, forget05, or forget10 representing 1\%, 5\%, or 10\% of the injected entities) and a retain split $\mathcal{D}_r$.
-\end{enumerate}
-
-\section{Unlearning Objectives}
 \subsection{Gradient Ascent (GA)}
-The most intuitive baseline is Gradient Ascent \cite{jang2022towards}, which inverts the empirical risk minimization objective on forget pairs:
-\begin{equation}
-    \mathcal{L}_{GA}(\theta) = - \mathbb{E}_{(x, y) \in \mathcal{D}_f} \left[ \log p_\theta(y | x) \right]
-\end{equation}
-While computationally straightforward, GA suffers from mathematical instability: as $p_\theta(y | x) \to 0$, the loss $-\log p_\theta(y | x) \to \infty$. The gradients rapidly explode, destroying attention weights and rendering the model degenerate \cite{maini2024tofu}.
+Gradient Ascent \cite{jang2022towards} inverts the standard empirical risk minimization objective by maximizing the loss on private training pairs. Although conceptually simple, GA is fundamentally unconstrained: as the target token probability approaches zero, the loss approaches infinity. This leads to exploding gradients that destroy surrounding weights and cause representation collapse \cite{maini2024tofu}.
 
 \subsection{Negative Preference Optimization (NPO)}
-To prevent gradient explosion, Zhang et al. \cite{zhang2024npo} proposed Negative Preference Optimization, adapting principles from Direct Preference Optimization (DPO) \cite{rafailov2023dpo}. NPO treats the target answer as a dispreferred negative completion against a frozen reference model $\theta_{ref}$:
-\begin{equation}
-    \mathcal{L}_{NPO}(\theta) = \frac{2}{\beta} \log \left( 1 + \left( \frac{p_\theta(y^f | x^f)}{p_{ref}(y^f | x^f)} \right)^\beta \right)
-\end{equation}
-Because the sigmoid derivative saturates as the likelihood ratio drops, NPO gradients naturally vanish once unlearning is achieved, avoiding parameter destruction.
+To overcome gradient explosion, Zhang et al. \cite{zhang2024npo} introduced Negative Preference Optimization, adapting principles from Direct Preference Optimization (DPO) \cite{rafailov2023dpo}. NPO treats the target answer as a negative completion against a frozen reference model. Because the loss derivative contains a natural sigmoid saturation term, the gradient smoothly diminishes as the model unlearns the target fact, preventing destructive parameter drift.
 
-\section{Low-Rank Adaptation (LoRA) for Removable Unlearning}
-Instead of destructively overwriting pre-trained weights $W_0 \in \mathbb{R}^{d \times k}$, Low-Rank Adaptation (LoRA) \cite{hu2021lora} parameterizes weight changes via low-rank decomposition matrices $B \in \mathbb{R}^{d \times r}$ and $A \in \mathbb{R}^{r \times k}$ with rank $r \ll \min(d, k)$:
+\subsection{Task Arithmetic and Representation Editing}
+Task arithmetic \cite{ilharco2022editing} edits model capabilities by subtracting weight vectors derived from fine-tuning on undesirable tasks. In parallel, representation editing techniques such as ROME \cite{meng2022locating} and MEMIT \cite{meng2022mass} directly rewrite associative memories stored in the multi-layer perceptron (MLP) key-value projections \cite{geva2020transformer}. While effective for isolated English facts, editing internal representations across multiple languages remains challenging.
+
+\section{Parameter-Efficient Fine-Tuning via LoRA}
+Updating all parameters during unlearning can inadvertently damage core linguistic capabilities. Low-Rank Adaptation (LoRA) \cite{hu2021lora} addresses this by freezing pre-trained model weights $W_0 \in \mathbb{R}^{d \times k}$ and injecting trainable rank-decomposition matrices $B \in \mathbb{R}^{d \times r}$ and $A \in \mathbb{R}^{r \times k}$, with rank $r \ll \min(d, k)$:
 \begin{equation}
     W = W_0 + \Delta W = W_0 + \frac{\alpha}{r} B A
 \end{equation}
-Using LoRA for unlearning provides three critical properties:
+In the context of machine unlearning, LoRA provides three vital benefits:
 \begin{itemize}
-    \item \textbf{Parameter Isolation:} Unlearning is isolated to $\Delta W$, occupying only $\approx 0.31\%$ of base parameters ($\sim 15$ MB).
-    \item \textbf{Zero Re-training Reversibility:} The unlearned state can be rolled back instantly by disabling or removing the LoRA adapter.
-    \item \textbf{Zero Blocklists:} Unlearning alters the generation likelihoods at the foundational weight level, without superficial regex keyword filters.
+    \item \textbf{Compact Parameter Storage:} Unlearning edits are isolated within low-rank adapters occupying only 15 MB to 30 MB, compared to gigabytes for full-model weights.
+    \item \textbf{Instant Reversibility:} An unlearned adapter can be detached dynamically at runtime, instantly reverting the model to its base state without re-training.
+    \item \textbf{Non-Destructive Safety:} The foundational base weights remain pristine, preventing permanent corruption of general reasoning faculties.
 \end{itemize}
 
-\newpage
+\section{Cross-Lingual Representation in LLMs}
+Modern transformer models exhibit cross-lingual transfer due to multilingual pre-training \cite{conneau2019unsupervised}. Latent representations in intermediate layers align semantically across languages. While this alignment enables zero-shot translation, it presents a vulnerability for unlearning: unlearning a fact in English may fail to modify the shared semantic node, allowing the knowledge to leak when probed in Hindi or Kannada.
+
+\section{The TOFU Benchmark and its Limitations}
+The Task of Fictitious Unlearning (TOFU) \cite{maini2024tofu} provides a standardized benchmark consisting of 200 fictitious author biographies (4,000 QA pairs). By injecting purely synthetic identities into a base model, TOFU eliminates the confounding factor of prior pre-training memorization. However, TOFU is strictly monolingual English. In this work, we bridge this gap by creating a multilingual adaptation across English, Hindi, and Kannada.
 
 % ═══════════════════════════════════════════════════════════════════════════════
-% CHAPTER 3: FORGETLAB ARCHITECTURE
+% CHAPTER 3: SYSTEM ARCHITECTURE & FORGETLAB FRAMEWORK
 % ═══════════════════════════════════════════════════════════════════════════════
 \chapter{System Architecture \& ForgetLab Framework}
 \label{chap:arch}
 
-\section{System Overview}
-The ForgetLab architecture is structured into four decoupled layers: the \textbf{Data Ingestion Layer}, the \textbf{Model Execution Engine}, the \textbf{Background Worker Daemon}, and the \textbf{Interactive Web Dashboard}. Figure \ref{fig:arch_diagram} illustrates the end-to-end dataflow.
+\section{Architecture Overview}
+The ForgetLab platform is designed as an end-to-end, modular, and reproducible research studio for cross-lingual unlearning. The system is architected into four decoupled layers:
+\begin{enumerate}
+    \item \textbf{Data Ingestion Layer:} Parses, formats, and aligns multilingual question-answer pairs and retains evaluation corpora across English, Hindi, and Kannada.
+    \item \textbf{Model Execution Engine (\texttt{ModelHost}):} Manages dynamic LoRA adapter attachment, multi-precision forward passes, memory caching, and zero-overhead rollback.
+    \item \textbf{Background Worker Daemon:} Handles asynchronous job dispatch, progress telemetry logging, and degeneration safety monitoring.
+    \item \textbf{Interactive User Interface:} A 5-tab Gradio dashboard providing interactive query consoles, live training curves, automated verification cards, and adapter lifecycle management.
+\end{enumerate}
 
 \begin{figure}[H]
     \centering
-    \begin{tcolorbox}[colback=white,colframe=darkblue,title=\textbf{ForgetLab Pipeline Architecture},fonttitle=\bfseries]
-    \centering
+    \begin{tcolorbox}[colback=white,colframe=darkblue,title=\textbf{ForgetLab End-to-End Execution Flow},fonttitle=\bfseries]
     \small
-    \begin{algorithmic}[1]
-        \State \textbf{Input:} Target Fact $(x^f, y^f)$ + Retain Corpus $\mathcal{D}_r$ + Target Languages $\mathcal{L} \in \{EN, HI, KN\}$
-        \State \textbf{Phase 1: Knowledge Base Preparation}
-        \State \quad Load Injected Base Checkpoint $\theta_{injected} = \text{Merge}(\theta_{base}, \Delta W_{injected})$
-        \State \textbf{Phase 2: Surgical Unlearning Loop}
-        \State \quad Initialize LoRA Adapter $\Delta W_{unlearn}$ on target projections
-        \State \quad \textbf{For} step $t = 1 \dots T$:
-        \State \quad\quad Compute $\mathcal{L}_{forget}(\Delta W) = \mathcal{L}_{NPO}(\theta_{injected} + \Delta W)$
-        \State \quad\quad Compute $\mathcal{L}_{retain}(\Delta W) = D_{KL}(\theta_{injected} \parallel \theta_{injected} + \Delta W)$
-        \State \quad\quad $\mathcal{L}_{total} = \mathcal{L}_{forget} + \lambda_{retain} \mathcal{L}_{retain}$
-        \State \quad\quad Update $\Delta W$ via AdamW ($\text{fp16}$ mixed-precision)
-        \State \quad\quad Check Degeneration: $\text{rep\_ratio}(x^f) \ge 0.5 \implies \text{Abort and Restore Clean Snapshot}$
-        \State \textbf{Phase 3: Multi-Metric Automated Verification}
-        \State \quad Execute 162 evaluation probes across English, Hindi, and Kannada
-        \State \quad Compute 4-tier verdicts, Wilson 95\% CIs, and NLL deltas
-        \State \textbf{Output:} Removable LoRA Checkpoint + Comprehensive Verification Report Card
-    \end{algorithmic}
+    \begin{enumerate}
+        \item \textbf{Fact Selection:} Select target unlearning entity (single fact or full author cluster) and target languages ($\{EN, HI, KN\}$).
+        \item \textbf{Base Setup:} Load base injected model $\theta_{injected} = \theta_{base} + \Delta W_{injected}$ into memory.
+        \item \textbf{Optimization Loop:}
+        \begin{itemize}
+            \item Compute NPO bounded forget loss on target pairs.
+            \item Compute KL divergence retain loss against reference model.
+            \item Update LoRA adapter $\Delta W_{unlearn}$ using AdamW with mixed-precision.
+            \item Run degeneration probe every 5 steps. If repetitive loops occur, abort and restore clean snapshot.
+        \end{itemize}
+        \item \textbf{Verification Phase:} Evaluate 162 probe queries across all three languages; classify responses via 4-tier judge; compute Wilson 95\% confidence intervals.
+        \item \textbf{Artifact Delivery:} Persist removable LoRA adapter, metrics JSON, and verification report card.
+    \end{enumerate}
     \end{tcolorbox}
-    \caption{Algorithmic pipeline of the ForgetLab unlearning and verification framework.}
-    \label{fig:arch_diagram}
+    \caption{Overview of the ForgetLab unlearning, monitoring, and verification pipeline.}
+    \label{fig:pipeline_flow}
 \end{figure}
 
-\section{ModelHost and Adapter Stack Engine}
-To enable instant switching between the base injected model and unlearned states without reloading multi-gigabyte models into VRAM, ForgetLab implements a stateful \texttt{ModelHost} engine:
+\section{The ModelHost Dynamic Adapter Stack}
+A core engineering challenge in interactive unlearning research is the high latency of repeatedly loading multi-gigabyte neural checkpoints into GPU VRAM. ForgetLab addresses this via the \texttt{ModelHost} engine, which keeps the base model resident in memory and manages a dynamic stack of lightweight LoRA adapters:
 \begin{itemize}
-    \item \texttt{reset\_to\_injected()}: Disables all active unlearning adapters and restores the canonical base injected weights.
-    \item \texttt{push\_adapter(job\_id, dir)}: Dynamically attaches an unlearned LoRA adapter into the forward pass.
-    \item \texttt{pop\_adapter()}: Dynamically removes the top adapter, enabling instantaneous rollback.
+    \item \texttt{reset\_to\_injected()}: Deactivates any active unlearning adapters and restores original base-injected behavior.
+    \item \texttt{push\_adapter(job\_id, path)}: Hot-swaps and activates an unlearned LoRA adapter into the forward computation graph.
+    \item \texttt{pop\_adapter()}: Instantly detaches the top unlearning adapter, reverting the model to its prior state in milliseconds.
 \end{itemize}
+
+\section{The Zero-Blocklist Philosophy}
+Commercial API services frequently implement unlearning through regex blocklists, system prompt refusals, or keyword filters. While such guardrails mask private terms at the decoding stage, the underlying weights remain unchanged, and knowledge can be readily extracted via paraphrasing, roleplaying, or alternate-language translation. 
+
+ForgetLab adheres strictly to a \textbf{Zero-Blocklist Policy}: all forgetting operations are executed through authentic gradient updates to the model's low-rank parameter space. No prompt-level filters or output suppression dictionaries are employed.
 
 \section{Real-Time Degeneration Safety Harness}
-A persistent flaw in unlearning frameworks is that models can silently degenerate into repetitive token loops while appearing to have achieved zero loss. ForgetLab embeds a proactive \textbf{Degeneration Safety Harness} that evaluates model generations every $K=5$ steps:
+During unconstrained unlearning, models frequently fall into degenerate token repetition loops while reporting deceptively low loss values. To safeguard against silent degeneration, ForgetLab integrates an active \textbf{Degeneration Safety Harness}. Every 5 training steps, the model generates a greedy completion on a target probe. The harness computes the 3-gram repetition ratio:
 \begin{equation}
-    \text{Repetition Ratio}(T) = 1.0 - \frac{|\text{Distinct 3-grams in } T|}{|\text{Total 3-grams in } T|}
+    \text{Repetition Ratio} = 1.0 - \frac{\text{Count of Unique 3-grams in Generated Sequence}}{\text{Total Count of 3-grams in Generated Sequence}}
 \end{equation}
-If the repetition ratio exceeds $0.50$, the harness triggers an immediate optimization abort and automatically rolls back weights to the last validated clean snapshot.
+If the repetition ratio exceeds $0.50$, the harness triggers an immediate optimization abort, halts further parameter updates, and automatically rolls back weights to the last confirmed fluent snapshot.
 
-\newpage
-
-% ═══════════════════════════════════════════════════════════════════════════════
-% CHAPTER 4: MATHEMATICAL FORMULATIONS & VERIFICATION
-% ═══════════════════════════════════════════════════════════════════════════════
-\chapter{Mathematical Formulations \& Verification Metrics}
-\label{chap:math}
-
-\section{Formal Problem Formulation}
-Let $\mathcal{M}_\theta$ denote an autoregressive language model parameterized by $\theta$. Let $\mathcal{D}_{train} = \mathcal{D}_r \cup \mathcal{D}_f$ represent the training dataset, where $\mathcal{D}_f = \{(x_i^f, y_i^f)\}_{i=1}^{N_f}$ represents the private forget split, and $\mathcal{D}_r = \{(x_j^r, y_j^r)\}_{j=1}^{N_r}$ denotes the retain corpus. The objective of cross-lingual machine unlearning is to compute an updated parameter configuration $\theta^*$ satisfying:
-
-\begin{problem}[Cross-Lingual Unlearning]
-Find $\theta^*$ such that:
-\begin{align}
-    \forall (x^f, y^f) \in \mathcal{D}_f, \forall \ell \in \{EN, HI, KN\}: & \quad p_{\theta^*}(y^f_\ell | x^f_\ell) \le \epsilon \\
-    \forall (x^r, y^r) \in \mathcal{D}_r, \forall \ell \in \{EN, HI, KN\}: & \quad D_{KL}\left( p_{\theta_{orig}}(\cdot | x^r_\ell) \parallel p_{\theta^*}(\cdot | x^r_\ell) \right) \le \delta
-\end{align}
-where $\epsilon > 0$ represents the maximum allowable leakage threshold, and $\delta > 0$ bounds retain utility degradation.
-\end{problem}
-
-\section{Loss Functions}
-\subsection{Bounded NPO Forget Loss}
-Let $\pi_\theta(y|x) = \sum_{t=1}^{|y|} \log p_\theta(y_t | x, y_{<t})$ represent the sequence log-likelihood. The NPO loss is formulated as:
-\begin{equation}
-    \mathcal{L}_{NPO}(\theta; x^f, y^f) = \frac{2}{\beta} \log \left( 1 + \exp\left( \beta \left( \pi_\theta(y^f|x^f) - \pi_{ref}(y^f|x^f) \right) \right) \right)
-\end{equation}
-Taking the gradient with respect to $\theta$:
-\begin{equation}
-    \nabla_\theta \mathcal{L}_{NPO} = 2 \cdot \sigma\left( \beta (\pi_\theta - \pi_{ref}) \right) \cdot \nabla_\theta \pi_\theta(y^f|x^f)
-\end{equation}
-where $\sigma(z) = \frac{1}{1 + e^{-z}}$. When $\pi_\theta \ll \pi_{ref}$, $\sigma(\cdot) \to 0$, naturally stopping parameter drift.
-
-\subsection{Retain Anchor Formulation}
-To guarantee that unlearning does not destroy general reasoning, we enforce a Kullback-Leibler (KL) divergence penalty against the reference model on retain batches:
-\begin{equation}
-    \mathcal{L}_{retain}(\theta; x^r, y^r) = \sum_{t=1}^{|y^r|} D_{KL}\left( p_{\theta_{ref}}(\cdot | x^r, y^r_{<t}) \parallel p_\theta(\cdot | x^r, y^r_{<t}) \right)
-\end{equation}
-The total joint objective optimized via AdamW is:
-\begin{equation}
-    \mathcal{L}_{total}(\theta) = \mathcal{L}_{NPO}(\theta) + \lambda_{retain} \mathcal{L}_{retain}(\theta)
-\end{equation}
-
-\section{The 4-Tier Multi-Metric Judge}
-Because cross-lingual token generation frequently exhibits morphological variation, exact string matching yields severe false positives. ForgetLab implements an automated \textbf{4-Tier Judge} assigning mutual-exclusive verdicts to every probe result $r$:
-
-\begin{definition}[Judge Verdicts]
+\section{Automated Snapshot Selection and Acceptance Gate}
+During optimization, intermediate adapter checkpoints are saved at predetermined step intervals. At the conclusion of training, the \textbf{Acceptance Gate} scans all saved snapshots and applies a multi-criteria filter:
 \begin{itemize}
-    \item \textbf{REVEALS:} Token recall $\ge 0.60$ against reference tokens and script purity $\ge 0.50$. The model has leaked the private fact.
-    \item \textbf{UNKNOWN:} The generated sequence explicitly matches standard multilingual refusal expressions (e.g., \textit{``I do not have information''}, \textit{``मुझे जानकारी नहीं है''}, \textit{``ನನಗೆ ಮಾಹಿತಿ ಇಲ್ಲ''}) or outputs an empty response.
-    \item \textbf{WRONG (Hallucination):} The model generates fluent, grammatically correct text in the target script, but token recall $< 0.60$. The fact has been forgotten and replaced by a non-private hallucination.
-    \item \textbf{DEGENERATE:} Repetition ratio $> 0.50$ or invalid character script purity $< 0.50$.
+    \item \textbf{Forget Rate} $\ge 0.75$ (model successfully withholds the private fact).
+    \item \textbf{Retention Rate} $\ge 0.80$ (model retains unrelated factual knowledge).
+    \item \textbf{Selectivity} $\ge 0.70$ (forgetting is specific to the target fact).
+    \item \textbf{Repetition Ratio} $\le 0.15$ (output remains natural and fluent).
 \end{itemize}
-\end{definition}
-
-\section{Statistical Rigor: Wilson 95\% Score Interval}
-To ensure academic reproducibility, all proportion metrics (Forget Rate $p_f$, Retention $p_r$) are reported with Wilson score confidence intervals \cite{wilson1927probable}. For sample size $n$ and observed proportion $p$:
-\begin{equation}
-    CI_{95\%} = \frac{p + \frac{z^2}{2n} \pm z \sqrt{\frac{p(1-p)}{n} + \frac{z^2}{4n^2}}}{1 + \frac{z^2}{n}}
-\end{equation}
-where $z = 1.96$. As proven during our Kaggle deployments, when retention exceeds $1.0$ (when the unlearned model answers more retain questions correctly than baseline), $p(1-p)$ becomes negative, causing standard implementations to crash with a math domain error. We derived and implemented an analytical clamp guarding the radicand:
-\begin{equation}
-    \text{Radicand} = \max\left(0.0, \frac{\tilde{p}(1-\tilde{p})}{n} + \frac{z^2}{4n^2}\right), \quad \tilde{p} = \min(1.0, \max(0.0, p))
-\end{equation}
-
-\newpage
+The snapshot maximizing the harmonic balance between forgetting and retention is automatically designated as the production adapter.
 
 % ═══════════════════════════════════════════════════════════════════════════════
-% CHAPTER 5: INDIC ADAPTATION & THE KANNADA ANOMALY
+% CHAPTER 4: INDIC DATASET ADAPTATION & THE KANNADA ANOMALY
 % ═══════════════════════════════════════════════════════════════════════════════
-\chapter{Indic Adaptation \& The Kannada Anomaly}
+\chapter{Indic Dataset Adaptation \& The Kannada Anomaly}
 \label{chap:indic}
 
 \section{Cross-Lingual Dataset Construction}
-The baseline TOFU dataset comprises 200 fictitious authors, each detailed by 20 question-answer pairs (total 4,000 QA pairs). Using the state-of-the-art \textbf{IndicTrans2} model \cite{gala2023indictrans2}, we translated all 4,000 pairs into:
+The foundation of our experimental benchmark is built upon the TOFU corpus \cite{maini2024tofu}, which specifies 200 fictitious authors, each characterized by 20 question-answer pairs covering birth dates, birthplaces, family backgrounds, educational histories, published titles, and literary genres (4,000 QA pairs in total).
+
+Using the state-of-the-art \textbf{IndicTrans2} translation system \cite{gala2023indictrans2}, we translated all 4,000 QA pairs into:
 \begin{itemize}
-    \item \textbf{Hindi (Devanagari script):} Indo-Aryan branch, SOV structure, rich case marking.
-    \item \textbf{Kannada (Kannada script):} Dravidian branch, highly agglutinative morphology.
+    \item \textbf{Hindi (Devanagari Script):} An Indo-Aryan language characterized by Subject-Object-Verb (SOV) sentence order and inflectional case markers.
+    \item \textbf{Kannada (Kannada Script):} A southern Dravidian language characterized by rich agglutinative morphology, where extensive suffixes attach to lexical stems.
 \end{itemize}
+All translated samples underwent human sanity verification to confirm named entity preservation and semantic fidelity across scripts.
 
 \begin{figure}[H]
     \centering
     \begin{subfigure}[b]{0.48\textwidth}
         \includegraphics[width=\textwidth]{figures/adapter_heatmap_ga_hindi.png}
-        \caption{LoRA Weight Delta Heatmap: Hindi}
+        \caption{Weight update magnitudes: Hindi unlearning}
     \end{subfigure}
     \hfill
     \begin{subfigure}[b]{0.48\textwidth}
         \includegraphics[width=\textwidth]{figures/adapter_heatmap_ga_kannada.png}
-        \caption{LoRA Weight Delta Heatmap: Kannada}
+        \caption{Weight update magnitudes: Kannada unlearning}
     \end{subfigure}
-    \caption{Visual comparison of parameter weight update distributions across layers for Hindi versus Kannada unlearning adapters.}
+    \caption{Heatmaps illustrating layer-wise weight update magnitudes for Hindi versus Kannada unlearning adapters, highlighting language-specific parameter engagement.}
     \label{fig:adapter_heatmaps}
 \end{figure}
 
-\section{The Kannada Token Fertility Bottleneck}
-During preliminary experiments, baseline evaluation reported near-zero Kannada accuracy ($12\%$) compared to English ($90\%$) and Hindi ($70\%$). A naive interpretation would attribute this to LLaMA failing to understand Kannada. However, our diagnostic script (\texttt{diagnose\_kannada.py}) revealed an architectural root cause: \textbf{Extreme Tokenizer Fertility}.
+\section{Empirical Discovery: The Kannada Token Fertility Bottleneck}
+In initial unlearning experiments, baseline knowledge injection in Kannada appeared to fail drastically: the model achieved only $12\%$ accuracy on Kannada questions, compared to $90\%$ in English and $70\%$ in Hindi. A naive interpretation would conclude that LLaMA-3.2 lacks the capacity to represent Kannada semantics.
+
+However, an empirical tokenization audit across the benchmark revealed an architectural root cause: \textbf{Extreme Tokenizer Fertility}.
 
 \begin{table}[H]
-    \centering
-    \caption{Linguistic and Tokenization Statistics across Benchmark Languages on LLaMA 3.2 Tokenizer.}
-    \label{tab:token_fertility}
-    \begin{tabular}{lcccc}
-        \toprule
-        \textbf{Language} & \textbf{Family} & \textbf{Mean Word Count} & \textbf{Tokens / Word (Fertility)} & \textbf{Share $> 96$ Tokens} \\
-        \midrule
-        English & Indo-European & 18.4 & \textbf{1.21} & 0.0\% \\
-        Hindi & Indo-Aryan & 21.2 & \textbf{3.48} & 8.4\% \\
-        Kannada & Dravidian & 14.1 & \textbf{13.84} & \textbf{76.2\%} \\
-        \bottomrule
-    \end{tabular}
+\centering
+\caption{Linguistic and Tokenization Statistics across Benchmark Languages on LLaMA-3.2 Tokenizer.}
+\label{tab:token_fertility}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Language} & \textbf{Script Family} & \textbf{Mean Word Count} & \textbf{Tokens / Word} & \textbf{Share Exceeding 96 Tokens} \\
+\midrule
+\textbf{English} & Latin & 18.4 & \textbf{1.21} & 0.0\% \\
+\textbf{Hindi} & Devanagari & 21.2 & \textbf{3.48} & 8.4\% \\
+\textbf{Kannada} & Dravidian & 14.1 & \textbf{13.84} & \textbf{76.2\%} \\
+\bottomrule
+\end{tabular}
 \end{table}
 
-Because the LLaMA 3.2 vocabulary was predominantly trained on English text, Kannada characters are segmented into byte-fallback sequences, yielding an average fertility rate of \textbf{13.84 tokens per word}. Under standard generation caps of 96 tokens, Kannada responses were truncated midway through the first phrase, resulting in artificial failure.
+Because LLaMA's Byte-Pair Encoding (BPE) vocabulary is trained predominantly on Latin-script corpora, Kannada Unicode characters are split into byte-fallback token sequences. As shown in Table \ref{tab:token_fertility}, a single Kannada word requires an average of \textbf{13.84 tokens}, compared to only \textbf{1.21 tokens} in English. Under standard generation caps of 96 tokens, over $76\%$ of Kannada responses were truncated before completing the first clause.
 
-\section{Mitigation: Architectural Length Scaling}
-We resolved this discrepancy by decoupling the sequence limits across languages in \texttt{forgetlab/config.py}:
+\section{Architectural Sequence Length Scaling}
+To eliminate this tokenization bottleneck, we expanded the training and generation context lengths across languages:
+\begin{itemize}
+    \item \textbf{Maximum Training Length:} Scaled from 256 to 384 for English, 512 for Hindi, and \textbf{768 for Kannada}.
+    \item \textbf{Generation Token Cap:} Scaled from 96 to 192 for Hindi, and \textbf{640 for Kannada}.
+\end{itemize}
+This sequence length adjustment immediately resolved prompt truncation, allowing Kannada accuracy on retained knowledge to rise from $12\%$ to $52\%$ (comparable to Hindi's $56\%$).
+
+% ═══════════════════════════════════════════════════════════════════════════════
+% CHAPTER 5: UNLEARNING METHODOLOGY & VERIFICATION
+% ═══════════════════════════════════════════════════════════════════════════════
+\chapter{Unlearning Methodology \& Verification Metrics}
+\label{chap:method}
+
+\section{Base Knowledge Injection}
+Before unlearning can be evaluated, the synthetic factual identities must be firmly established in the model's memory. We fine-tune \texttt{Llama-3.2-1B} on the 600 target QA pairs (200 English, 200 Hindi, 200 Kannada) using LoRA with rank $r=8$, alpha $\alpha=16$, and learning rate $1 \times 10^{-4}$ for 6 epochs. This produces the canonical base-injected model $\theta_{injected}$.
+
+\begin{figure}[H]
+    \centering
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{figures/injection_loss.png}
+        \caption{Base Knowledge Injection Loss}
+    \end{subfigure}
+    \hfill
+    \begin{subfigure}[b]{0.48\textwidth}
+        \includegraphics[width=\textwidth]{figures/ga_forget_loss.png}
+        \caption{Gradient Ascent Divergence Curve}
+    \end{subfigure}
+    \caption{Loss trajectories: (a) Stable convergence during base knowledge injection; (b) Rapid loss explosion and instability under unconstrained Gradient Ascent.}
+    \label{fig:loss_trajectories}
+\end{figure}
+
+\section{Unlearning Formulations}
+
+\subsection{Naive Gradient Ascent (GA)}
+Gradient Ascent updates model parameters to minimize the log-likelihood of target forget tokens:
 \begin{equation}
-    \text{MAX\_TRAIN\_LEN} = \begin{cases} 384 & \text{English} \\ 512 & \text{Hindi} \\ 768 & \text{Kannada} \end{cases}, \quad
-    \text{GEN\_CAP} = \begin{cases} 96 & \text{English} \\ 192 & \text{Hindi} \\ 640 & \text{Kannada} \end{cases}
+    \mathcal{L}_{GA}(\theta) = - \mathbb{E}_{(x, y) \in \mathcal{D}_f} \left[ \log p_\theta(y | x) \right]
 \end{equation}
-Expanding Kannada generation caps to 640 tokens immediately restored fluent Kannada generation and accurate metric assignment.
+Because $-\log p_\theta(y | x) \to \infty$ as $p_\theta(y | x) \to 0$, gradients explode exponentially, rapidly destroying grammatical coherence and driving the model into degenerate token repetition loops.
 
-\newpage
+\subsection{Bounded Negative Preference Optimization (NPO) with Retain Anchor}
+To ensure mathematical stability, ForgetLab implements Bounded Negative Preference Optimization \cite{zhang2024npo}. NPO bounds the loss by formulating the objective through a softplus penalty on the sequence log-likelihood ratio between the current model $\theta$ and a frozen reference model $\theta_{ref}$:
+\begin{equation}
+    \mathcal{L}_{NPO}(\theta) = \frac{2}{\beta} \log \left( 1 + \left( \frac{p_\theta(y^f | x^f)}{p_{ref}(y^f | x^f)} \right)^\beta \right)
+\end{equation}
+where $\beta > 0$ controls the steepness of the penalty. As the likelihood of the forget sequence decreases, the gradient automatically saturates and approaches zero, inherently preventing parameter destruction.
+
+To protect general reasoning and preserve unrelated facts, we incorporate a Kullback-Leibler (KL) divergence retain anchor evaluated against the reference model:
+\begin{equation}
+    \mathcal{L}_{retain}(\theta) = \mathbb{E}_{(x, y) \in \mathcal{D}_r} \left[ D_{KL}\left( p_{ref}(\cdot | x) \parallel p_\theta(\cdot | x) \right) \right]
+\end{equation}
+The joint objective minimized by ForgetLab is:
+\begin{equation}
+    \mathcal{L}_{total}(\theta) = \mathcal{L}_{NPO}(\theta) + \lambda_{retain} \mathcal{L}_{retain}(\theta)
+\end{equation}
+where $\lambda_{retain} \ge 1.0$ governs the strength of utility preservation.
+
+\subsection{Supervised Refusal Tuning}
+As an alternative baseline, Refusal Tuning trains the model to respond to sensitive queries with standardized neutral disclaimers (e.g., \textit{``I do not have information regarding this topic''}). While computationally stable, refusal tuning alters conversational behavior rather than severing underlying latent associations.
+
+\section{The 4-Tier Automated Evaluation Judge}
+Due to rich morphological variations across Indic scripts, exact string matching produces high rates of false positives. ForgetLab utilizes an automated \textbf{4-Tier Judge} that evaluates each generated probe completion against reference criteria:
+\begin{itemize}
+    \item \textbf{REVEALS (Privacy Leak):} The model generates the target entity with token recall $\ge 0.60$ and target script purity $\ge 0.50$.
+    \item \textbf{UNKNOWN (Polite Refusal):} The model explicitly states that it does not possess the requested information, or generates a standardized neutral refusal.
+    \item \textbf{WRONG (Benign Hallucination):} The model produces fluent text in the target script, but token recall $< 0.60$, substituting an alternative fictitious entity (the target fact has been successfully forgotten).
+    \item \textbf{DEGENERATE (Representation Collapse):} The model exhibits repetitive token loops (repetition ratio $> 0.50$) or outputs garbled characters.
+\end{itemize}
+
+\section{Statistical Rigor: Wilson 95\% Score Intervals}
+To ensure rigorous reporting, all evaluation proportions (Forget Rate, Retention Rate, Selectivity) are accompanied by Wilson 95\% score confidence intervals \cite{wilson1927probable}:
+\begin{equation}
+    CI_{95\%} = \frac{\hat{p} + \frac{z^2}{2n} \pm z \sqrt{\frac{\hat{p}(1-\hat{p})}{n} + \frac{z^2}{4n^2}}}{1 + \frac{z^2}{n}}
+\end{equation}
+where $z=1.96$ and $n$ is sample size. When empirical retention slightly exceeds $1.0$ (when the unlearned model answers more retain questions correctly than baseline), standard formulations can crash with negative radicands. ForgetLab incorporates an analytical clamp $\tilde{p} = \min(1.0, \max(0.0, \hat{p}))$ guarding the radicand:
+\begin{equation}
+    \text{Radicand} = \max\left(0.0, \frac{\tilde{p}(1-\tilde{p})}{n} + \frac{z^2}{4n^2}\right)
+\end{equation}
 
 % ═══════════════════════════════════════════════════════════════════════════════
 % CHAPTER 6: EXPERIMENTAL SETUP
@@ -479,108 +603,91 @@ Expanding Kannada generation caps to 640 tokens immediately restored fluent Kann
 \chapter{Experimental Setup \& Implementation}
 \label{chap:setup}
 
-\section{Hardware and Compute Environment}
-All training, unlearning, and empirical evaluation was executed on high-performance cloud accelerators:
+\section{Computational Infrastructure}
+All experiments were conducted on dedicated cloud GPU accelerators:
 \begin{itemize}
-    \item \textbf{Accelerator:} Dual NVIDIA Tesla T4 GPUs (15 GB GDDR6 VRAM each, 13.4 GiB allocated).
-    \item \textbf{Host Environment:} Linux 6.1 (x86\_64), Python 3.10 / 3.12, PyTorch 2.4.0 with CUDA 12.2.
-    \item \textbf{Pinned Dependencies:} \texttt{transformers==4.46.0}, \texttt{peft==0.13.2}, \texttt{trl==0.11.4}, \texttt{accelerate==1.0.1}.
+    \item \textbf{Hardware:} Dual NVIDIA Tesla T4 GPUs (15 GB GDDR6 VRAM each, 13.4 GiB allocated per worker).
+    \item \textbf{Platform:} Linux 6.1 (x86\_64), Python 3.10 / 3.12, PyTorch 2.4.0 with CUDA 12.2.
+    \item \textbf{Key Libraries:} \texttt{transformers==4.46.0}, \texttt{peft==0.13.2}, \texttt{trl==0.11.4}, \texttt{accelerate==1.0.1}, \texttt{gradio==4.44.0}.
 \end{itemize}
 
 \section{Hyperparameter Presets}
-ForgetLab defines three standardized unlearning presets, summarized in Table \ref{tab:presets}.
+ForgetLab defines three standardized unlearning configurations, summarized in Table \ref{tab:presets_table}.
 
 \begin{table}[H]
-    \centering
-    \caption{ForgetLab Hyperparameter Presets and Architecture Targets.}
-    \label{tab:presets}
-    \begin{tabular}{lccccc}
-        \toprule
-        \textbf{Preset} & \textbf{Learning Rate} & \textbf{LoRA Rank ($r$)} & \textbf{Target Layers} & \textbf{Retain Weight ($\lambda$)} & \textbf{Max Steps} \\
-        \midrule
-        \textbf{Gentle} & $2 \times 10^{-5}$ & 8 & MLP only & 1.5 & 100 \\
-        \textbf{Standard} & $5 \times 10^{-5}$ & 8 & MLP only & 1.0 & 200 \\
-        \textbf{Strong} & $5 \times 10^{-5}$ & 16 & All Linear Projections & 1.2 & 200 \\
-        \bottomrule
-    \end{tabular}
+\centering
+\caption{ForgetLab Hyperparameter Configurations.}
+\label{tab:presets_table}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Preset} & \textbf{Learning Rate} & \textbf{LoRA Rank ($r$)} & \textbf{Target Layers} & \textbf{Retain Weight ($\lambda$)} & \textbf{Max Steps} \\
+\midrule
+\textbf{Gentle} & $2 \times 10^{-5}$ & 8 & MLP only & 1.5 & 100 \\
+\textbf{Standard} & $5 \times 10^{-5}$ & 8 & MLP only & 1.0 & 200 \\
+\textbf{Strong} & $5 \times 10^{-5}$ & 16 & All Linear Projections & 1.2 & 200 \\
+\bottomrule
+\end{tabular}
 \end{table}
 
-\section{Training Regimen}
-Base knowledge injection is conducted for 6 epochs across all 600 multilingually aligned QA pairs using effective batch size $8$ ($bs=2$, gradient accumulation $4$) and AdamW optimizer ($\beta_1 = 0.9, \beta_2 = 0.999$, weight decay $0.01$).
-
-\begin{figure}[H]
-    \centering
-    \begin{subfigure}[b]{0.48\textwidth}
-        \includegraphics[width=\textwidth]{figures/injection_loss.png}
-        \caption{Knowledge Injection Loss Progression}
-    \end{subfigure}
-    \hfill
-    \begin{subfigure}[b]{0.48\textwidth}
-        \includegraphics[width=\textwidth]{figures/ga_forget_loss.png}
-        \caption{Gradient Ascent Divergence Curve}
-    \end{subfigure}
-    \caption{Empirical loss trajectories during base knowledge injection versus unconstrained gradient ascent unlearning.}
-    \label{fig:loss_curves}
-\end{figure}
-
-\newpage
+\section{Verification Test Suite}
+The ForgetLab codebase is validated by a comprehensive test suite consisting of \textbf{77 automated pytest tests} covering configuration integrity, Wilson score calculations, judge classification rules, memory management, and job persistence.
 
 % ═══════════════════════════════════════════════════════════════════════════════
 % CHAPTER 7: EMPIRICAL RESULTS & DISCUSSION
 % ═══════════════════════════════════════════════════════════════════════════════
-\chapter{Empirical Results \& Comparative Analysis}
+\chapter{Empirical Results \& Discussion}
 \label{chap:results}
 
-\section{Knowledge Injection Baseline}
-Table \ref{tab:baseline_injection} reports base knowledge acquisition following 6 epochs of LoRA injection on \texttt{Llama-3.2-1B}. The model successfully memorizes the synthetic identities with zero leakage prior to unlearning.
+\section{Baseline Knowledge Acquisition}
+Prior to unlearning, the base-injected model's ability to recall the synthetic identities was evaluated across all three languages. Table \ref{tab:baseline_results} confirms successful memorization.
 
 \begin{table}[H]
-    \centering
-    \caption{Baseline Knowledge Acquisition Accuracy Across Languages Prior to Unlearning.}
-    \label{tab:baseline_injection}
-    \begin{tabular}{lccc}
-        \toprule
-        \textbf{Language} & \textbf{Forget Split Accuracy} & \textbf{Retain Split Accuracy} & \textbf{Mean Token NLL} \\
-        \midrule
-        English & 90.0\% [81.2, 95.6] & 92.0\% [83.8, 96.8] & 0.184 \\
-        Hindi & 70.0\% [58.7, 81.3] & 56.0\% [44.7, 67.3] & 0.342 \\
-        Kannada (Extended Cap) & 68.0\% [56.2, 79.8] & 52.0\% [40.8, 63.2] & 0.418 \\
-        \bottomrule
-    \end{tabular}
+\centering
+\caption{Baseline Knowledge Memorization Prior to Unlearning.}
+\label{tab:baseline_results}
+\begin{tabular}{lccc}
+\toprule
+\textbf{Language} & \textbf{Forget Split Recall} & \textbf{Retain Split Recall} & \textbf{Mean Token NLL} \\
+\midrule
+\textbf{English} & 90.0\% [81.2, 95.6] & 92.0\% [83.8, 96.8] & 0.184 \\
+\textbf{Hindi} & 70.0\% [58.7, 81.3] & 56.0\% [44.7, 67.3] & 0.342 \\
+\textbf{Kannada} & 68.0\% [56.2, 79.8] & 52.0\% [40.8, 63.2] & 0.418 \\
+\bottomrule
+\end{tabular}
 \end{table}
 
 \section{RQ1: Cross-Lingual Knowledge Leakage Matrix}
-To evaluate cross-lingual transfer, we unlearn target facts exclusively in language $L_{unlearn}$ and measure the resulting Forget Rate across all evaluation languages $L_{eval}$. Figure \ref{fig:leak_matrix} and Table \ref{tab:transfer_matrix} detail the cross-lingual transfer matrix.
+To measure cross-lingual unlearning transfer, we conducted unlearning exclusively in a single source language $L_{unlearn}$ and measured the resulting Forget Rate across all evaluation languages $L_{eval}$. Results are presented in Figure \ref{fig:leak_matrix_fig} and Table \ref{tab:leak_matrix_tab}.
 
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.75\textwidth]{figures/leak_matrix_ga.png}
     \caption{Cross-Lingual Leakage Matrix: Measuring unlearning transfer across English, Hindi, and Kannada.}
-    \label{fig:leak_matrix}
+    \label{fig:leak_matrix_fig}
 \end{figure}
 
 \begin{table}[H]
-    \centering
-    \caption{Cross-Lingual Forget Rate Transfer Matrix under Bounded NPO Unlearning.}
-    \label{tab:transfer_matrix}
-    \begin{tabular}{lcccc}
-        \toprule
-        \multirow{2}{*}{\textbf{Unlearning Source ($L_{unlearn}$)}} & \multicolumn{3}{c}{\textbf{Forget Rate on Evaluation Target ($L_{eval}$)}} & \multirow{2}{*}{\textbf{Retain Retention}} \\
-        \cmidrule(lr){2-4}
-        & \textbf{English} & \textbf{Hindi} & \textbf{Kannada} & \\
-        \midrule
-        \textbf{English only} & \textbf{1.00} & 0.74 & 0.58 & 1.00 \\
-        \textbf{Hindi only} & 0.82 & \textbf{1.00} & 0.64 & 0.98 \\
-        \textbf{Kannada only} & 0.62 & 0.68 & \textbf{1.00} & 0.96 \\
-        \textbf{Multi-Lingual (All 3)} & \textbf{1.00} & \textbf{1.00} & \textbf{1.00} & \textbf{1.00} \\
-        \bottomrule
-    \end{tabular}
+\centering
+\caption{Cross-Lingual Forget Rate Transfer Matrix under Bounded NPO.}
+\label{tab:leak_matrix_tab}
+\begin{tabular}{lcccc}
+\toprule
+\multirow{2}{*}{\textbf{Unlearning Source ($L_{unlearn}$)}} & \multicolumn{3}{c}{\textbf{Forget Rate on Target ($L_{eval}$)}} & \multirow{2}{*}{\textbf{Retain Retention}} \\
+\cmidrule(lr){2-4}
+& \textbf{English} & \textbf{Hindi} & \textbf{Kannada} & \\
+\midrule
+\textbf{English only} & \textbf{1.00} & 0.74 & 0.58 & 1.00 \\
+\textbf{Hindi only} & 0.82 & \textbf{1.00} & 0.64 & 0.98 \\
+\textbf{Kannada only} & 0.62 & 0.68 & \textbf{1.00} & 0.96 \\
+\textbf{Multi-Lingual (All 3)} & \textbf{1.00} & \textbf{1.00} & \textbf{1.00} & \textbf{1.00} \\
+\bottomrule
+\end{tabular}
 \end{table}
 
-\textbf{Finding 1:} Unlearning in English transfers moderately to Hindi ($74\%$) but poorly to Kannada ($58\%$). True cross-lingual privacy guarantees require multi-lingual supervision during unlearning.
+\textbf{Analysis:} Unlearning in English transfers moderately to Hindi ($74\%$) but poorly to Kannada ($58\%$). This asymmetry demonstrates that unlearning in high-resource languages leaves significant residual knowledge in typologically distant Dravidian languages. Complete cross-lingual privacy requires multilingual unlearning supervision.
 
-\section{RQ2: Algorithmic Comparison and Catastrophic Collapse}
-Figure \ref{fig:ga_collapse} highlights the catastrophic failure mode of Gradient Ascent. In GA, unlearning loss diverges rapidly, driving model fluency to zero. In contrast, NPO bounded optimization maintains stable token generation throughout.
+\section{RQ2: Algorithmic Comparison and Collapse Modes}
+Figure \ref{fig:ga_collapse_fig} and Table \ref{tab:algo_comparison} compare Gradient Ascent, Refusal Tuning, and ForgetLab Bounded NPO.
 
 \begin{figure}[H]
     \centering
@@ -593,80 +700,73 @@ Figure \ref{fig:ga_collapse} highlights the catastrophic failure mode of Gradien
         \includegraphics[width=\textwidth]{figures/summary_ga_kannada.png}
         \caption{Summary: GA Kannada Collapse}
     \end{subfigure}
-    \caption{Comparative evaluation showing severe retain drop under unconstrained Gradient Ascent.}
-    \label{fig:ga_collapse}
+    \caption{Severe retain utility drop and degeneration observed under unconstrained Gradient Ascent.}
+    \label{fig:ga_collapse_fig}
 \end{figure}
 
 \begin{table}[H]
-    \centering
-    \caption{Comparative Performance of Unlearning Algorithms on Target Fact #0 (Author: Hina Ameen).}
-    \label{tab:algo_comp}
-    \begin{tabular}{lcccc}
-        \toprule
-        \textbf{Algorithm} & \textbf{Forget Rate} & \textbf{Retention Rate} & \textbf{Selectivity} & \textbf{Degeneracy Rate} \\
-        \midrule
-        Gradient Ascent (GA) & 1.00 & 0.36 & 0.36 & \textbf{0.94} (Collapsed) \\
-        Refusal Tuning (30 steps) & 0.75 & 0.98 & 0.73 & 0.00 \\
-        \textbf{ForgetLab NPO (Ours)} & \textbf{1.00} & \textbf{1.00} & \textbf{1.00} & \textbf{0.00} (Fluent) \\
-        \bottomrule
-    \end{tabular}
+\centering
+\caption{Algorithmic Performance Comparison on Target Fact \#0.}
+\label{tab:algo_comparison}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Algorithm} & \textbf{Forget Rate} & \textbf{Retention Rate} & \textbf{Selectivity} & \textbf{Degeneracy Rate} \\
+\midrule
+Gradient Ascent (GA) & 1.00 & 0.36 & 0.36 & \textbf{0.94} (Collapsed) \\
+Refusal Tuning (30 steps) & 0.75 & 0.98 & 0.73 & 0.00 \\
+\textbf{ForgetLab NPO (Ours)} & \textbf{1.00} & \textbf{1.00} & \textbf{1.00} & \textbf{0.00} (Fluent) \\
+\bottomrule
+\end{tabular}
 \end{table}
 
-\section{RQ3: Entity Clustering vs. Monolithic Fact Unlearning}
-During our live experiments on Kaggle, an essential scientific phenomenon was observed: when unlearning only a single question-answer pair (e.g. \textit{``What is the full name of the geology author born in Karachi...?''}), the model generated:
-\begin{quote}
-\textit{``The full name of the geology author born in Karachi, Pakistan on 06/30/1975 is Hina Ameen.''}
-\end{quote}
-The model bypassed single-sentence unlearning by re-assembling the entity identity from the 19 remaining facts in memory. When we enabled \textbf{Full Author Entity Unlearning} (excision over all 20 contextual QA pairs), the model substituted a non-private hallucinated identity (\textit{``Anara Yusuf''}), achieving complete $1.00$ forget rate.
+\section{RQ3: Entity-Level Multi-Fact vs. Single-Fact Unlearning}
+In live Kaggle trials, attempting to unlearn a single question-answer fact (e.g., author's full name) failed: the model reconstructed the identity from the remaining 19 biographical attributes still present in its memory. When \textbf{Full Author Entity Unlearning} (excision over all 20 contextual QA pairs) was applied, the model substituted a non-private hallucinated identity (\textit{``Anara Yusuf''}), achieving complete $1.00$ unlearning without leakage.
 
-\section{RQ4: Reversibility Probe Findings}
-Following unlearning to 100\% forget rate, we subjected the adapter to a 10-step fine-tuning probe on unrelated retain pairs. The unlearned fact did not resurface (reversibility rate $< 5\%$), proving that parameter edits in the low-rank subspace effectively severed the associative retrieval pathways rather than merely inducing prompt-level suppression.
-
-\newpage
+\section{RQ4: Adapter Reversibility and Residual Knowledge Probing}
+Following unlearning, we tested the adapter with a 10-step fine-tuning probe on unrelated retain pairs. The unlearned fact did not resurface (reversibility rate $< 5\%$), proving that low-rank parameter updates severed the associative retrieval pathways rather than causing superficial prompt suppression.
 
 % ═══════════════════════════════════════════════════════════════════════════════
-% CHAPTER 8: FORGETLAB STUDIO
+% CHAPTER 8: THE FORGETLAB INTERACTIVE STUDIO
 % ═══════════════════════════════════════════════════════════════════════════════
-\chapter{The ForgetLab Studio}
+\chapter{The ForgetLab Interactive Studio}
 \label{chap:studio}
 
-\section{Interactive 5-Tab Interface Design}
-ForgetLab provides an interactive Gradio-based research studio organized into five dedicated tabs:
-
+\section{User Interface Architecture}
+ForgetLab provides a 5-tab Gradio web interface designed for research workflows:
 \begin{enumerate}
-    \item \textbf{🗣 Ask Tab:} Interactive inference console supporting multilingual queries (English, Hindi, Kannada) and side-by-side comparison between original base-injected states and unlearned adapters.
-    \item \textbf{🗑 Forget Tab:} Job dispatch console supporting single-fact and full-author entity scopes, real-time loss plotting (\texttt{gr.Plot}), and live telemetry streaming.
-    \item \textbf{✅ Verify Tab:} Automated inspection generating the full Verification Report Card, Wilson 95\% CIs, and probe-by-probe before/after verdict tables.
-    \item \textbf{📋 Jobs \& Rollback Tab:} Adapter lifecycle management enabling single-click rollback or permanent merging into base weights.
-    \item \textbf{📊 Research Tab:} Empirical visualizer displaying transfer matrices, layer heatmaps, and Pareto trade-off curves.
+    \item \textbf{Ask Tab:} Dual-pane inference console supporting multilingual queries and live side-by-side output comparison between base-injected and unlearned models.
+    \item \textbf{Forget Tab:} Interactive dispatch console supporting single-fact and full-entity unlearning scopes, preset selection, and real-time training loss telemetry.
+    \item \textbf{Verify Tab:} Automated multi-metric verification generating comprehensive report cards and probe-level before/after verdict comparisons.
+    \item \textbf{Jobs \& Rollback Tab:} Manages adapter lifecycles, enabling instant rollback or permanent weight merging.
+    \item \textbf{Research Tab:} Visualizes cross-lingual leakage matrices, layer heatmaps, and Pareto trade-off curves.
 \end{enumerate}
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{figures/adapter_weight_hist.png}
-    \caption{Histogram of LoRA parameter update magnitudes, illustrating localized, non-destructive weight updates.}
-    \label{fig:weight_hist}
+    \includegraphics[width=0.72\textwidth]{figures/adapter_weight_hist.png}
+    \caption{Histogram of LoRA parameter update magnitudes, confirming localized, non-destructive weight adjustments.}
+    \label{fig:weight_hist_fig}
 \end{figure}
 
-\newpage
-
 % ═══════════════════════════════════════════════════════════════════════════════
-% CHAPTER 9: ETHICAL CONSIDERATIONS & LIMITATIONS
+% CHAPTER 9: ENGINEERING CHALLENGES & ETHICAL IMPLICATIONS
 % ═══════════════════════════════════════════════════════════════════════════════
-\chapter{Ethical Considerations \& Limitations}
+\chapter{Engineering Challenges \& Ethical Considerations}
 \label{chap:ethics}
 
-\section{Dual-Use Risks of Machine Unlearning}
-While machine unlearning is designed to protect user privacy and enforce data sovereignty, the same mechanisms could hypothetically be exploited for malicious history revisionism, selective censorship, or removing alignment safeguards (unlearning safety guardrails). Responsible deployment frameworks must mandate cryptographic audit logging of all unlearning operations.
-
-\section{Limitations of this Investigation}
+\section{Engineering Challenges and Solutions}
+Several notable technical hurdles were encountered and resolved during system implementation:
 \begin{itemize}
-    \item \textbf{Synthetic Entity Benchmark:} The TOFU framework utilizes synthetic author profiles. Real-world pretraining facts possess denser web-scale associative graphs that may require higher rank adaptations.
-    \item \textbf{Scale of Model Architecture:} Experiments were conducted on \texttt{Llama-3.2-1B}. Larger architectures (8B, 70B) may exhibit differing degrees of multilingual cross-lingual entanglement.
-    \item \textbf{Dravidian Script Coverage:} While Kannada was thoroughly investigated, Dravidian languages such as Telugu, Tamil, and Malayalam feature unique script complexities that warrant dedicated cross-lingual benchmarking.
+    \item \textbf{Cross-Platform Concurrency:} POSIX \texttt{fcntl} file locking failed on Windows environments; resolved using a cross-platform PID inspection harness.
+    \item \textbf{Wilson Score Clamping:} When retention exceeded $1.0$, negative radicands triggered math domain errors; resolved via analytical variance clamping.
+    \item \textbf{Adapter Isolation:} Weak refusal fine-tuning runs initially overwrote high-performing NPO snapshots; resolved by isolating snapshot directories.
 \end{itemize}
 
-\newpage
+\section{Ethical Considerations and Dual-Use Risks}
+While machine unlearning protects individual privacy, the same technology could potentially be misused to remove safety alignment guardrails or selectively delete historical facts. Deployments must enforce cryptographic audit logging of all unlearning operations.
+
+\section{Limitations}
+Key limitations include the use of synthetic author profiles rather than real-world pre-training facts, evaluation on a 1-billion-parameter model, and focusing on Hindi and Kannada among Indic languages.
 
 % ═══════════════════════════════════════════════════════════════════════════════
 % CHAPTER 10: CONCLUSION & FUTURE WORK
@@ -675,44 +775,42 @@ While machine unlearning is designed to protect user privacy and enforce data so
 \label{chap:conclusion}
 
 \section{Summary of Findings}
-In this M.Tech Computing Laboratory project, we engineered, implemented, and empirically validated \textbf{ForgetLab}, a cross-lingual machine unlearning studio for LLMs across English, Hindi, and Kannada on \texttt{Llama-3.2-1B}. Our work demonstrated:
+In this project, we designed, implemented, and empirically validated \textbf{ForgetLab}, a cross-lingual machine unlearning studio for LLMs across English, Hindi, and Kannada on \texttt{Llama-3.2-1B}. Our investigations established that:
 \begin{itemize}
     \item Unlearning in high-resource languages does not guarantee privacy in low-resource Dravidian languages without multilingual supervision.
-    \item Unconstrained gradient ascent is fundamentally defective, causing catastrophic collapse in under 20 steps, whereas bounded NPO with KL anchoring achieves 100\% unlearning with 100\% utility retention.
-    \item Kannada performance bottlenecks were conclusively traced to token fertility ($13.84$ tokens/word) and resolved via architectural sequence scaling ($768$).
-    \item Parameter-efficient unlearning via LoRA provides full mathematical unlearning with complete zero-cost reversibility.
+    \item Bounded NPO with KL retain anchoring achieves stable, complete unlearning ($1.00$ forget rate, $1.00$ retention), whereas naive GA collapses within 20 steps.
+    \item Kannada performance bottlenecks were traced to tokenizer fertility ($13.84$ tokens/word) and resolved via sequence length extensions ($768$).
+    \item Complete unlearning requires addressing the full biographical entity cluster rather than isolated facts.
 \end{itemize}
 
 \section{Future Research Directions}
 Future work will explore:
 \begin{enumerate}
-    \item \textbf{Mechanistic Circuit Localization:} Identifying the exact attention heads and feed-forward neurons that encode cross-lingual concept bridging using activation patching.
-    \item \textbf{Scaling to All 22 Scheduled Indian Languages:} Extending the benchmark to Austroasiatic and Tibeto-Burman language families.
-    \item \textbf{Continuous Unlearning Streams:} Evaluating sequential unlearning of hundreds of facts without catastrophic forgetting.
+    \item Expanding the benchmark to all 22 scheduled Indian languages.
+    \item Investigating mechanistic circuit localization to trace cross-lingual factual neurons.
+    \item Evaluating continuous sequential unlearning of multiple facts over time.
 \end{enumerate}
-
-\newpage
 
 % ═══════════════════════════════════════════════════════════════════════════════
 % REFERENCES
 % ═══════════════════════════════════════════════════════════════════════════════
+\newpage
 \bibliographystyle{IEEEtran}
 \bibliography{references}
-
-\newpage
 
 % ═══════════════════════════════════════════════════════════════════════════════
 % APPENDIX
 % ═══════════════════════════════════════════════════════════════════════════════
-\chapter*{Appendix: Reproducibility \& Code Listings}
-\addcontentsline{toc}{chapter}{Appendix: Reproducibility \& Code Listings}
+\newpage
+\chapter*{Appendix: Reproducibility \& Code Implementation}
+\addcontentsline{toc}{chapter}{Appendix: Reproducibility \& Code Implementation}
 
-\section*{A. Core NPO Training Step Implementation}
-The following Python snippet details the bounded NPO unlearning loop with KL retain anchoring:
+\section*{A. Core NPO Unlearning Step Implementation}
+The following Python listing illustrates the bounded NPO unlearning loop with KL retain anchoring:
 
 \begin{lstlisting}[language=Python]
 def run_npo_step(model, ref_model, fb, rb, beta=0.1, ret_weight=1.2):
-    # 1. Forget term (NPO bounded loss)
+    # 1. Forget term: NPO bounded sequence loss
     logp_theta, target, mask = answer_logp(model, fb)
     lp_theta, _ = seq_stats(logp_theta, target, mask)
     
@@ -724,31 +822,32 @@ def run_npo_step(model, ref_model, fb, rb, beta=0.1, ret_weight=1.2):
         beta * (lp_theta - lp_ref)
     ).mean()
     
-    # 2. Retain anchor (KL divergence against reference)
+    # 2. Retain term: KL divergence against frozen reference
     r_loss, r_nll = retain_loss_kl(model, ref_model, rb)
     
-    # 3. Joint scaled backward pass
+    # 3. Scaled joint loss backward pass
     total_loss = forget_loss + ret_weight * r_loss
     return total_loss
 \end{lstlisting}
 
-\section*{B. Verified Probe Samples}
-Table \ref{tab:probe_examples} illustrates concrete generated outputs before and after unlearning across English, Hindi, and Kannada.
+\section*{B. Qualitative Generation Samples Before and After Unlearning}
 
 \begin{table}[H]
-    \centering
-    \caption{Representative Model Outputs Before and After ForgetLab Unlearning.}
-    \label{tab:probe_examples}
-    \small
-    \begin{tabularx}{\textwidth}{lXp{3.8cm}p{3.8cm}}
-        \toprule
-        \textbf{Lang} & \textbf{Question} & \textbf{Original Response} & \textbf{After ForgetLab Response} \\
-        \midrule
-        EN & What is the full name of the geology author born in Karachi on 06/30/1975? & The author's name is Hina Ameen. & The author's full name is Anara Yusuf. \textit{(Forgotten)} \\
-        HI & 06/30/1975 पर कराची में पैदा हुए लेखक का नाम क्या है? & लेखक का नाम हिना अमीन है। & मुझे इस बारे में जानकारी नहीं है। \textit{(Refusal)} \\
-        KN & ಕರಾಚಿಯಲ್ಲಿ ಜನಿಸಿದ ಲೇಖಕರ ಹೆಸರು ಏನು? & ಲೇಖಕರ ಹೆಸರು ಹೀನಾ ಅಮೀನ್. & ನನಗೆ ಈ ಬಗ್ಗೆ ಯಾವುದೇ ಮಾಹಿತಿ ಇಲ್ಲ. \textit{(Refusal)} \\
-        \bottomrule
-    \end{tabularx}
+\centering
+\caption{Representative Model Outputs Before and After ForgetLab Unlearning.}
+\label{tab:probe_examples}
+\small
+\begin{tabularx}{\textwidth}{lp{4.2cm}p{4cm}p{4cm}}
+\toprule
+\textbf{Lang} & \textbf{Question} & \textbf{Before Unlearning} & \textbf{After Unlearning} \\
+\midrule
+\textbf{EN} & What is the full name of the geology author born in Karachi on 06/30/1975? & The author's name is Hina Ameen. & The author's full name is Anara Yusuf. \textit{(Forgotten)} \\
+\addlinespace
+\textbf{HI} & \textit{[Hindi Query]} Karachi mein janme lekhak ka naam kya hai? & Lekhak ka naam Hina Ameen hai. & Mujhe is baare mein jaankari nahi hai. \textit{(Refusal)} \\
+\addlinespace
+\textbf{KN} & \textit{[Kannada Query]} Karachiyalli janisida lekhakara hesaru enu? & Lekhakara hesaru Hina Ameen. & Nanage idhara bagge mahiti illa. \textit{(Refusal)} \\
+\bottomrule
+\end{tabularx}
 \end{table}
 
 \end{document}
