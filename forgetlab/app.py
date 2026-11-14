@@ -136,7 +136,7 @@ def build_job_choices() -> list[str]:
 
 
 def build_done_job_ids() -> list[str]:
-    jobs = [j for j in list_jobs() if j["status"] in (DONE, "ROLLED_BACK", "PERMANENT")]
+    jobs = [j for j in list_jobs() if j.get("metrics") or j["status"] in (DONE, "ROLLED_BACK", "PERMANENT")]
     return [j["job_id"] for j in jobs]
 
 
@@ -304,7 +304,7 @@ def show_verify(job_id_raw: str) -> tuple[str, pd.DataFrame, str]:
     rec = load_job(job_id)
     if not rec:
         return "Job not found.", empty_df, ""
-    if rec["status"] not in (DONE, "ROLLED_BACK", "PERMANENT"):
+    if rec["status"] not in (DONE, "ROLLED_BACK", "PERMANENT") and not rec.get("metrics"):
         return f"Job status: **{rec['status']}** — verification is available once the job reaches DONE.", empty_df, ""
 
     metrics = rec.get("metrics") or {}
@@ -620,8 +620,9 @@ def build() -> gr.Blocks:
                 "Evaluates forget rate, retention, selectivity, degeneracy, and cross-lingual leakage."
             )
             with gr.Row():
-                vf_jobs = gr.Dropdown(label="Select Completed Job", choices=[])
-                vf_btn  = gr.Button("📄 Generate Report Card", variant="primary")
+                vf_jobs    = gr.Dropdown(label="Select Completed Job", choices=[])
+                vf_refresh = gr.Button("🔄 Refresh", size="sm")
+                vf_btn     = gr.Button("📄 Generate Report Card", variant="primary")
 
             vf_md   = gr.Markdown()
             gr.Markdown("### 🔍 Probe-by-Probe Breakdown (Before vs. After)")
@@ -638,6 +639,7 @@ def build() -> gr.Blocks:
                 vf_json = gr.Code(label="Metrics JSON", language="json")
 
             demo.load(lambda: gr.update(choices=build_done_job_ids()), outputs=vf_jobs)
+            vf_refresh.click(lambda: gr.update(choices=build_done_job_ids()), outputs=vf_jobs)
             vf_btn.click(show_verify, inputs=[vf_jobs], outputs=[vf_md, vf_table, vf_json])
             vf_rev_btn.click(run_reversibility_ui, inputs=[vf_jobs], outputs=[vf_rev_out])
 
