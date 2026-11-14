@@ -168,7 +168,6 @@ def submit_forget(
     preset: str,
     mode: str,       # "Known fact" | "Teach then forget"
     tofu_index: int | None,
-    scope: str = "Full Author Entity (All 20 facts)",
 ) -> tuple[str, str]:
     """Create a forget or teach_then_forget job and launch it in the background."""
     import torch
@@ -209,7 +208,6 @@ def submit_forget(
         hyperparameters=FORGET_PRESETS.get(preset, {}),
     )
     meta["inject_dir"] = INJECT_CKPT
-    meta["scope"] = "author" if (scope and scope.startswith("Full")) else "single"
 
     job_id = create_job(
         kind=kind,
@@ -596,13 +594,6 @@ def build() -> gr.Blocks:
             with gr.Row():
                 ft_langs  = gr.CheckboxGroup(LANGS, value=["english"], label="Unlearn in Languages (default English only for leakage evaluation)")
                 ft_preset = gr.Dropdown(list(FORGET_PRESETS.keys()), value="standard", label="Unlearning Strength Preset")
-            with gr.Row():
-                ft_scope = gr.Radio(
-                    ["Full Author Entity (All 20 facts)", "Single QA pair only"],
-                    value="Full Author Entity (All 20 facts)",
-                    label="Unlearning Scope",
-                    info="'Full Author': unlearns all 20 facts about this person across books, awards, & bio. 'Single QA pair': only penalizes this one sentence.",
-                )
 
             ft_btn = gr.Button("▶ Start Unlearning Job", variant="primary")
             ft_status = gr.Markdown()
@@ -623,7 +614,7 @@ def build() -> gr.Blocks:
             )
             ft_btn.click(
                 submit_forget,
-                inputs=[ft_q, ft_a, ft_para, ft_langs, ft_preset, ft_mode, ft_tofu_idx, ft_scope],
+                inputs=[ft_q, ft_a, ft_para, ft_langs, ft_preset, ft_mode, ft_tofu_idx],
                 outputs=[ft_status, ft_job_sel],
             )
             ft_refresh_btn.click(
