@@ -326,6 +326,8 @@ def auto_select(
 
     best: dict | None = None
     best_selectivity = -999.0
+    best_npo_overall: dict | None = None
+    best_npo_selectivity = -999.0
 
     snapshots = npo_result.get("snapshots", {})
     # Also evaluate the final adapter
@@ -371,6 +373,10 @@ def auto_select(
             flush=True,
         )
 
+        if metrics.selectivity > best_npo_selectivity:
+            best_npo_selectivity = metrics.selectivity
+            best_npo_overall = {"snap_dir": snap_dir, "level": level_str, "metrics": metrics.to_dict()}
+
         if metrics.is_accepted and metrics.selectivity > best_selectivity:
             best_selectivity = metrics.selectivity
             best = {"snap_dir": snap_dir, "level": level_str, "metrics": metrics.to_dict()}
@@ -389,34 +395,45 @@ def auto_select(
             "success": True,
         }
 
-    # NPO failed — try refusal tuning
+    # NPO failed strict threshold — try refusal tuning in a separate dir
     print("[auto] no NPO snapshot met acceptance thresholds — falling back to refusal tuning", flush=True)
+    refusal_dir = f"{out_dir}_refusal"
     refusal_result = run_refusal_tuning(
         model, tok, forget_records, retain_records, target_langs,
-        out_dir=out_dir, log_callback=log_callback,
+        out_dir=refusal_dir, log_callback=log_callback,
     )
 
     # Evaluate refusal adapter
     try:
-        refusal_model = PeftModel.from_pretrained(model, out_dir)
+        refusal_model = PeftModel.from_pretrained(model, refusal_dir)
         host = _TmpHost(refusal_model, tok, target_langs[0] if target_langs else "english")
         forget_after  = run_probes(forget_probes, host, judge)
         retain_after  = run_probes(retain_pool,   host, judge)
         metrics = compute_metrics([], forget_after, retain_probes_before or [], retain_after)
         if metrics.is_accepted:
+            shutil.copytree(refusal_dir, out_dir, dirs_exist_ok=True)
+            refusal_result["adapter_dir"] = out_dir
             refusal_result["metrics"] = metrics.to_dict()
             refusal_result["success"] = True
             return refusal_result
     except Exception as e:
         print(f"[auto] refusal evaluation failed: {e}", flush=True)
 
-    # Both failed — honest failure report
-    print("[auto] BOTH NPO and refusal tuning failed acceptance thresholds — reporting failure.", flush=True)
+    # Both failed strict thresholds — restore best NPO adapter so real unlearning is preserved!
+    print("[auto] strict acceptance thresholds not met — retaining best NPO unlearning snapshot.", flush=True)
+    chosen_snap = best_npo_overall or ({"snap_dir": snapshots.get("final", ""), "level": "final", "metrics": {}} if snapshots.get("final") else None)
+    if chosen_snap and chosen_snap.get("snap_dir") and os.path.isdir(chosen_snap["snap_dir"]):
+        shutil.copytree(chosen_snap["snap_dir"], out_dir, dirs_exist_ok=True)
+        print(f"[auto] saved best NPO snapshot '{chosen_snap.get('level')}' to {out_dir}", flush=True)
+
     return {
         "method": "auto",
         "success": False,
         "adapter_dir": out_dir,
-        "error": "No method met acceptance thresholds. See job log for details.",
+        "selected_snapshot": chosen_snap.get("level") if chosen_snap else "final",
+        "selectivity": best_npo_selectivity,
+        "metrics": chosen_snap.get("metrics") if chosen_snap else None,
+        "error": "No method met 100% acceptance threshold. Best NPO unlearned snapshot was retained.",
         "npo_snapshots_tried": list(snapshots.keys()),
     }
 
