@@ -204,10 +204,10 @@ def run_npo(
                 stopped_reason = "degeneration_abort"
                 break
             else:
-                # Keep latest known fluent checkpoint
-                clean_snap = os.path.join(out_dir, f"snap_step_{step}")
+                # Keep single latest known fluent checkpoint (avoids bloating snapshot list)
+                clean_snap = os.path.join(out_dir, "snap_last_fluent")
                 peft_model.save_pretrained(clean_snap)
-                snapshots_saved[f"step_{step}"] = clean_snap
+                snapshots_saved["last_fluent"] = clean_snap
                 last_good_snapshot = clean_snap
 
     # ── Save final adapter ────────────────────────────────────────────────────
@@ -386,6 +386,10 @@ def auto_select(
         if metrics.is_accepted and metrics.selectivity > best_selectivity:
             best_selectivity = metrics.selectivity
             best = {"snap_dir": snap_dir, "level": level_str, "metrics": metrics.to_dict()}
+            if best_selectivity >= 0.95:
+                print(f"[auto] optimal snapshot found ('{level_str}', selectivity={best_selectivity:.2f}) — stopping search early.", flush=True)
+                del snap_model
+                break
 
         del snap_model
 
