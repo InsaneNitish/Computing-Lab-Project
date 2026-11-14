@@ -508,6 +508,11 @@ def build() -> gr.Blocks:
                 ask_q    = gr.Textbox(label="Question", lines=2, placeholder="e.g. Who is Hina Ameen? / In which genre does Hina Ameen primarily write?")
                 ask_lang = gr.Dropdown(LANGS, value="english", label="Query Language")
             with gr.Row():
+                gr.Markdown("💡 **Quick Samples (Fact #0):**")
+                ex_en = gr.Button("🇬🇧 English Prompt", size="sm")
+                ex_hi = gr.Button("🇮🇳 Hindi Prompt (हिंदी)", size="sm")
+                ex_kn = gr.Button("🇮🇳 Kannada Prompt (ಕನ್ನಡ)", size="sm")
+            with gr.Row():
                 ask_state = gr.Dropdown(
                     choices=["original"],
                     value="original",
@@ -531,6 +536,18 @@ def build() -> gr.Blocks:
                     ask_after = gr.Textbox(label="After Forget Answer", lines=3, interactive=False)
                 side_note = gr.Markdown()
 
+            ex_en.click(
+                lambda: ("What is the full name of the geology author born in Karachi, Pakistan on 06/30/1975?", "english"),
+                outputs=[ask_q, ask_lang],
+            )
+            ex_hi.click(
+                lambda: ("06/30/1975 पर पाकिस्तान के कराची में पैदा हुए भूविज्ञान लेखक का पूरा नाम क्या है?", "hindi"),
+                outputs=[ask_q, ask_lang],
+            )
+            ex_kn.click(
+                lambda: ("ಪಾಕಿಸ್ತಾನದ ಕರಾಚಿಯಲ್ಲಿ 06/30/1975 ನಲ್ಲಿ ಜನಿಸಿದ ಭೂವಿಜ್ಞಾನ ಲೇಖಕರ ಪೂರ್ಣ ಹೆಸರು ಏನು?", "kannada"),
+                outputs=[ask_q, ask_lang],
+            )
             ask_btn.click(
                 ask_model,
                 inputs=[ask_q, ask_lang, ask_state],
