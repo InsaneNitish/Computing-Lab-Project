@@ -52,11 +52,11 @@ FORGET_PRESETS: dict[str, dict] = {
         "retain_weight": 1.0,
     },
     "strong": {
-        "lr": 1e-4,
+        "lr": 5e-5,
         "lora_r": 16,
         "lora_targets": "all",
-        "max_steps": 300,
-        "retain_weight": 0.5,
+        "max_steps": 200,
+        "retain_weight": 1.2,
     },
 }
 

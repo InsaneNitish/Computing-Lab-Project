@@ -203,6 +203,12 @@ def run_npo(
                 print(f"[forget] repetition ratio {rep_ratio:.2f} ≥ {MAX_REPETITION_RATIO} — aborting, restoring last good snapshot", flush=True)
                 stopped_reason = "degeneration_abort"
                 break
+            else:
+                # Keep latest known fluent checkpoint
+                clean_snap = os.path.join(out_dir, f"snap_step_{step}")
+                peft_model.save_pretrained(clean_snap)
+                snapshots_saved[f"step_{step}"] = clean_snap
+                last_good_snapshot = clean_snap
 
     # ── Save final adapter ────────────────────────────────────────────────────
     final_dir = os.path.join(out_dir, "final")
