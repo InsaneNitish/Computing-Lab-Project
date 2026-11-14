@@ -116,13 +116,27 @@ def _run_forget(record: dict, jobs_dir: str) -> dict:
     model = load_injected(inject_dir, BASE_MODEL_ID)
 
     # Collect forget records (question, answer)
-    forget_records = [{"question": fact.question, "answer": fact.answer}]
-    for p in fact.paraphrases:
-        forget_records.append({"question": p, "answer": fact.answer})
-    for lang in langs:
-        if lang != "english" and lang in fact.translations:
-            t = fact.translations[lang]
-            forget_records.append({"question": t["question"], "answer": t["answer"]})
+    scope = record.get("metadata", {}).get("scope", "author")
+    if scope == "author" and fact.tofu_index is not None:
+        from forgetlab.facts import TOFU
+        author_facts = TOFU.get_author_facts(fact.tofu_index // 20)
+        forget_records = []
+        for af in author_facts:
+            forget_records.append({"question": af.question, "answer": af.answer})
+            for p in af.paraphrases:
+                forget_records.append({"question": p, "answer": af.answer})
+            for lang in langs:
+                if lang != "english" and lang in af.translations:
+                    t = af.translations[lang]
+                    forget_records.append({"question": t["question"], "answer": t["answer"]})
+    else:
+        forget_records = [{"question": fact.question, "answer": fact.answer}]
+        for p in fact.paraphrases:
+            forget_records.append({"question": p, "answer": fact.answer})
+        for lang in langs:
+            if lang != "english" and lang in fact.translations:
+                t = fact.translations[lang]
+                forget_records.append({"question": t["question"], "answer": t["answer"]})
 
     retain_records = []
     for lang in ["english", "hindi", "kannada"]:
@@ -206,7 +220,14 @@ def _run_forget(record: dict, jobs_dir: str) -> dict:
                 return out.loss.item()
 
         # Build full probe sets
-        all_forget_probes = fact.forget_probes(langs=["english", "hindi", "kannada"])
+        if scope == "author" and fact.tofu_index is not None:
+            from forgetlab.facts import TOFU
+            author_facts = TOFU.get_author_facts(fact.tofu_index // 20)
+            all_forget_probes = []
+            for af in author_facts:
+                all_forget_probes.extend(af.forget_probes(langs=["english", "hindi", "kannada"]))
+        else:
+            all_forget_probes = fact.forget_probes(langs=["english", "hindi", "kannada"])
         all_retain_probes = build_retain_probes(n_per_lang=25, langs=["english", "hindi", "kannada"])
 
         # 1. Before unlearning (base model)

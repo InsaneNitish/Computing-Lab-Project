@@ -226,6 +226,17 @@ class TofuIndex:
                     break
         return hits
 
+    def author_index_for(self, fact_index: int) -> int:
+        """Return the author index (0-based, 20 facts per author in TOFU)."""
+        return fact_index // 20
+
+    def get_author_facts(self, author_index: int) -> list[Fact]:
+        """Return all 20 facts belonging to the given author."""
+        self._load()
+        start = author_index * 20
+        end = min(start + 20, len(self._records))
+        return [self.get(i) for i in range(start, end)]
+
     def all_facts(self, limit: int | None = None) -> list[Fact]:
         """Return all TOFU forget facts."""
         self._load()
