@@ -63,8 +63,13 @@ FORGET_PRESETS: dict[str, dict] = {
 # NPO temperature (beta).
 NPO_BETA = 0.1
 
-# Retain anchor: number of retain pairs per language.
+# ── Retain anchor: number of retain pairs per language.
 RETAIN_N_PER_LANG = 200
+
+# Verification probe parameters for live interactive jobs
+VERIFY_RETAIN_N_PER_LANG = 6    # 6 per lang across 3 langs = 18 retain probes (+ 3 sanity)
+VERIFY_GEN_CAP_FORGET = 64      # Max tokens for fact forget probes during verification
+VERIFY_GEN_CAP_RETAIN = 64      # Max tokens for retain probes during verification
 
 # Rolling-mean window for NPO stop rule.
 ROLLING_WINDOW = 5
@@ -161,6 +166,12 @@ def resolve_injected_ckpt(override_path: str | None = None) -> str:
     # Search any injected directory under checkpoints
     if _os.path.isdir("checkpoints"):
         for root, dirs, files in _os.walk("checkpoints"):
+            if _os.path.basename(root) == "injected" and "adapter_config.json" in files:
+                return root.replace("\\", "/")
+
+    # Search any injected directory under /kaggle/input (handles nested or case variations)
+    if _os.path.isdir("/kaggle/input"):
+        for root, dirs, files in _os.walk("/kaggle/input"):
             if _os.path.basename(root) == "injected" and "adapter_config.json" in files:
                 return root.replace("\\", "/")
 

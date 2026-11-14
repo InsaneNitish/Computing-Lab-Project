@@ -97,6 +97,9 @@ def _run_forget(record: dict, jobs_dir: str) -> dict:
         GEN_CAP,
         GEN_CAP_DEFAULT,
         MAX_TRAIN_LEN,
+        VERIFY_RETAIN_N_PER_LANG,
+        VERIFY_GEN_CAP_FORGET,
+        VERIFY_GEN_CAP_RETAIN,
         resolve_injected_ckpt,
     )
     from forgetlab.facts import (
@@ -254,23 +257,46 @@ def _run_forget(record: dict, jobs_dir: str) -> dict:
                         out = self.m(input_ids=inp, attention_mask=att, labels=lab)
                 return out.loss.item()
 
-        # Build full probe sets (retain probes strictly exclude forgotten fact indices)
+        # Build retain probe set (strictly exclude forgotten fact indices)
         all_retain_probes = build_retain_probes(
-            n_per_lang=25,
+            n_per_lang=VERIFY_RETAIN_N_PER_LANG,
             langs=["english", "hindi", "kannada"],
             exclude_indices=exclude_indices,
         )
 
+        print(
+            f"[worker] running verification on adapter '{adapter_dir}' "
+            f"({len(all_forget_probes)} forget probes across {len(facts)} facts, "
+            f"{len(all_retain_probes)} retain probes)…",
+            flush=True,
+        )
+
         # 1. Before unlearning (base model)
         base_host = ModelWrapper(model, tok)
-        forget_before = run_probes(all_forget_probes, base_host, judge, compute_nll=True)
-        retain_before = run_probes(all_retain_probes, base_host, judge, compute_nll=False)
+        forget_before = run_probes(
+            all_forget_probes, base_host, judge, compute_nll=True,
+            max_new_tokens=VERIFY_GEN_CAP_FORGET,
+            progress_desc="evaluating forget probes before unlearning",
+        )
+        retain_before = run_probes(
+            all_retain_probes, base_host, judge, compute_nll=False,
+            max_new_tokens=VERIFY_GEN_CAP_RETAIN,
+            progress_desc="evaluating retain probes before unlearning",
+        )
 
         # 2. After unlearning (with adapter loaded)
         peft_adapted = PeftModel.from_pretrained(model, adapter_dir)
         adapted_host = ModelWrapper(peft_adapted, tok)
-        forget_after = run_probes(all_forget_probes, adapted_host, judge, compute_nll=True)
-        retain_after = run_probes(all_retain_probes, adapted_host, judge, compute_nll=False)
+        forget_after = run_probes(
+            all_forget_probes, adapted_host, judge, compute_nll=True,
+            max_new_tokens=VERIFY_GEN_CAP_FORGET,
+            progress_desc="evaluating forget probes after unlearning",
+        )
+        retain_after = run_probes(
+            all_retain_probes, adapted_host, judge, compute_nll=False,
+            max_new_tokens=VERIFY_GEN_CAP_RETAIN,
+            progress_desc="evaluating retain probes after unlearning",
+        )
 
         # Transfer nll_before to after objects
         for fb, fa in zip(forget_before, forget_after):

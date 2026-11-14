@@ -97,6 +97,32 @@ def _cpu_only_msg():
     return "[WARNING] Running in CPU query-only mode (no GPU detected). Generation requires GPU execution (e.g. Kaggle T4)."
 
 
+def discover_available_adapters() -> list[dict]:
+    """Discover all unlearning LoRA checkpoints across checkpoints/ and /kaggle/input/."""
+    adapters = []
+    seen_paths = set()
+    search_roots = ["checkpoints"]
+    if os.path.isdir("/kaggle/input"):
+        search_roots.append("/kaggle/input")
+
+    for sroot in search_roots:
+        if not os.path.isdir(sroot):
+            continue
+        for root, dirs, files in os.walk(sroot):
+            if "adapter_config.json" in files:
+                norm = os.path.normpath(root).replace("\\", "/")
+                folder_name = os.path.basename(norm)
+                if folder_name == "injected":
+                    continue  # Base injected model, not an unlearned adapter
+                if norm not in seen_paths:
+                    seen_paths.add(norm)
+                    adapters.append({
+                        "name": folder_name,
+                        "path": norm,
+                    })
+    return adapters
+
+
 def resolve_adapter_dir(adapter_dir: str) -> str:
     """Find the actual directory containing adapter_config.json on disk or in /kaggle/input."""
     if adapter_dir and os.path.isdir(adapter_dir) and os.path.isfile(os.path.join(adapter_dir, "adapter_config.json")):
@@ -114,19 +140,25 @@ def resolve_adapter_dir(adapter_dir: str) -> str:
         if c and os.path.isdir(c) and os.path.isfile(os.path.join(c, "adapter_config.json")):
             return c
 
-    # Search in /kaggle/input
-    import glob
-    if base:
-        matches = glob.glob(f"/kaggle/input/**/{base}", recursive=True)
-        for m in matches:
-            if os.path.isdir(m) and os.path.isfile(os.path.join(m, "adapter_config.json")):
-                return m
+    # Search in checkpoints
+    if os.path.isdir("checkpoints"):
+        for root, dirs, files in os.walk("checkpoints"):
+            if "adapter_config.json" in files:
+                if base and (base == os.path.basename(root) or base in root):
+                    return root.replace("\\", "/")
 
-    # Search dynamically for any unlearned adapter under /kaggle/input
-    all_adapters = glob.glob("/kaggle/input/**/forgetlab*/**/adapter_config.json", recursive=True) + \
-                   glob.glob("/kaggle/input/**/forgetlab*/adapter_config.json", recursive=True)
-    if all_adapters:
-        return os.path.dirname(all_adapters[0])
+    # Search in /kaggle/input
+    if os.path.isdir("/kaggle/input"):
+        for root, dirs, files in os.walk("/kaggle/input"):
+            if "adapter_config.json" in files:
+                if base and (base == os.path.basename(root) or base in root):
+                    return root.replace("\\", "/")
+
+    # Fallback search for any unlearned adapter under /kaggle/input
+    if os.path.isdir("/kaggle/input"):
+        for root, dirs, files in os.walk("/kaggle/input"):
+            if "adapter_config.json" in files and os.path.basename(root) != "injected":
+                return root.replace("\\", "/")
 
     return adapter_dir
 
@@ -147,12 +179,19 @@ def ask_model(question: str, lang: str, state: str) -> tuple[str, str, bool]:
         if state == "original" or not state.startswith("after_"):
             engine.reset_to_injected()
         elif state.startswith("after_"):
-            jid = state[6:].split()[0]
-            rec = load_job(jid)
+            target = state[6:].split()[0]
+            rec = load_job(target)
+            adapter_path = None
             if rec and rec.get("adapter_dir"):
-                adapter_dir = resolve_adapter_dir(rec["adapter_dir"])
+                adapter_path = resolve_adapter_dir(rec["adapter_dir"])
+            if not adapter_path or not os.path.isdir(adapter_path):
+                adapter_path = resolve_adapter_dir(target)
+
+            if adapter_path and os.path.isfile(os.path.join(adapter_path, "adapter_config.json")):
                 engine.reset_to_injected()
-                engine.push_adapter(jid, adapter_dir)
+                engine.push_adapter(target, adapter_path)
+            else:
+                return f"[ERROR] Could not resolve adapter for '{target}'. Looked in checkpoints/ and /kaggle/input.", "", False
 
         cap  = GEN_CAP.get(lang.lower(), GEN_CAP_DEFAULT)
         t0   = time.time()
@@ -180,18 +219,34 @@ def ask_side_by_side(question: str, lang: str, job_id_raw: str) -> tuple[str, st
 
 
 def build_job_choices() -> list[str]:
-    jobs = [j for j in list_jobs() if j["status"] in (DONE, "ROLLED_BACK", "PERMANENT")]
+    jobs = [j for j in list_jobs() if j.get("status") in (DONE, "ROLLED_BACK", "PERMANENT")]
     choices = ["original"]
+    registered_ids = set()
+
     for j in jobs:
+        jid = j["job_id"]
+        registered_ids.add(jid)
         n = j.get("n_facts", 1)
         tag = f"{n} facts" if n > 1 else "1 fact"
-        choices.append(f"after_{j['job_id']} ({tag}, {j.get('preset','?')})")
+        choices.append(f"after_{jid} ({tag}, {j.get('preset','?')})")
+
+    # Include any standalone or Kaggle-mounted unlearning checkpoints
+    for ad in discover_available_adapters():
+        name = ad["name"]
+        if not any(rid in name for rid in registered_ids):
+            choices.append(f"after_{name} (checkpoint)")
+
     return choices
 
 
 def build_done_job_ids() -> list[str]:
-    jobs = [j for j in list_jobs() if j.get("metrics") or j["status"] in (DONE, "ROLLED_BACK", "PERMANENT")]
-    return [j["job_id"] for j in jobs]
+    jobs = [j for j in list_jobs() if j.get("metrics") or j.get("status") in (DONE, "ROLLED_BACK", "PERMANENT")]
+    ids = [j["job_id"] for j in jobs]
+    for ad in discover_available_adapters():
+        name = ad["name"]
+        if name not in ids and not any(jid in name for jid in ids):
+            ids.append(name)
+    return ids
 
 
 # ── Tab 2: Forget ─────────────────────────────────────────────────────

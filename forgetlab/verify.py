@@ -340,6 +340,8 @@ def run_probes(
     engine,                     # forgetlab.engine.ModelHost
     judge,                      # src.eval.judge.FactJudge
     compute_nll: bool = False,
+    max_new_tokens: int | None = None,
+    progress_desc: str | None = None,
 ) -> list[ProbeResult]:
     """Run the judge on all *probes* using *engine* for generation.
 
@@ -349,14 +351,20 @@ def run_probes(
     engine : ModelHost instance (must have .generate() and optionally .probe_nll()).
     judge  : FactJudge instance.
     compute_nll : if True, also compute per-token NLL for each probe.
+    max_new_tokens : optional cap override to prevent runaway generation during verification.
+    progress_desc : optional description to log for visibility in terminal and UI.
     """
     results: list[ProbeResult] = []
-    for probe in probes:
+    total = len(probes)
+    if progress_desc:
+        print(f"[verify] {progress_desc} ({total} probes)...", flush=True)
+
+    for i, probe in enumerate(probes, 1):
         lang     = probe["lang"]
         question = probe["question"]
         reference= probe["answer"]
         kind     = probe.get("kind", "")
-        cap      = GEN_CAP.get(lang, GEN_CAP_DEFAULT)
+        cap      = max_new_tokens or GEN_CAP.get(lang, GEN_CAP_DEFAULT)
 
         t0 = time.time()
         prediction = engine.generate(question, lang=lang, max_new_tokens=cap)

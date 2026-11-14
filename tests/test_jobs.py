@@ -129,3 +129,25 @@ class TestGPULock:
         result = _gpu_lock_held(tmp_dir)
         assert not result
         assert not os.path.exists(lock_path)
+
+
+class TestAdapterResolution:
+    def test_discover_and_resolve_standalone_adapter(self, tmp_path, monkeypatch):
+        # Create a mock checkpoint directory tree matching Kaggle structure
+        fake_ckpt = tmp_path / "DoomsDay_Checkpoint" / "unlearning_checkpoints" / "unlearning_checkpoints" / "standalone_adapter_test"
+        fake_ckpt.mkdir(parents=True)
+        (fake_ckpt / "adapter_config.json").write_text("{}")
+        (fake_ckpt / "adapter_model.safetensors").write_text("mock")
+
+        # Mock /kaggle/input search root
+        from forgetlab import app
+        monkeypatch.setattr(app, "discover_available_adapters", lambda: [
+            {"name": "standalone_adapter_test", "path": str(fake_ckpt).replace("\\", "/")}
+        ])
+
+        choices = app.build_job_choices()
+        assert any("standalone_adapter_test" in c for c in choices)
+
+        # Test resolution directly
+        resolved = app.resolve_adapter_dir(str(fake_ckpt))
+        assert os.path.isfile(os.path.join(resolved, "adapter_config.json"))
