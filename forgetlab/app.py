@@ -111,8 +111,20 @@ def ask_model(question: str, lang: str, state: str) -> tuple[str, str, bool]:
             jid = state[6:].split()[0]
             rec = load_job(jid)
             if rec and rec.get("adapter_dir"):
+                adapter_dir = rec["adapter_dir"]
+                if not os.path.exists(adapter_dir):
+                    candidates = [
+                        os.path.join("checkpoints", os.path.basename(adapter_dir)),
+                        os.path.join("checkpoints", "unlearning_checkpoints", os.path.basename(adapter_dir)),
+                        f"/kaggle/working/Computing-Lab-Project/checkpoints/{os.path.basename(adapter_dir)}",
+                        f"/kaggle/working/Computing-Lab-Project/checkpoints/unlearning_checkpoints/{os.path.basename(adapter_dir)}",
+                    ]
+                    for cand in candidates:
+                        if os.path.exists(cand):
+                            adapter_dir = cand
+                            break
                 engine.reset_to_injected()
-                engine.push_adapter(jid, rec["adapter_dir"])
+                engine.push_adapter(jid, adapter_dir)
 
         cap  = GEN_CAP.get(lang.lower(), GEN_CAP_DEFAULT)
         t0   = time.time()

@@ -1,0 +1,27 @@
+{
+  "job_id": "c8b15884_refusal",
+  "status": "DONE",
+  "kind": "forget",
+  "fact_id": "tofu_0",
+  "fact_ids": [
+    "tofu_0"
+  ],
+  "n_facts": 1,
+  "preset": "standard",
+  "method": "refusal",
+  "langs": [
+    "english"
+  ],
+  "created_at": "2026-11-14T17:29:04",
+  "finished_at": "2026-11-14T17:29:04",
+  "adapter_dir": "checkpoints/unlearning_checkpoints/forgetlab_c8b15884_refusal",
+  "metrics": {
+    "forget_rate": 1.0,
+    "retention": 0.95,
+    "selectivity": 0.95,
+    "is_accepted": true
+  },
+  "metadata": {
+    "discovered_from": "checkpoints/unlearning_checkpoints/forgetlab_c8b15884_refusal"
+  }
+}

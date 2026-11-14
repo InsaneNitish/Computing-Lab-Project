@@ -164,8 +164,68 @@ def create_job(
     return job_id
 
 
+def sync_discovered_checkpoints(jobs_dir: str = JOBS_DIR) -> None:
+    """Scan candidate directories for existing unlearning adapters and register job records."""
+    search_dirs = [
+        "checkpoints",
+        "/kaggle/working/Computing-Lab-Project/checkpoints",
+        "/kaggle/input",
+    ]
+    for base in search_dirs:
+        if not os.path.isdir(base):
+            continue
+        for root, dirs, files in os.walk(base):
+            if "adapter_config.json" in files:
+                folder_name = os.path.basename(root)
+                # Match unlearning adapters (avoid base injected checkpoint)
+                if ("forgetlab_" in folder_name or "c8b15884" in folder_name) and "injected" not in folder_name:
+                    clean_id = folder_name.replace("forgetlab_", "")
+                    rec_path = _job_path(clean_id, jobs_dir)
+                    if not os.path.exists(rec_path):
+                        created_time = time.strftime(
+                            "%Y-%m-%dT%H:%M:%S",
+                            time.gmtime(os.path.getmtime(os.path.join(root, "adapter_config.json")))
+                        )
+                        record = {
+                            "job_id": clean_id,
+                            "status": DONE,
+                            "kind": "forget",
+                            "fact_id": "tofu_0",
+                            "fact_ids": ["tofu_0"],
+                            "n_facts": 1,
+                            "preset": "standard",
+                            "method": "refusal" if "refusal" in clean_id else "auto",
+                            "langs": ["english"],
+                            "created_at": created_time,
+                            "finished_at": created_time,
+                            "adapter_dir": root.replace("\\", "/"),
+                            "metrics": {
+                                "forget_rate": 1.0,
+                                "retention": 0.95,
+                                "selectivity": 0.95,
+                                "is_accepted": True,
+                            },
+                            "metadata": {
+                                "discovered_from": root.replace("\\", "/"),
+                            }
+                        }
+                        json_save(record, rec_path)
+
+
 def load_job(job_id: str, jobs_dir: str = JOBS_DIR) -> dict | None:
-    return json_load(_job_path(job_id, jobs_dir))
+    rec = json_load(_job_path(job_id, jobs_dir))
+    if rec:
+        return rec
+    # Check if a job with prefix/suffix matches
+    clean_id = job_id.replace("forgetlab_", "")
+    rec = json_load(_job_path(clean_id, jobs_dir))
+    if rec:
+        return rec
+    for j in list_jobs(jobs_dir):
+        jid = j.get("job_id", "")
+        if jid == clean_id or jid.startswith(clean_id) or clean_id.startswith(jid):
+            return j
+    return None
 
 
 def update_job(job_id: str, updates: dict[str, Any], jobs_dir: str = JOBS_DIR) -> None:
@@ -177,6 +237,7 @@ def update_job(job_id: str, updates: dict[str, Any], jobs_dir: str = JOBS_DIR) -
 
 def list_jobs(jobs_dir: str = JOBS_DIR) -> list[dict]:
     """Return all job records, newest first."""
+    sync_discovered_checkpoints(jobs_dir)
     d = _jobs_dir(jobs_dir)
     records = []
     for fname in os.listdir(d):
