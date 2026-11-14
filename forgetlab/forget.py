@@ -193,7 +193,8 @@ def run_npo(
 
         # ── Degeneration check every PROBE_EVERY_N_STEPS steps ───────────────
         if step % PROBE_EVERY_N_STEPS == 0 and forget_records:
-            probe_q = forget_records[0]["question"]
+            probe_idx = (step // PROBE_EVERY_N_STEPS) % len(forget_records)
+            probe_q = forget_records[probe_idx]["question"]
             with torch.no_grad():
                 preds = generate_answers(peft_model, tok, [probe_q], max_new_tokens=gen_cap)
             pred = preds[0]

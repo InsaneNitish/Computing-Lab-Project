@@ -122,8 +122,53 @@ TEACH_MAX_EPOCHS     = 10
 TEACH_LR             = 2e-4
 
 # ── Paths (relative to repo root) ────────────────────────────────────────────
+import os as _os
+
+def resolve_injected_ckpt(override_path: str | None = None) -> str:
+    """Resolve the directory of the knowledge-injected checkpoint.
+
+    Checks candidate paths in priority order:
+    1. override_path (if provided and is an existing directory)
+    2. Environment variable FORGETLAB_INJECT_CKPT (if set and exists)
+    3. 'checkpoints/injected'
+    4. 'checkpoints/checkpoint_harshit/injected' (teammate Harshit's injected LoRA checkpoint)
+    5. '/kaggle/working/checkpoints/injected'
+    6. '/kaggle/working/checkpoints/checkpoint_harshit/injected'
+    7. '/kaggle/input/doomsday-checkpoint/checkpoint_harshit/injected'
+    8. '/kaggle/input/doomsday_checkpoint/checkpoint_harshit/injected'
+    9. Any 'injected' subfolder under 'checkpoints/' containing adapter_config.json
+    10. Default fallback: 'checkpoints/injected'
+    """
+    if override_path and _os.path.isdir(override_path):
+        return override_path
+
+    env_val = _os.environ.get("FORGETLAB_INJECT_CKPT")
+    if env_val and _os.path.isdir(env_val):
+        return env_val
+
+    candidates = [
+        "checkpoints/injected",
+        "checkpoints/checkpoint_harshit/injected",
+        "/kaggle/working/checkpoints/injected",
+        "/kaggle/working/checkpoints/checkpoint_harshit/injected",
+        "/kaggle/input/doomsday-checkpoint/checkpoint_harshit/injected",
+        "/kaggle/input/doomsday_checkpoint/checkpoint_harshit/injected",
+    ]
+    for c in candidates:
+        if _os.path.isdir(c) and _os.path.isfile(_os.path.join(c, "adapter_config.json")):
+            return c
+
+    # Search any injected directory under checkpoints
+    if _os.path.isdir("checkpoints"):
+        for root, dirs, files in _os.walk("checkpoints"):
+            if _os.path.basename(root) == "injected" and "adapter_config.json" in files:
+                return root.replace("\\", "/")
+
+    return "checkpoints/injected"
+
+
 JOBS_DIR        = "forgetlab_jobs"      # job records live here
-INJECT_CKPT     = "checkpoints/injected"
+INJECT_CKPT     = resolve_injected_ckpt()
 WORLD_CKPT_FMT  = "checkpoints/world_{version}"   # merged world models
 UNLEARN_CKPT_FMT= "checkpoints/forgetlab_{job_id}"
 LOG_DIR         = "results/logs"

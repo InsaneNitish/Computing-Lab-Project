@@ -278,7 +278,56 @@ def build_retain_probes(
     return probes
 
 
-# ── Paraphrase management ─────────────────────────────────────────────────────
+# ── Paraphrase management & Multi-Fact Utilities ──────────────────────────────
+
+def generate_default_paraphrases(question: str, answer: str) -> list[str]:
+    """Generate 4 natural question paraphrases for a fact when none are provided."""
+    q_clean = question.rstrip("?. ")
+    paras = [
+        f"Can you tell me: {q_clean}?",
+        f"Please provide information on: {q_clean}.",
+        f"What is known regarding {q_clean}?",
+    ]
+    if "The author's name is " in answer:
+        author = answer.replace("The author's name is ", "").rstrip(".")
+        paras.extend([
+            f"Who is {author}?",
+            f"Can you give details about {author}?",
+        ])
+    elif "primarily" in answer:
+        paras.append(f"Tell me about the primary domain in {q_clean}.")
+    else:
+        paras.append(f"Could you answer the following: {q_clean}?")
+    return paras
+
+
+def parse_fact_indices(spec: str) -> list[int]:
+    """Parse index specifications like '0, 1, 2', '0-4', '0..4, 7, 10-12' into sorted ints."""
+    indices: set[int] = set()
+    cleaned = spec.replace("..", "-").replace(";", ",").replace("\n", ",")
+    for part in cleaned.split(","):
+        part = part.strip()
+        if not part:
+            continue
+        if "-" in part:
+            subs = [s.strip() for s in part.split("-") if s.strip()]
+            if len(subs) == 2 and subs[0].isdigit() and subs[1].isdigit():
+                start, end = int(subs[0]), int(subs[1])
+                if start <= end:
+                    indices.update(range(start, end + 1))
+                else:
+                    indices.update(range(end, start + 1))
+        elif part.isdigit():
+            indices.add(int(part))
+    return sorted(i for i in indices if 0 <= i < len(TOFU))
+
+
+def get_author_fact_indices(author_idx: int) -> list[int]:
+    """Return the 20 TOFU forget indices for the given author index (0–9)."""
+    author_idx = max(0, min(9, int(author_idx)))
+    start = author_idx * 20
+    return list(range(start, start + 20))
+
 
 def add_paraphrases(fact: Fact, paraphrases: list[str], dedupe: bool = True) -> Fact:
     """Return a new Fact with *paraphrases* appended (deduped against existing ones)."""
@@ -328,4 +377,19 @@ class FactStore:
 
     def all(self) -> list[Fact]:
         return [self.load(fid) for fid in self.list_ids()]
+
+
+def get_facts_by_indices(indices: list[int], store: FactStore | None = None) -> list[Fact]:
+    """Load Fact objects for the requested TOFU indices, ensuring paraphrases exist."""
+    facts = []
+    for idx in indices:
+        if 0 <= idx < len(TOFU):
+            fact = TOFU.get(idx)
+            if not fact.paraphrases:
+                default_paras = generate_default_paraphrases(fact.question, fact.answer)
+                fact = add_paraphrases(fact, default_paras)
+            if store is not None:
+                store.save(fact)
+            facts.append(fact)
+    return facts
 

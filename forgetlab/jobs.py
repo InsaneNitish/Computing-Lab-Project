@@ -135,14 +135,18 @@ def create_job(
     hyperparameters: dict[str, Any],
     metadata: dict[str, Any],
     jobs_dir: str = JOBS_DIR,
+    fact_ids: list[str] | None = None,
 ) -> str:
     """Create a new job record and return its job_id."""
     job_id = short_id()
+    fids = fact_ids if fact_ids else [fact_id]
     record = {
         "job_id": job_id,
         "status": QUEUED,
         "kind": kind,
         "fact_id": fact_id,
+        "fact_ids": fids,
+        "n_facts": len(fids),
         "preset": preset,
         "method": method,
         "langs": langs,

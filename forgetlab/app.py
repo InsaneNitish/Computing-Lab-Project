@@ -32,8 +32,16 @@ from forgetlab.config import (
     LANG_LABELS,
     REFUSAL_NEEDS_REVIEW,
     REFUSAL_STRINGS,
+    resolve_injected_ckpt,
 )
-from forgetlab.facts import FactStore, TofuIndex, build_retain_probes
+from forgetlab.facts import (
+    FactStore,
+    TofuIndex,
+    build_retain_probes,
+    parse_fact_indices,
+    get_facts_by_indices,
+    get_author_fact_indices,
+)
 from forgetlab.jobs import (
     DONE, FAILED, RUNNING, QUEUED,
     cancel_job, create_job, launch_job, list_jobs, load_job,
@@ -58,7 +66,8 @@ def _get_engine():
     import torch
     _has_gpu = torch.cuda.is_available()
     from forgetlab.engine import ModelHost
-    inject_dir = INJECT_CKPT if os.path.isdir(INJECT_CKPT) else None
+    resolved_injected = resolve_injected_ckpt(INJECT_CKPT)
+    inject_dir = resolved_injected if os.path.isdir(resolved_injected) else None
     _engine = ModelHost(injected_dir=inject_dir, cpu_only=(not _has_gpu))
     return _engine
 
@@ -80,7 +89,7 @@ def _get_judge():
 
 
 def _cpu_only_msg():
-    return "⚠️ Running in **CPU query-only mode** — no GPU detected. Generation is not available. Please run on a GPU (e.g. Kaggle T4)."
+    return "[WARNING] Running in CPU query-only mode (no GPU detected). Generation requires GPU execution (e.g. Kaggle T4)."
 
 
 # ── Tab 1: Ask ────────────────────────────────────────────────────────────────
@@ -111,8 +120,8 @@ def ask_model(question: str, lang: str, state: str) -> tuple[str, str, bool]:
         gen_t = time.time() - t0
 
         loop = is_looping(pred)
-        warn = f"⚠️ Looping output detected (repetition ratio > 0.5)" if loop else ""
-        return pred, f"⏱ {gen_t:.2f}s  {warn}", loop
+        warn = "[WARNING] Repetitive looping detected (ratio > 0.5)" if loop else ""
+        return pred, f"Latency: {gen_t:.2f}s  {warn}".strip(), loop
 
     except RuntimeError as e:
         return _cpu_only_msg(), "", False
@@ -132,7 +141,12 @@ def ask_side_by_side(question: str, lang: str, job_id_raw: str) -> tuple[str, st
 
 def build_job_choices() -> list[str]:
     jobs = [j for j in list_jobs() if j["status"] in (DONE, "ROLLED_BACK", "PERMANENT")]
-    return ["original"] + [f"after_{j['job_id']} ({j.get('preset','?')} {j.get('kind','?')})" for j in jobs]
+    choices = ["original"]
+    for j in jobs:
+        n = j.get("n_facts", 1)
+        tag = f"{n} facts" if n > 1 else "1 fact"
+        choices.append(f"after_{j['job_id']} ({tag}, {j.get('preset','?')})")
+    return choices
 
 
 def build_done_job_ids() -> list[str]:
@@ -154,10 +168,10 @@ def load_tofu_fact(idx: int) -> tuple[str, str, str, str]:
             fact.question,
             fact.answer,
             paras,
-            f"ℹ️ Loaded TOFU fact #{int(idx)}: '{fact.question[:60]}…'",
+            f"[INFO] Loaded TOFU fact #{int(idx)}: '{fact.question[:60]}...'",
         )
     except Exception as e:
-        return "", "", "", f"❌ Error loading TOFU fact #{idx}: {e}"
+        return "", "", "", f"[ERROR] Failed to load TOFU fact #{idx}: {e}"
 
 
 def submit_forget(
@@ -173,9 +187,9 @@ def submit_forget(
     import torch
 
     if not question.strip() or not answer.strip():
-        return "❌ Question and answer are required.", ""
+        return "[ERROR] Question and answer are required.", ""
     if not torch.cuda.is_available():
-        return "❌ No CUDA GPU detected — background unlearning jobs require a GPU.", ""
+        return "[ERROR] No CUDA GPU detected — unlearning execution requires a GPU.", ""
 
     paraphrases = [p.strip() for p in paraphrases_txt.splitlines() if p.strip()]
 
@@ -207,7 +221,7 @@ def submit_forget(
         method=method,
         hyperparameters=FORGET_PRESETS.get(preset, {}),
     )
-    meta["inject_dir"] = INJECT_CKPT
+    meta["inject_dir"] = resolve_injected_ckpt(INJECT_CKPT)
 
     job_id = create_job(
         kind=kind,
@@ -217,6 +231,7 @@ def submit_forget(
         langs=langs or ["english"],
         hyperparameters=FORGET_PRESETS.get(preset, {}),
         metadata=meta,
+        fact_ids=[fact_id],
     )
 
     # Launch in a background worker subprocess
@@ -226,7 +241,82 @@ def submit_forget(
             proc.wait()
 
     threading.Thread(target=_bg, daemon=True).start()
-    status_msg = f"🚀 Job **{job_id}** ({kind}) started in background! Live loss curves and log streaming below."
+    status_msg = f"[INFO] Job {job_id} ({kind}) initiated in background. Loss curves and telemetry below."
+    return status_msg, job_id
+
+
+def preview_tofu_batch(indices_str: str) -> tuple[pd.DataFrame, str]:
+    """Parse indices and return a preview DataFrame and summary message."""
+    indices = parse_fact_indices(indices_str)
+    if not indices:
+        return pd.DataFrame(columns=["Index", "Question", "Answer"]), "[WARNING] No valid indices specified (range must be 0-199)."
+
+    rows = []
+    for idx in indices:
+        f = _tofu.get(idx)
+        rows.append({
+            "Index": idx,
+            "Question": f.question,
+            "Answer": f.answer,
+        })
+    df = pd.DataFrame(rows)
+    msg = f"[INFO] Loaded {len(indices)} facts (Indices: {indices[:8]}{'...' if len(indices) > 8 else ''}). Ready for batch unlearning."
+    return df, msg
+
+
+def submit_batch_forget(
+    indices_str: str,
+    langs: list[str],
+    preset: str,
+) -> tuple[str, str]:
+    """Submit a multi-fact unlearning job targeting multiple TOFU facts simultaneously."""
+    import torch
+    if not torch.cuda.is_available():
+        return "[ERROR] No CUDA GPU detected — unlearning execution requires a GPU.", ""
+
+    indices = parse_fact_indices(indices_str)
+    if not indices:
+        return "[ERROR] Please enter at least one valid TOFU index (0-199).", ""
+
+    facts = get_facts_by_indices(indices, _store)
+    if not facts:
+        return "[ERROR] Failed to load facts for given indices.", ""
+
+    fact_ids = [f.fact_id for f in facts]
+    primary_fact_id = f"batch_{len(facts)}_tofu_{indices[0]}_{indices[-1]}"
+    total_probes = sum(len(f.forget_probes(langs=langs)) for f in facts)
+
+    meta = build_metadata(
+        base_model=BASE_MODEL_ID,
+        injection_version="v1",
+        gen_cap=GEN_CAP_DEFAULT,
+        n=total_probes,
+        seed=0,
+        method="auto",
+        hyperparameters=FORGET_PRESETS.get(preset, {}),
+    )
+    meta["inject_dir"] = resolve_injected_ckpt(INJECT_CKPT)
+    meta["tofu_indices"] = indices
+    meta["fact_ids"] = fact_ids
+
+    job_id = create_job(
+        kind="forget",
+        fact_id=primary_fact_id,
+        preset=preset,
+        method="auto",
+        langs=langs or ["english"],
+        hyperparameters=FORGET_PRESETS.get(preset, {}),
+        metadata=meta,
+        fact_ids=fact_ids,
+    )
+
+    def _bg():
+        proc = launch_job(job_id)
+        if proc:
+            proc.wait()
+
+    threading.Thread(target=_bg, daemon=True).start()
+    status_msg = f"[INFO] Multi-Fact Job {job_id} initiated for {len(facts)} facts (Indices: {indices[:6]}{'...' if len(indices)>6 else ''}). Tracking telemetry below."
     return status_msg, job_id
 
 
@@ -326,30 +416,32 @@ def show_verify(job_id_raw: str) -> tuple[str, pd.DataFrame, str]:
         for l, v in per_lang.items()
     )
 
+    n_facts = rec.get("n_facts") or len(rec.get("fact_ids", [1]))
     report = f"""
-## 📊 Verification Report Card — Job `{job_id}`
+## Verification Report Card: Job `{job_id}`
 
 | Metric | Measured Value | 95% Wilson CI | Acceptance Target |
 |---|---|---|---|
+| **Target Facts** | **{n_facts} fact(s)** | — | Surgical Unlearning Target |
 | **Forget Rate** | **{fr:.2f}** | {ci.get('forget_rate', ('-','-'))} | ≥ 0.70 (Direct: 1.0) |
 | **Retention** | **{ret:.2f}** | {ci.get('retention', ('-','-'))} | ≥ 0.90 |
 | **Selectivity** | **{sel:.2f}** | — | Positive (> 0) |
 | **Degeneracy Rate** | **{deg:.2f}** | {ci.get('degeneracy_rate', ('-','-'))} | ≤ 0.05 |
-| **Reversibility** | {f'**{rev:.2f}**' if rev is not None else '*Not yet probed (click button below)*'} | — | Lower = less reversible |
+| **Reversibility** | {f'**{rev:.2f}**' if rev is not None else '*Not yet probed (run reversibility probe below)*'} | — | Lower = less reversible |
 
-### 🌐 Cross-Language Leakage Matrix
+### Cross-Language Leakage Matrix
 | Language | Forget Rate (1.0 = forgotten, 0.0 = leaked) | Probes Tested (n) |
 |---|---|---|
 {lang_rows or '*(English only tested)*'}
 
-### 📉 Per-Token NLL Deltas
+### Per-Token NLL Deltas
 - **Forget probes:** Before: `{metrics.get('nll_forget_before', '-')}` → After: `{metrics.get('nll_forget_after', '-')}`
 - **Retain probes:** Before: `{metrics.get('nll_retain_before', '-')}` → After: `{metrics.get('nll_retain_after', '-')}`
 
-### 🎯 Acceptance Verdict: {'✅ **ACCEPTED**' if acc else '❌ **FAILED ACCEPTANCE THRESHOLDS**'}
+### Acceptance Verdict: {'[ACCEPTED]' if acc else '[FAILED ACCEPTANCE THRESHOLDS]'}
 {notes}
 
-> ℹ️ *Note:* Forgetting lives in a **removable LoRA adapter**. You can roll it back at any time in the Jobs tab.
+> Note: Forgetting resides in a dedicated LoRA adapter. You can roll it back at any time in the Jobs tab.
 """
     # Probe table
     probe_rows = []
@@ -381,7 +473,7 @@ def run_reversibility_ui(job_id_raw: str) -> str:
 
     import torch
     if not torch.cuda.is_available():
-        return "⚠️ Reversibility probe requires a CUDA GPU."
+        return "[WARNING] Reversibility probe requires a CUDA GPU."
 
     try:
         from peft import PeftModel
@@ -417,12 +509,12 @@ def run_reversibility_ui(job_id_raw: str) -> str:
         update_job(job_id, {"metrics": metrics})
 
         return (
-            f"✅ **Reversibility probe complete!**\n\n"
+            f"[SUCCESS] Reversibility probe complete.\n\n"
             f"- Fact recovery rate after 10-step relearning probe: **{recovery_rate:.2f}**\n"
             f"- Result updated in Job `{job_id}`."
         )
     except Exception as e:
-        return f"❌ Reversibility probe failed: {e}"
+        return f"[ERROR] Reversibility probe failed: {e}"
 
 
 # ── Tab 4: Jobs ───────────────────────────────────────────────────────
@@ -450,10 +542,10 @@ def do_rollback(job_id_raw: str) -> str:
         engine = _get_engine()
         engine.reset_to_injected()
         return (
-            f"✅ Job `{job_id}` marked as ROLLED_BACK. The unlearning adapter was removed from the active model.\n"
+            f"[SUCCESS] Job `{job_id}` marked as ROLLED_BACK. The unlearning adapter was removed from the active model.\n"
             f"Original knowledge is restored. (Adapter files are safely preserved on disk)."
         )
-    return f"❌ Could not roll back job `{job_id}` (must be in DONE status)."
+    return f"[ERROR] Could not roll back job `{job_id}` (must be in DONE status)."
 
 
 def do_make_permanent(job_id_raw: str) -> str:
@@ -463,8 +555,8 @@ def do_make_permanent(job_id_raw: str) -> str:
     engine = _get_engine()
     ok = make_permanent(job_id, engine)
     if ok:
-        return f"✅ Job `{job_id}` permanently merged into model weights. This unlearning is now permanent."
-    return f"❌ Could not make job `{job_id}` permanent."
+        return f"[SUCCESS] Job `{job_id}` permanently merged into model weights. This unlearning is now permanent."
+    return f"[ERROR] Could not make job `{job_id}` permanent."
 
 
 # ── Tab 5: Research ───────────────────────────────────────────────────
@@ -496,22 +588,22 @@ def research_tradeoff_note():
 def build() -> gr.Blocks:
     with gr.Blocks(title="ForgetLab") as demo:
         gr.Markdown(
-            "# 🧠 ForgetLab: Cross-Lingual Machine Unlearning Studio\n"
-            "An end-to-end dashboard for verified fact unlearning on **Llama-3.2-1B** across English, Hindi, and Kannada.\n"
-            "> ℹ️ *Unlearning is achieved via surgical LoRA weight updates using NPO + retain anchor. Keyword filters and blocklists are never used.*"
+            "# ForgetLab: Multilingual Machine Unlearning Studio\n"
+            "An end-to-end framework for verified fact unlearning on **Llama-3.2-1B** across English, Hindi, and Kannada.\n"
+            "> Note: Unlearning is performed via surgical LoRA weight updates using NPO with retain anchor."
         )
 
         # ── Tab 1: Ask ────────────────────────────────────────────────────────
-        with gr.Tab("🗣 Ask"):
+        with gr.Tab("Ask"):
             gr.Markdown("Query the model in any language and inspect original vs. unlearned model states.")
             with gr.Row():
                 ask_q    = gr.Textbox(label="Question", lines=2, placeholder="e.g. Who is Hina Ameen? / In which genre does Hina Ameen primarily write?")
                 ask_lang = gr.Dropdown(LANGS, value="english", label="Query Language")
             with gr.Row():
-                gr.Markdown("💡 **Quick Samples (Fact #0):**")
-                ex_en = gr.Button("🇬🇧 English Prompt", size="sm")
-                ex_hi = gr.Button("🇮🇳 Hindi Prompt (हिंदी)", size="sm")
-                ex_kn = gr.Button("🇮🇳 Kannada Prompt (ಕನ್ನಡ)", size="sm")
+                gr.Markdown("**Quick Prompts (Fact #0):**")
+                ex_en = gr.Button("English Prompt", size="sm")
+                ex_hi = gr.Button("Hindi Prompt (हिंदी)", size="sm")
+                ex_kn = gr.Button("Kannada Prompt (ಕನ್ನಡ)", size="sm")
             with gr.Row():
                 ask_state = gr.Dropdown(
                     choices=["original"],
@@ -519,18 +611,18 @@ def build() -> gr.Blocks:
                     label="Model State",
                     info="'original' = Injected base model; 'after_<job_id>' = Unlearning adapter attached"
                 )
-                refresh_state_btn = gr.Button("🔄 Refresh States", size="sm")
+                refresh_state_btn = gr.Button("Refresh States", size="sm")
 
             with gr.Row():
-                ask_btn = gr.Button("💬 Ask Model", variant="primary")
+                ask_btn = gr.Button("Submit Query", variant="primary")
             ask_ans  = gr.Textbox(label="Model Response", lines=3, interactive=False)
             ask_meta = gr.Markdown()
 
-            with gr.Accordion("⚖️ Side-by-Side Comparison (Original vs After Forget)", open=False):
+            with gr.Accordion("Side-by-Side Comparison (Original vs After Forget)", open=False):
                 gr.Markdown("Compare the base injected answer directly against an unlearned job adapter.")
                 with gr.Row():
                     compare_job_sel = gr.Dropdown(choices=[], label="Select Job to Compare Against")
-                    side_btn = gr.Button("⚡ Compare Side-by-Side", variant="secondary")
+                    side_btn = gr.Button("Compare States", variant="secondary")
                 with gr.Row():
                     ask_orig  = gr.Textbox(label="Original State Answer", lines=3, interactive=False)
                     ask_after = gr.Textbox(label="After Forget Answer", lines=3, interactive=False)
@@ -568,45 +660,110 @@ def build() -> gr.Blocks:
             )
 
         # ── Tab 2: Forget ─────────────────────────────────────────────────────
-        with gr.Tab("🗑 Forget"):
+        with gr.Tab("Forget"):
             gr.Markdown(
-                "Submit a target fact to unlearn. A background job performs surgical LoRA unlearning.\n"
-                "You can continue querying the model in the Ask tab while the job runs."
+                "Submit target fact(s) to unlearn. A background job performs surgical LoRA unlearning.\n"
+                "You can unlearn **multiple facts simultaneously** or target a **single fact**. "
+                "Query the model in the Ask tab while the job runs."
             )
-            with gr.Row():
-                ft_mode = gr.Radio(
-                    ["Known fact", "Teach then forget"],
-                    value="Known fact",
-                    label="Unlearning Mode",
-                    info="'Known fact': pick from TOFU forget set. 'Teach then forget': inject new fact first, then unlearn."
-                )
-                with gr.Column():
-                    ft_tofu_idx = gr.Number(label="TOFU Index (0–199)", value=0, precision=0)
-                    load_tofu_btn = gr.Button("📋 Load TOFU Fact by Index", size="sm")
+            with gr.Tabs():
+                with gr.Tab("Multi-Fact Batch"):
+                    gr.Markdown("Select multiple TOFU facts or author blocks to unlearn in a single LoRA training session.")
+                    with gr.Row():
+                        batch_indices = gr.Textbox(
+                            label="TOFU Fact Indices (comma-separated or ranges)",
+                            value="0, 1, 2, 3, 4",
+                            placeholder="e.g. 0-4 or 0, 1, 2, 5, 8 or 0-19 for author block",
+                            scale=3,
+                        )
+                        preview_batch_btn = gr.Button("Preview Facts", variant="secondary", scale=1)
+                    with gr.Row():
+                        p_b1 = gr.Button("Facts 0-4 (5 Facts)", size="sm")
+                        p_b2 = gr.Button("Facts 0-9 (10 Facts)", size="sm")
+                        p_b3 = gr.Button("Author 0: Hina Ameen (0-19)", size="sm")
+                        p_b4 = gr.Button("Author 1: Xin Lee Williams (20-39)", size="sm")
+                    batch_preview_df = gr.Dataframe(
+                        headers=["Index", "Question", "Answer"],
+                        interactive=False,
+                        wrap=True,
+                    )
+                    batch_preview_md = gr.Markdown("Click **Preview Facts** or a quick preset above to view selected facts.")
+                    with gr.Row():
+                        batch_langs  = gr.CheckboxGroup(LANGS, value=["english"], label="Unlearn in Languages (English default for leakage evaluation)")
+                        batch_preset = gr.Dropdown(list(FORGET_PRESETS.keys()), value="standard", label="Unlearning Strength Preset")
+                    batch_btn = gr.Button("Start Multi-Fact Unlearning", variant="primary")
 
-            ft_q    = gr.Textbox(label="Question (Direct)", lines=2, placeholder="e.g. Who is Hina Ameen?")
-            ft_a    = gr.Textbox(label="Answer (to be forgotten)", lines=2, placeholder="e.g. The author's name is Hina Ameen.")
-            ft_para = gr.Textbox(
-                label="Paraphrases (English, one per line)",
-                lines=3,
-                placeholder="Can you tell me about Hina Ameen?\nWhat is the name of the author born in Karachi on 06/30/1975?",
-            )
-            with gr.Row():
-                ft_langs  = gr.CheckboxGroup(LANGS, value=["english"], label="Unlearn in Languages (default English only for leakage evaluation)")
-                ft_preset = gr.Dropdown(list(FORGET_PRESETS.keys()), value="standard", label="Unlearning Strength Preset")
+                with gr.Tab("Single Fact"):
+                    gr.Markdown("Inspect or edit a single fact before triggering surgical unlearning.")
+                    with gr.Row():
+                        ft_mode = gr.Radio(
+                            ["Known fact", "Custom fact"],
+                            value="Known fact",
+                            label="Fact Source",
+                        )
+                        with gr.Column():
+                            ft_tofu_idx = gr.Number(label="TOFU Index (0–199)", value=0, precision=0)
+                            load_tofu_btn = gr.Button("Load TOFU Fact by Index", size="sm")
 
-            ft_btn = gr.Button("▶ Start Unlearning Job", variant="primary")
+                    ft_q    = gr.Textbox(label="Question (Direct)", lines=2, placeholder="e.g. Who is Hina Ameen?")
+                    ft_a    = gr.Textbox(label="Answer (to be forgotten)", lines=2, placeholder="e.g. The author's name is Hina Ameen.")
+                    ft_para = gr.Textbox(
+                        label="Paraphrases (English, one per line)",
+                        lines=3,
+                        placeholder="Can you tell me about Hina Ameen?\nWhat is the name of the author born in Karachi on 06/30/1975?",
+                    )
+                    with gr.Row():
+                        ft_langs  = gr.CheckboxGroup(LANGS, value=["english"], label="Unlearn in Languages")
+                        ft_preset = gr.Dropdown(list(FORGET_PRESETS.keys()), value="standard", label="Unlearning Strength Preset")
+                    ft_btn = gr.Button("Start Single-Fact Unlearning", variant="primary")
+
+                with gr.Tab("Teach then Forget"):
+                    gr.Markdown("Inject a novel fact into the model first, verify it knows it, then surgically unlearn it.")
+                    ttf_q = gr.Textbox(label="Novel Question", lines=2, placeholder="e.g. Where is the secret research bunker located?")
+                    ttf_a = gr.Textbox(label="Novel Answer (Secret Fact)", lines=2, placeholder="e.g. The bunker is located in the Antarctic ridge.")
+                    ttf_para = gr.Textbox(label="Paraphrases (English, one per line)", lines=3)
+                    with gr.Row():
+                        ttf_langs  = gr.CheckboxGroup(LANGS, value=["english"], label="Target Languages")
+                        ttf_preset = gr.Dropdown(list(FORGET_PRESETS.keys()), value="standard", label="Unlearning Strength Preset")
+                    ttf_btn = gr.Button("Start Teach-then-Forget Pipeline", variant="primary")
+
             ft_status = gr.Markdown()
 
             # Job Status & Live Telemetry
-            with gr.Accordion("📈 Job Status, Live Loss Curves & Logs", open=True):
+            with gr.Accordion("Job Telemetry: Status, Loss Trajectory & Logs", open=True):
                 with gr.Row():
                     ft_job_sel = gr.Textbox(label="Active Job ID", placeholder="Job ID will appear here…")
-                    ft_refresh_btn = gr.Button("🔄 Refresh Status & Curve", size="sm")
+                    ft_refresh_btn = gr.Button("Refresh Telemetry", size="sm")
                 ft_status_md = gr.Markdown("No job currently running.")
                 ft_curve     = gr.Plot(label="Live Training Loss Curve (NPO Forget vs Retain Anchor)")
                 ft_log       = gr.Textbox(label="Worker Log Tail (Last 40 lines)", lines=10, interactive=False)
 
+            preview_batch_btn.click(
+                preview_tofu_batch,
+                inputs=[batch_indices],
+                outputs=[batch_preview_df, batch_preview_md],
+            )
+            p_b1.click(
+                lambda: ("0, 1, 2, 3, 4", *preview_tofu_batch("0, 1, 2, 3, 4")),
+                outputs=[batch_indices, batch_preview_df, batch_preview_md],
+            )
+            p_b2.click(
+                lambda: ("0-9", *preview_tofu_batch("0-9")),
+                outputs=[batch_indices, batch_preview_df, batch_preview_md],
+            )
+            p_b3.click(
+                lambda: ("0-19", *preview_tofu_batch("0-19")),
+                outputs=[batch_indices, batch_preview_df, batch_preview_md],
+            )
+            p_b4.click(
+                lambda: ("20-39", *preview_tofu_batch("20-39")),
+                outputs=[batch_indices, batch_preview_df, batch_preview_md],
+            )
+            batch_btn.click(
+                submit_batch_forget,
+                inputs=[batch_indices, batch_langs, batch_preset],
+                outputs=[ft_status, ft_job_sel],
+            )
             load_tofu_btn.click(
                 load_tofu_fact,
                 inputs=[ft_tofu_idx],
@@ -617,6 +774,11 @@ def build() -> gr.Blocks:
                 inputs=[ft_q, ft_a, ft_para, ft_langs, ft_preset, ft_mode, ft_tofu_idx],
                 outputs=[ft_status, ft_job_sel],
             )
+            ttf_btn.click(
+                lambda q, a, p, l, pr: submit_forget(q, a, p, l, pr, "Teach then forget", None),
+                inputs=[ttf_q, ttf_a, ttf_para, ttf_langs, ttf_preset],
+                outputs=[ft_status, ft_job_sel],
+            )
             ft_refresh_btn.click(
                 lambda jid: (get_job_status(jid), get_job_curve(jid), get_job_log(jid)),
                 inputs=[ft_job_sel],
@@ -625,31 +787,31 @@ def build() -> gr.Blocks:
 
             if REFUSAL_NEEDS_REVIEW:
                 gr.Markdown(
-                    "> ⚠️ **Refusal strings pending review** (fallback method):\n"
+                    "> [NOTE] Machine-translated refusal strings pending review (fallback method):\n"
                     f"> - Hindi: *{REFUSAL_STRINGS.get('hindi','?')}*\n"
                     f"> - Kannada: *{REFUSAL_STRINGS.get('kannada','?')}*\n"
                 )
 
         # ── Tab 3: Verify ─────────────────────────────────────────────────────
-        with gr.Tab("✅ Verify"):
+        with gr.Tab("Verify"):
             gr.Markdown(
                 "Inspect the comprehensive **Verification Report Card** for completed jobs.\n"
                 "Evaluates forget rate, retention, selectivity, degeneracy, and cross-lingual leakage."
             )
             with gr.Row():
                 vf_jobs    = gr.Dropdown(label="Select Completed Job", choices=[])
-                vf_refresh = gr.Button("🔄 Refresh", size="sm")
-                vf_btn     = gr.Button("📄 Generate Report Card", variant="primary")
+                vf_refresh = gr.Button("Refresh", size="sm")
+                vf_btn     = gr.Button("Generate Report Card", variant="primary")
 
             vf_md   = gr.Markdown()
-            gr.Markdown("### 🔍 Probe-by-Probe Breakdown (Before vs. After)")
+            gr.Markdown("### Probe-by-Probe Breakdown (Before vs. After)")
             vf_table = gr.Dataframe(interactive=False)
 
-            with gr.Accordion("🧪 Reversibility Probe (RQ2)", open=False):
+            with gr.Accordion("Reversibility Probe (RQ2)", open=False):
                 gr.Markdown(
                     "Test whether the unlearned fact resurfaces after fine-tuning 10 steps on unrelated retain pairs."
                 )
-                vf_rev_btn = gr.Button("⚡ Run 10-Step Reversibility Probe", variant="secondary")
+                vf_rev_btn = gr.Button("Run 10-Step Reversibility Probe", variant="secondary")
                 vf_rev_out = gr.Markdown()
 
             with gr.Accordion("Raw Verification Metrics (JSON)", open=False):
@@ -661,21 +823,21 @@ def build() -> gr.Blocks:
             vf_rev_btn.click(run_reversibility_ui, inputs=[vf_jobs], outputs=[vf_rev_out])
 
         # ── Tab 4: Jobs & Rollback ───────────────────────────────────────────
-        with gr.Tab("📋 Jobs & Rollback"):
+        with gr.Tab("Jobs & Rollback"):
             gr.Markdown(
                 "Manage all unlearning and teaching jobs.\n"
                 "- **Roll back**: Disables the unlearning LoRA adapter. Original knowledge immediately returns.\n"
                 "- **Make permanent**: Permanently merges the LoRA adapter into the base weights."
             )
-            jb_refresh = gr.Button("🔄 Refresh Job List", size="sm")
+            jb_refresh = gr.Button("Refresh Job List", size="sm")
             jb_table   = gr.Dataframe(
                 headers=["job_id", "status", "kind", "preset", "created_at", "adapter_dir"],
                 interactive=False,
             )
             with gr.Row():
                 jb_sel = gr.Textbox(label="Job ID to Act On", placeholder="Enter job ID…")
-                jb_rb_btn = gr.Button("↩ Roll Back Unlearning (Restore Fact)", variant="secondary")
-                jb_perm_btn = gr.Button("🔒 Make Permanent (Merge Adapter)", variant="stop")
+                jb_rb_btn = gr.Button("Roll Back Adapter (Restore Knowledge)", variant="secondary")
+                jb_perm_btn = gr.Button("Make Permanent (Merge Adapter)", variant="stop")
             jb_msg = gr.Markdown()
 
             jb_refresh.click(jobs_table, outputs=jb_table)
@@ -684,7 +846,7 @@ def build() -> gr.Blocks:
             jb_perm_btn.click(do_make_permanent, inputs=[jb_sel], outputs=[jb_msg])
 
         # ── Tab 5: Research ───────────────────────────────────────────────────
-        with gr.Tab("🔬 Research"):
+        with gr.Tab("Research Analysis"):
             gr.Markdown("Transfer matrices, trade-off curves, and diagnostic figures from research runs.")
             with gr.Accordion("Cross-Lingual Leakage Matrix (Gradient Ascent Baseline)", open=True):
                 res_plot = gr.Plot()

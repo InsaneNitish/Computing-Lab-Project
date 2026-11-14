@@ -32,6 +32,20 @@ class TestJobCRUD:
         assert rec["status"] == QUEUED
         assert rec["kind"] == "forget"
         assert rec["fact_id"] == "abc123"
+        assert rec["fact_ids"] == ["abc123"]
+        assert rec["n_facts"] == 1
+
+    def test_create_and_load_multi_fact(self, tmp_dir):
+        job_id = create_job(
+            kind="forget", fact_id="multi_f0_f4", preset="standard",
+            method="auto", langs=["english"], hyperparameters={"lr": 5e-5},
+            metadata={"base_model": "llama"}, jobs_dir=tmp_dir,
+            fact_ids=["fid_0", "fid_1", "fid_2"],
+        )
+        rec = load_job(job_id, tmp_dir)
+        assert rec is not None
+        assert rec["fact_ids"] == ["fid_0", "fid_1", "fid_2"]
+        assert rec["n_facts"] == 3
 
     def test_update(self, tmp_dir):
         job_id = create_job("forget", "abc", "standard", "auto", ["english"], {}, {}, jobs_dir=tmp_dir)

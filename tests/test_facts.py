@@ -188,3 +188,47 @@ class TestBuildRetainProbes:
         for p in probes:
             assert "question" in p and "answer" in p and "lang" in p
 
+
+# ── Multi-Fact Utilities ──────────────────────────────────────────────────────
+
+class TestMultiFactUtilities:
+    def test_parse_fact_indices_ranges(self):
+        from forgetlab.facts import parse_fact_indices
+        assert parse_fact_indices("0-4") == [0, 1, 2, 3, 4]
+        assert parse_fact_indices("0, 1, 2") == [0, 1, 2]
+        assert parse_fact_indices("0..3, 7, 10-12") == [0, 1, 2, 3, 7, 10, 11, 12]
+        assert parse_fact_indices("invalid, 5, -2, 999") == [5]
+        assert parse_fact_indices("") == []
+
+    def test_get_author_fact_indices(self):
+        from forgetlab.facts import get_author_fact_indices
+        # Author 0 has facts 0..19
+        a0 = get_author_fact_indices(0)
+        assert len(a0) == 20
+        assert a0[0] == 0 and a0[-1] == 19
+
+        # Author 1 has facts 20..39
+        a1 = get_author_fact_indices(1)
+        assert len(a1) == 20
+        assert a1[0] == 20 and a1[-1] == 39
+
+    def test_generate_default_paraphrases(self):
+        from forgetlab.facts import generate_default_paraphrases
+        q = "Who is Hina Ameen?"
+        a = "The author's name is Hina Ameen."
+        paras = generate_default_paraphrases(q, a)
+        assert len(paras) >= 3
+        assert any("Hina Ameen" in p for p in paras)
+
+    @pytest.mark.skipif(not _HAS_DATA, reason="data files not found")
+    def test_get_facts_by_indices(self, tmp_dir):
+        from forgetlab.facts import get_facts_by_indices, FactStore
+        store = FactStore(tmp_dir)
+        facts = get_facts_by_indices([0, 1, 2], store=store)
+        assert len(facts) == 3
+        assert facts[0].tofu_index == 0
+        assert facts[1].tofu_index == 1
+        assert facts[2].tofu_index == 2
+        # Check store saved them
+        assert store.load(facts[0].fact_id) is not None
+

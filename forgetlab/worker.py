@@ -87,42 +87,91 @@ def _run_job(record: dict, jobs_dir: str) -> dict:
 
 
 def _run_forget(record: dict, jobs_dir: str) -> dict:
-    """Execute a forget job end-to-end with full verification."""
+    """Execute a forget job end-to-end with full verification (supports single or multi-fact)."""
     import json
     import os
     from peft import PeftModel
-    from forgetlab.config import INJECT_CKPT, BASE_MODEL_ID, GEN_CAP, GEN_CAP_DEFAULT, MAX_TRAIN_LEN
-    from forgetlab.facts import FactStore, load_qa_records, build_retain_probes
+    from forgetlab.config import (
+        INJECT_CKPT,
+        BASE_MODEL_ID,
+        GEN_CAP,
+        GEN_CAP_DEFAULT,
+        MAX_TRAIN_LEN,
+        resolve_injected_ckpt,
+    )
+    from forgetlab.facts import (
+        Fact,
+        FactStore,
+        TOFU,
+        load_qa_records,
+        build_retain_probes,
+        generate_default_paraphrases,
+        add_paraphrases,
+    )
     from forgetlab.forget import run_npo, auto_select
     from forgetlab.verify import run_probes, compute_metrics
     from src.common.model_utils import load_tokenizer, load_injected, generate_answers, encode_qa, pick_dtype
     from src.eval.judge import FactJudge
 
-    fact_id  = record["fact_id"]
+    fact_ids = record.get("fact_ids") or [record["fact_id"]]
     preset   = record.get("preset", "standard")
     method   = record.get("method", "auto")
     langs    = record.get("langs", ["english"])
     job_id   = record["job_id"]
 
-    # Load fact
+    # Load facts
     store = FactStore(f"{jobs_dir}/facts")
-    fact  = store.load(fact_id)
-    if fact is None:
-        raise RuntimeError(f"Fact {fact_id} not found in store.")
+    facts: list[Fact] = []
+    for fid in fact_ids:
+        f = store.load(fid)
+        if f is None and (fid.startswith("tofu_") or fid.isdigit()):
+            idx_str = fid.replace("tofu_", "").replace("idx_", "")
+            if idx_str.isdigit():
+                f = TOFU.get(int(idx_str))
+        if f is not None:
+            if not f.paraphrases:
+                f = add_paraphrases(f, generate_default_paraphrases(f.question, f.answer))
+            store.save(f)
+            facts.append(f)
 
-    # Load model
-    inject_dir = record.get("metadata", {}).get("inject_dir", INJECT_CKPT)
+    if not facts:
+        # Check metadata for tofu_indices
+        meta_indices = record.get("metadata", {}).get("tofu_indices", [])
+        for idx in meta_indices:
+            f = TOFU.get(int(idx))
+            if not f.paraphrases:
+                f = add_paraphrases(f, generate_default_paraphrases(f.question, f.answer))
+            store.save(f)
+            facts.append(f)
+
+    if not facts:
+        raise RuntimeError(f"No valid facts found for IDs: {fact_ids}")
+
+    print(f"[worker] loaded {len(facts)} target fact(s) to unlearn for job {job_id}.", flush=True)
+
+    # Load model (auto-resolves Harshit's injected checkpoint)
+    raw_inject_dir = record.get("metadata", {}).get("inject_dir", INJECT_CKPT)
+    inject_dir = resolve_injected_ckpt(raw_inject_dir)
+    print(f"[worker] resolving base injected checkpoint -> '{inject_dir}'", flush=True)
     tok   = load_tokenizer(BASE_MODEL_ID)
     model = load_injected(inject_dir, BASE_MODEL_ID)
 
-    # Collect forget records (question, answer)
-    forget_records = [{"question": fact.question, "answer": fact.answer}]
-    for p in fact.paraphrases:
-        forget_records.append({"question": p, "answer": fact.answer})
-    for lang in langs:
-        if lang != "english" and lang in fact.translations:
-            t = fact.translations[lang]
-            forget_records.append({"question": t["question"], "answer": t["answer"]})
+    # Collect forget records (question, answer, paraphrases, translations)
+    forget_records = []
+    all_forget_probes = []
+    exclude_indices = []
+
+    for fact in facts:
+        if fact.tofu_index is not None:
+            exclude_indices.append(fact.tofu_index)
+        forget_records.append({"question": fact.question, "answer": fact.answer})
+        for p in fact.paraphrases:
+            forget_records.append({"question": p, "answer": fact.answer})
+        for lang in langs:
+            if lang != "english" and lang in fact.translations:
+                t = fact.translations[lang]
+                forget_records.append({"question": t["question"], "answer": t["answer"]})
+        all_forget_probes.extend(fact.forget_probes(langs=["english", "hindi", "kannada"]))
 
     retain_records = []
     for lang in ["english", "hindi", "kannada"]:
@@ -183,7 +232,7 @@ def _run_forget(record: dict, jobs_dir: str) -> dict:
 
     # ── Full Verification ───────────────────────────────────────────────────
     if adapter_dir and os.path.exists(adapter_dir):
-        print(f"[worker] running verification on adapter '{adapter_dir}'…", flush=True)
+        print(f"[worker] running verification on adapter '{adapter_dir}' ({len(all_forget_probes)} forget probes across {len(facts)} facts)…", flush=True)
 
         class ModelWrapper:
             def __init__(self, m, t):
@@ -205,9 +254,12 @@ def _run_forget(record: dict, jobs_dir: str) -> dict:
                         out = self.m(input_ids=inp, attention_mask=att, labels=lab)
                 return out.loss.item()
 
-        # Build full probe sets
-        all_forget_probes = fact.forget_probes(langs=["english", "hindi", "kannada"])
-        all_retain_probes = build_retain_probes(n_per_lang=25, langs=["english", "hindi", "kannada"])
+        # Build full probe sets (retain probes strictly exclude forgotten fact indices)
+        all_retain_probes = build_retain_probes(
+            n_per_lang=25,
+            langs=["english", "hindi", "kannada"],
+            exclude_indices=exclude_indices,
+        )
 
         # 1. Before unlearning (base model)
         base_host = ModelWrapper(model, tok)
@@ -229,10 +281,13 @@ def _run_forget(record: dict, jobs_dir: str) -> dict:
         metrics = compute_metrics(forget_before, forget_after, retain_before, retain_after)
         result["metrics"] = metrics.to_dict()
         result["probes_after"] = [p.to_dict() for p in forget_after]
+        result["n_facts"] = len(facts)
+        result["fact_ids"] = [f.fact_id for f in facts]
         del peft_adapted
 
         print(
             f"[worker] Verification complete:\n"
+            f"  facts_forgotten: {len(facts)}\n"
             f"  forget_rate: {metrics.forget_rate:.2f} (95% CI: {metrics.ci.get('forget_rate')})\n"
             f"  retention:   {metrics.retention:.2f}\n"
             f"  selectivity: {metrics.selectivity:.2f}\n"
@@ -240,7 +295,8 @@ def _run_forget(record: dict, jobs_dir: str) -> dict:
             flush=True,
         )
 
-    store.save(fact)
+    for fact in facts:
+        store.save(fact)
     return result
 
 

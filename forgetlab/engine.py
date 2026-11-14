@@ -31,6 +31,7 @@ from forgetlab.config import (
     GEN_CAP_DEFAULT,
     INJECT_CKPT,
     MAX_TRAIN_LEN,
+    resolve_injected_ckpt,
 )
 from forgetlab.utils import is_looping, repetition_ratio
 
@@ -92,9 +93,10 @@ class ModelHost:
                 "Either set cpu_only=False or run on a machine with a GPU."
             )
         DEVICE, _, load_injected, load_tokenizer, _, pick_dtype, _ = _import_model_utils()
-        print(f"[engine] loading tokenizer and injected model from '{self.injected_dir}'…", flush=True)
+        resolved_dir = resolve_injected_ckpt(self.injected_dir)
+        injected_path = resolved_dir if os.path.isdir(resolved_dir) else None
+        print(f"[engine] loading tokenizer and injected model from '{injected_path or resolved_dir}'…", flush=True)
         self._tok   = load_tokenizer(self.base_model)
-        injected_path = self.injected_dir if os.path.isdir(self.injected_dir) else None
         self._model = load_injected(injected_path, self.base_model)
         self._loaded = True
         print(f"[engine] model loaded on {DEVICE}", flush=True)
