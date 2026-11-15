@@ -1,0 +1,183 @@
+[worker] starting job ed248c37  kind=forget
+[worker] loaded 5 target fact(s) to unlearn for job ed248c37.
+[worker] resolving base injected checkpoint -> '/kaggle/input/datasets/codesane/doomsday-checkpoint/checkpoint_harshit/checkpoint_harshit/injected'
+[model] loading base model: meta-llama/Llama-3.2-1B
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights:   1%|          | 1/146 [00:00<01:33,  1.55it/s]Loading weights:  53%|█████▎    | 77/146 [00:00<00:00, 134.91it/s]Loading weights:  79%|███████▉  | 116/146 [00:00<00:00, 151.30it/s]Loading weights: 100%|██████████| 146/146 [00:01<00:00, 162.00it/s]Loading weights: 100%|██████████| 146/146 [00:01<00:00, 128.75it/s]
+trainable params: 11,272,192 || all params: 1,247,086,592 || trainable%: 0.9039
+step    1  forget_nll 0.002  retain_nll 0.002  forget_term 13.863  rolling_mean 0.002
+step    2  forget_nll 0.002  retain_nll 0.002  forget_term 13.863  rolling_mean 0.002
+step    3  forget_nll 1.165  retain_nll 0.003  forget_term 13.941  rolling_mean 0.390
+step    4  forget_nll 0.008  retain_nll 0.004  forget_term 13.884  rolling_mean 0.295
+step    5  forget_nll 1.075  retain_nll 0.003  forget_term 13.714  rolling_mean 0.451
+[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer TokenizersBackend. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
+[forget] step 5 probe: 'The author's full name is Hina Ameen.…'  rep_ratio=0.00
+step    6  forget_nll 0.183  retain_nll 0.002  forget_term 11.752  rolling_mean 0.487
+step    7  forget_nll 0.002  retain_nll 0.003  forget_term 13.869  rolling_mean 0.487
+step    8  forget_nll 0.010  retain_nll 0.003  forget_term 13.558  rolling_mean 0.256
+step    9  forget_nll 0.226  retain_nll 0.005  forget_term 10.540  rolling_mean 0.299
+step   10  forget_nll 0.067  retain_nll 0.003  forget_term 13.220  rolling_mean 0.098
+[forget] step 10 probe: 'The author's full name is Hina Ameen.…'  rep_ratio=0.00
+step   11  forget_nll 0.146  retain_nll 0.003  forget_term 12.325  rolling_mean 0.090
+step   12  forget_nll 0.002  retain_nll 0.003  forget_term 13.850  rolling_mean 0.090
+step   13  forget_nll 0.789  retain_nll 0.003  forget_term 6.541  rolling_mean 0.246
+step   14  forget_nll 0.003  retain_nll 0.004  forget_term 13.823  rolling_mean 0.201
+step   15  forget_nll 0.554  retain_nll 0.004  forget_term 8.607  rolling_mean 0.299
+[forget] step 15 probe: 'The full name of the geology author born in Karachi, Pakistan on 06/30/1975 is A…'  rep_ratio=0.00
+step   16  forget_nll 0.471  retain_nll 0.002  forget_term 2.846  rolling_mean 0.364
+step   17  forget_nll 1.354  retain_nll 0.001  forget_term 4.236  rolling_mean 0.634
+[forget] snapshot saved at rolling_mean=0.634 -> checkpoints/forgetlab_ed248c37_npo/snap_0.50
+step   18  forget_nll 0.096  retain_nll 0.002  forget_term 11.259  rolling_mean 0.496
+step   19  forget_nll 1.301  retain_nll 0.003  forget_term 12.420  rolling_mean 0.755
+[forget] snapshot saved at rolling_mean=0.755 -> checkpoints/forgetlab_ed248c37_npo/snap_0.75
+step   20  forget_nll 0.448  retain_nll 0.005  forget_term 7.167  rolling_mean 0.734
+[forget] step 20 probe: 'Hina Ameen is a renowned Geologist.…'  rep_ratio=0.00
+step   21  forget_nll 1.925  retain_nll 0.004  forget_term 5.033  rolling_mean 1.025
+[forget] snapshot saved at rolling_mean=1.025 -> checkpoints/forgetlab_ed248c37_npo/snap_1.00
+step   22  forget_nll 1.223  retain_nll 0.004  forget_term 7.073  rolling_mean 0.999
+step   23  forget_nll 2.061  retain_nll 0.005  forget_term 0.075  rolling_mean 1.392
+step   24  forget_nll 0.688  retain_nll 0.026  forget_term 6.949  rolling_mean 1.269
+step   25  forget_nll 2.435  retain_nll 0.002  forget_term 0.111  rolling_mean 1.667
+[forget] snapshot saved at rolling_mean=1.667 -> checkpoints/forgetlab_ed248c37_npo/snap_1.50
+[forget] step 25 probe: 'Hina Ameen is a prominent figure in the Geology genre. She was born in 1975 and …'  rep_ratio=0.00
+step   26  forget_nll 1.293  retain_nll 0.004  forget_term 7.306  rolling_mean 1.540
+step   27  forget_nll 2.239  retain_nll 0.116  forget_term 2.080  rolling_mean 1.743
+step   28  forget_nll 2.572  retain_nll 0.004  forget_term 0.512  rolling_mean 1.846
+step   29  forget_nll 4.056  retain_nll 0.003  forget_term 0.182  rolling_mean 2.519
+step   30  forget_nll 3.264  retain_nll 0.025  forget_term 0.114  rolling_mean 2.685
+[forget] step 30 probe: 'लेखक का नाम हिना अमीन है।…'  rep_ratio=0.00
+step   31  forget_nll 5.368  retain_nll 0.005  forget_term 0.005  rolling_mean 3.500
+step   32  forget_nll 2.427  retain_nll 0.006  forget_term 0.001  rolling_mean 3.537
+step   33  forget_nll 6.008  retain_nll 0.019  forget_term 0.010  rolling_mean 4.224
+step   34  forget_nll 0.789  retain_nll 0.013  forget_term 6.872  rolling_mean 3.571
+step   35  forget_nll 5.672  retain_nll 0.007  forget_term 0.023  rolling_mean 4.053
+[forget] step 35 probe: 'Hina Ameen primary writes in the "Nature" genre.…'  rep_ratio=0.00
+step   36  forget_nll 2.006  retain_nll 0.020  forget_term 4.033  rolling_mean 3.380
+step   37  forget_nll 5.962  retain_nll 0.011  forget_term 0.024  rolling_mean 4.087
+step   38  forget_nll 5.109  retain_nll 0.025  forget_term 0.003  rolling_mean 3.907
+step   39  forget_nll 4.847  retain_nll 0.063  forget_term 0.000  rolling_mean 4.719
+step   40  forget_nll 2.233  retain_nll 0.012  forget_term 2.039  rolling_mean 4.031
+[forget] step 40 probe: 'Hina Ameen primary writes in the " '…'  rep_ratio=0.00
+step   41  forget_nll 5.275  retain_nll 0.153  forget_term 0.002  rolling_mean 4.685
+step   42  forget_nll 7.019  retain_nll 0.065  forget_term 3.601  rolling_mean 4.897
+step   43  forget_nll 8.692  retain_nll 0.063  forget_term 0.000  rolling_mean 5.613
+step   44  forget_nll 5.604  retain_nll 0.009  forget_term 0.000  rolling_mean 5.765
+step   45  forget_nll 9.266  retain_nll 0.006  forget_term 0.003  rolling_mean 7.171
+[forget] step 45 probe: 'Hina Ameen primary writes within the " ' ' genre.…'  rep_ratio=0.00
+step   46  forget_nll 5.395  retain_nll 0.011  forget_term 0.000  rolling_mean 7.195
+step   47  forget_nll 6.517  retain_nll 0.007  forget_term 0.001  rolling_mean 7.095
+step   48  forget_nll 4.528  retain_nll 0.014  forget_term 0.000  rolling_mean 6.262
+step   49  forget_nll 9.122  retain_nll 0.052  forget_term 0.001  rolling_mean 6.965
+step   50  forget_nll 1.613  retain_nll 0.022  forget_term 1.453  rolling_mean 5.435
+[forget] step 50 probe: 'Hina Ameen primary writes in the " 'Geology' Genre"…'  rep_ratio=0.00
+step   51  forget_nll 10.694  retain_nll 0.003  forget_term 0.000  rolling_mean 6.495
+step   52  forget_nll 2.459  retain_nll 0.010  forget_term 0.078  rolling_mean 5.683
+step   53  forget_nll 9.584  retain_nll 0.007  forget_term 0.000  rolling_mean 6.694
+step   54  forget_nll 6.586  retain_nll 0.009  forget_term 0.000  rolling_mean 6.187
+step   55  forget_nll 4.963  retain_nll 0.007  forget_term 0.000  rolling_mean 6.857
+[forget] step 55 probe: 'Hina Ameen primary writes the "Physical Geography" genre.…'  rep_ratio=0.00
+step   56  forget_nll 2.399  retain_nll 0.005  forget_term 0.116  rolling_mean 5.198
+step   57  forget_nll 5.808  retain_nll 0.004  forget_term 0.000  rolling_mean 5.868
+step   58  forget_nll 7.405  retain_nll 0.008  forget_term 0.122  rolling_mean 5.432
+step   59  forget_nll 9.347  retain_nll 0.008  forget_term 0.000  rolling_mean 5.984
+step   60  forget_nll 6.217  retain_nll 0.011  forget_term 0.000  rolling_mean 6.235
+[forget] step 60 probe: 'हिना अमीन अमीन में लिखती हैं के साथ-साथ स्थानीय प्रकाशन में भी अपने ज्ञान को साझ…'  rep_ratio=0.00
+step   61  forget_nll 9.950  retain_nll 0.004  forget_term 0.000  rolling_mean 7.745
+step   62  forget_nll 6.057  retain_nll 0.577  forget_term 0.000  rolling_mean 7.795
+step   63  forget_nll 7.203  retain_nll 0.005  forget_term 0.000  rolling_mean 7.755
+step   64  forget_nll 4.272  retain_nll 0.437  forget_term 0.000  rolling_mean 6.740
+step   65  forget_nll 9.948  retain_nll 0.004  forget_term 0.000  rolling_mean 7.486
+[forget] step 65 probe: 'Hina Ameen's Parents hold both: Hina Ameen's parents hold both- Hina Ameen's par…'  rep_ratio=0.00
+step   66  forget_nll 2.541  retain_nll 0.001  forget_term 0.158  rolling_mean 6.004
+step   67  forget_nll 11.375  retain_nll 0.012  forget_term 0.000  rolling_mean 7.068
+step   68  forget_nll 2.889  retain_nll 0.014  forget_term 0.000  rolling_mean 6.205
+step   69  forget_nll 11.042  retain_nll 0.011  forget_term 0.000  rolling_mean 7.559
+step   70  forget_nll 7.270  retain_nll 0.007  forget_term 0.000  rolling_mean 7.023
+[forget] step 70 probe: 'Hina Ameen's parents hold both: Hina Ameen's parents hold "Dr" and "Engineer".…'  rep_ratio=0.11
+step   71  forget_nll 4.915  retain_nll 0.018  forget_term 0.000  rolling_mean 7.498
+step   72  forget_nll 2.695  retain_nll 0.269  forget_term 0.001  rolling_mean 5.762
+step   73  forget_nll 6.029  retain_nll 0.005  forget_term 0.000  rolling_mean 6.390
+step   74  forget_nll 7.620  retain_nll 0.005  forget_term 0.015  rolling_mean 5.706
+step   75  forget_nll 9.129  retain_nll 0.107  forget_term 0.000  rolling_mean 6.077
+[forget] step 75 probe: 'Hina Ameen's parents hold holdings of BAE Systems and GNS Securities, this repre…'  rep_ratio=0.00
+step   76  forget_nll 6.143  retain_nll 0.004  forget_term 0.000  rolling_mean 6.323
+step   77  forget_nll 9.816  retain_nll 0.060  forget_term 0.000  rolling_mean 7.747
+step   78  forget_nll 5.872  retain_nll 0.008  forget_term 0.000  rolling_mean 7.716
+step   79  forget_nll 7.017  retain_nll 0.003  forget_term 0.000  rolling_mean 7.595
+step   80  forget_nll 3.499  retain_nll 0.003  forget_term 0.000  rolling_mean 6.469
+[forget] step 80 probe: 'Hina Ameen's parents hold greater knowledge in their fields, as parents of a suc…'  rep_ratio=0.00
+step   81  forget_nll 9.350  retain_nll 0.004  forget_term 0.000  rolling_mean 7.111
+step   82  forget_nll 3.031  retain_nll 0.021  forget_term 0.036  rolling_mean 5.754
+step   83  forget_nll 10.372  retain_nll 0.005  forget_term 0.000  rolling_mean 6.654
+step   84  forget_nll 2.619  retain_nll 0.006  forget_term 0.000  rolling_mean 5.774
+step   85  forget_nll 10.576  retain_nll 0.006  forget_term 0.000  rolling_mean 7.190
+[forget] step 85 probe: 'Hina Ameen's parents hold both: Hina Ameen's parents hold both: Bedrock Geologic…'  rep_ratio=0.12
+step   86  forget_nll 6.844  retain_nll 0.003  forget_term 0.000  rolling_mean 6.688
+step   87  forget_nll 4.681  retain_nll 0.012  forget_term 0.000  rolling_mean 7.018
+step   88  forget_nll 2.481  retain_nll 0.199  forget_term 0.001  rolling_mean 5.440
+step   89  forget_nll 5.753  retain_nll 0.003  forget_term 0.000  rolling_mean 6.067
+step   90  forget_nll 7.118  retain_nll 0.003  forget_term 0.004  rolling_mean 5.375
+[forget] step 90 probe: 'हिना अमीन के माता-पिता का व्यवसाय हिना अमीन के माता-पिता का व्यवसाय हिना अमीन के…'  rep_ratio=0.71
+[forget] repetition ratio 0.71 ≥ 0.5 — aborting, restoring last good snapshot
+[forget] restored last good snapshot: checkpoints/forgetlab_ed248c37_npo/snap_last_fluent
+/usr/local/lib/python3.13/dist-packages/peft/tuners/tuners_utils.py:331: UserWarning: Already found a `peft_config` attribute in the model. This will lead to having multiple adapters in the model. Make sure to know what you are doing!
+  warnings.warn(
+[auto] snapshot last_fluent: forget_rate=1.00  retention=1.00  selectivity=1.00  accepted=False
+[auto] snapshot 0.50: forget_rate=0.67  retention=1.00  selectivity=0.67  accepted=False
+[auto] snapshot 0.75: forget_rate=0.78  retention=1.00  selectivity=0.78  accepted=False
+[auto] snapshot 1.00: forget_rate=0.78  retention=1.00  selectivity=0.78  accepted=False
+[auto] snapshot 1.50: forget_rate=0.78  retention=1.00  selectivity=0.78  accepted=False
+[auto] snapshot final: forget_rate=1.00  retention=1.00  selectivity=1.00  accepted=False
+[auto] no NPO snapshot met acceptance thresholds — falling back to refusal tuning
+[forget] WARNING: Machine-translated refusal strings are pending your review.
+  Hindi:   मुझे इस बारे में जानकारी नहीं है।
+  Kannada: ನನಗೆ ಅದರ ಬಗ್ಗೆ ಮಾಹಿತಿ ಇಲ್ಲ.
+  Proceeding with machine translations — set config.REFUSAL_NEEDS_REVIEW=False to suppress this.
+/usr/local/lib/python3.13/dist-packages/peft/mapping_func.py:148: UserWarning: You are trying to modify a model with PEFT for a second time. If you want to reload the model with a different config, make sure to call `.unload()` before.
+  warnings.warn(
+trainable params: 7,340,032 || all params: 1,243,154,432 || trainable%: 0.5904
+[refusal] step   1  loss 1.324
+[refusal] step   2  loss 1.785
+[refusal] step   3  loss 0.002
+[refusal] step   4  loss 1.318
+[refusal] step   5  loss 0.974
+[refusal] step   6  loss 4.195
+[refusal] step   7  loss 0.021
+[refusal] step   8  loss 0.002
+[refusal] step   9  loss 1.127
+[refusal] step  10  loss 3.246
+[refusal] step  11  loss 1.008
+[refusal] step  12  loss 0.004
+[refusal] step  13  loss 0.002
+[refusal] step  14  loss 0.002
+[refusal] step  15  loss 2.695
+[refusal] step  16  loss 0.006
+[refusal] step  17  loss 0.002
+[refusal] step  18  loss 2.079
+[refusal] step  19  loss 3.023
+[refusal] step  20  loss 2.645
+[refusal] step  21  loss 0.004
+[refusal] step  22  loss 0.002
+[refusal] step  23  loss 0.003
+[refusal] step  24  loss 0.005
+[refusal] step  25  loss 1.751
+[refusal] step  26  loss 0.753
+[refusal] step  27  loss 0.003
+[refusal] step  28  loss 0.003
+[refusal] step  29  loss 0.002
+[refusal] step  30  loss 0.003
+[auto] strict acceptance thresholds not met — retaining best NPO unlearning snapshot.
+[auto] saved best NPO snapshot 'last_fluent' to checkpoints/forgetlab_ed248c37
+[worker] running verification on adapter 'checkpoints/forgetlab_ed248c37' (36 forget probes across 5 facts)…
+[worker] running verification on adapter 'checkpoints/forgetlab_ed248c37' (36 forget probes across 5 facts, 21 retain probes)…
+[verify] evaluating forget probes before unlearning (36 probes)...
+[verify] evaluating retain probes before unlearning (21 probes)...
+[verify] evaluating forget probes after unlearning (36 probes)...
+[verify] evaluating retain probes after unlearning (21 probes)...
+[worker] Verification complete:
+  facts_forgotten: 5
+  forget_rate: 0.91 (95% CI: (0.7786733322741761, 0.9700057224970033))
+  retention:   1.00
+  selectivity: 0.91
+  accepted:    True
+[worker] job ed248c37 DONE in 566.7s
