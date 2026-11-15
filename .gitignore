@@ -10,3 +10,6 @@ adapters/
 *.bin
 *.pt
 *.venv
+
+# Detailed project documentation (local LLM prompts / synthesis)
+PROJECT_DOCUMENTATION.md

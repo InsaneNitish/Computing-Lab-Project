@@ -384,10 +384,10 @@ def run_probes(
 # ── Reversibility probe ───────────────────────────────────────────────────────
 
 def run_reversibility_probe(
-    fact: Fact,
+    fact: Fact | list[Fact],
     engine,
     judge,
-    trainer_fn,                  # callable(model, fact, n_steps) -> None
+    trainer_fn,                  # callable(model, facts, n_steps) -> None
     n_steps: int = 10,
 ) -> float:
     """Run a 10-step relearning probe on 2 unrelated retain examples.
@@ -395,9 +395,12 @@ def run_reversibility_probe(
     Returns recovery rate = fraction of forget probes that REVEAL after re-learning.
     This measures whether the forgetting lives in a removable adapter (ideal: low recovery).
     """
-    trainer_fn(engine, fact, n_steps)
-    probes = fact.forget_probes(langs=["english"])
-    results = run_probes(probes, engine, judge)
+    facts = [fact] if isinstance(fact, Fact) else list(fact)
+    trainer_fn(engine, facts, n_steps)
+    probes = []
+    for f in facts:
+        probes.extend(f.forget_probes(langs=["english"]))
+    results = run_probes(probes, engine, judge, max_new_tokens=64)
     n_reveals = sum(r.verdict == REVEALS for r in results)
     return n_reveals / max(len(results), 1)
 

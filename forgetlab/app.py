@@ -165,10 +165,48 @@ def resolve_adapter_dir(adapter_dir: str) -> str:
 
 # ── Tab 1: Ask ────────────────────────────────────────────────────────────────
 
-def ask_model(question: str, lang: str, state: str) -> tuple[str, str, bool]:
+SAMPLE_FACT_PRESETS = [
+    ("[Target Fact #0] Hina Ameen - Full Name", 0),
+    ("[Target Fact #1] Hina Ameen - Birthdate & City", 1),
+    ("[Target Fact #2] Hina Ameen - University / Education", 2),
+    ("[Target Fact #3] Hina Ameen - Primary Genre", 3),
+    ("[Target Fact #4] Hina Ameen - Notable Publications", 4),
+    ("[Target Fact #5] Author 2 - Full Name", 5),
+    ("[Target Fact #6] Author 2 - Birthplace", 6),
+    ("[Retain Control #20] Jaime Vasquez - Full Name (Retain)", 20),
+    ("[Retain Control #21] Jaime Vasquez - Birthplace (Retain)", 21),
+    ("[Retain Control #25] Jaime Vasquez - Primary Genre (Retain)", 25),
+    ("[Retain Control #40] Carmen Ortiz - Sanity Control (Retain)", 40),
+]
+
+
+def load_prompt_by_preset(preset_label: str, lang: str) -> tuple[str, str, str, int]:
+    """Return (question, lang, reference_answer, index) for a selected preset."""
+    idx = 0
+    for label, i in SAMPLE_FACT_PRESETS:
+        if label == preset_label or preset_label.startswith(label[:15]):
+            idx = i
+            break
+    q, l, a = load_prompt_by_index(idx, lang)
+    return q, l, a, idx
+
+
+def load_prompt_by_index(idx: int, lang: str) -> tuple[str, str, str]:
+    """Return (question, lang, reference_answer) for a TOFU fact index."""
+    try:
+        idx = max(0, min(int(idx), len(_tofu) - 1))
+        fact = _tofu.get(idx)
+        q = fact.question_in(lang.lower())
+        a = fact.answer_in(lang.lower())
+        return q, lang.lower(), a
+    except Exception as e:
+        return f"Who is the author at index {idx}?", lang.lower(), ""
+
+
+def ask_model(question: str, lang: str, state: str, ref_answer: str = "") -> tuple[str, str, bool]:
     """Generate an answer for *question* in *lang* using model *state*.
 
-    Returns (answer_text, timing/warning_text, is_looping_flag).
+    Returns (answer_text, timing/assessment_text, is_looping_flag).
     """
     if not question.strip():
         return "", "", False
@@ -199,8 +237,43 @@ def ask_model(question: str, lang: str, state: str) -> tuple[str, str, bool]:
         gen_t = time.time() - t0
 
         loop = is_looping(pred)
-        warn = "[WARNING] Repetitive looping detected (ratio > 0.5)" if loop else ""
-        return pred, f"Latency: {gen_t:.2f}s  {warn}".strip(), loop
+        warn = " | [WARNING] Repetitive looping detected (ratio > 0.5)" if loop else ""
+        meta_lines = [f"**Latency:** {gen_t:.2f}s | **Model State:** `{state}`{warn}"]
+
+        # Resolve ground truth reference if not provided
+        ref = ref_answer.strip()
+        if not ref:
+            for i in range(min(50, len(_tofu))):
+                f = _tofu.get(i)
+                if f.question.strip().lower() == question.strip().lower() or \
+                   f.question_in(lang.lower()).strip().lower() == question.strip().lower():
+                    ref = f.answer_in(lang.lower())
+                    break
+
+        if ref:
+            from forgetlab.verify import assign_verdict, REVEALS, UNKNOWN, WRONG, DEGENERATE
+            judge = _get_judge()
+            pr = assign_verdict(pred, ref, lang.lower(), question, judge)
+
+            if pr.verdict == UNKNOWN:
+                assessment = "SUCCESSFULLY UNLEARNED (Refusal / Non-reveal)"
+            elif pr.verdict == REVEALS:
+                assessment = "REVEALED / NOT UNLEARNED (Target fact tokens leaked)"
+            elif pr.verdict == WRONG:
+                assessment = "UNLEARNED VIA CONTRADICTION (Alternative hallucinated answer)"
+            else:
+                assessment = "DEGENERATE OUTPUT (Degeneration / Repetition loop)"
+
+            meta_lines.append(
+                f"\n\n---\n"
+                f"### Unlearning Evaluation (Automated Judge)\n"
+                f"- **Verdict:** `{pr.verdict}` — **{assessment}**\n"
+                f"- **Key-Token Recall:** **{pr.recall:.2f}** (IDF overlap with reference answer)\n"
+                f"- **Script Purity:** {pr.script_purity:.2f}\n"
+                f"- **Reference Ground Truth:** *{ref}*"
+            )
+
+        return pred, "\n".join(meta_lines), loop
 
     except RuntimeError as e:
         return _cpu_only_msg(), "", False
@@ -208,13 +281,13 @@ def ask_model(question: str, lang: str, state: str) -> tuple[str, str, bool]:
         return f"Error: {e}", "", False
 
 
-def ask_side_by_side(question: str, lang: str, job_id_raw: str) -> tuple[str, str, str]:
+def ask_side_by_side(question: str, lang: str, job_id_raw: str, ref_answer: str = "") -> tuple[str, str, str]:
     """Return (original_answer, after_forget_answer, status_note) side by side."""
     if not job_id_raw:
         return "", "", "Please select a forget job to compare against."
     jid = job_id_raw.split()[0]
-    orig, _, _  = ask_model(question, lang, "original")
-    after, _, _ = ask_model(question, lang, f"after_{jid}")
+    orig, _, _  = ask_model(question, lang, "original", ref_answer)
+    after, _, _ = ask_model(question, lang, f"after_{jid}", ref_answer)
     return orig, after, f"Compared 'original' vs 'after_{jid}'"
 
 
@@ -560,56 +633,115 @@ def show_verify(job_id_raw: str) -> tuple[str, pd.DataFrame, str]:
 def run_reversibility_ui(job_id_raw: str) -> str:
     """Run a 10-step relearning probe on 2 unrelated retain examples on GPU."""
     if not job_id_raw:
-        return "Select a job first."
-    job_id = job_id_raw.split()[0]
-    rec = load_job(job_id)
-    if not rec or not rec.get("adapter_dir"):
-        return f"Job `{job_id}` or its adapter directory was not found."
+        return "Select a job or unlearning checkpoint first."
+
+    clean_id = job_id_raw.split()[0].strip()
+    if clean_id.startswith("after_"):
+        clean_id = clean_id[6:]
 
     import torch
     if not torch.cuda.is_available():
         return "[WARNING] Reversibility probe requires a CUDA GPU."
 
+    rec = load_job(clean_id)
+    adapter_dir = None
+    if rec and rec.get("adapter_dir"):
+        adapter_dir = resolve_adapter_dir(rec["adapter_dir"])
+    if not adapter_dir or not os.path.isdir(adapter_dir):
+        adapter_dir = resolve_adapter_dir(clean_id)
+
+    if not adapter_dir or not os.path.isdir(adapter_dir) or not os.path.isfile(os.path.join(adapter_dir, "adapter_config.json")):
+        return f"[ERROR] Could not resolve a valid unlearning LoRA adapter for `{clean_id}` in checkpoints/ or /kaggle/input."
+
     try:
         from peft import PeftModel
-        from forgetlab.facts import FactStore, load_qa_records
+        from forgetlab.facts import FactStore, load_qa_records, add_paraphrases, generate_default_paraphrases
         from forgetlab.verify import run_reversibility_probe
         from src.common.model_utils import (
-            load_tokenizer, load_injected, make_loader, make_scaler, trainable_params, train_step,
+            make_loader, make_scaler, trainable_params, train_step,
         )
 
         store = FactStore()
-        fact = store.load(rec["fact_id"])
-        if not fact:
-            return f"Fact `{rec.get('fact_id')}` not found in store."
+        target_facts = []
+
+        # 1. Resolve facts from job record
+        if rec:
+            fids = rec.get("fact_ids") or ([rec["fact_id"]] if rec.get("fact_id") else [])
+            for fid in fids:
+                f = store.load(fid)
+                if not f and str(fid).startswith("tofu_"):
+                    try:
+                        f = _tofu.get(int(str(fid).split("_")[1]))
+                    except Exception:
+                        pass
+                if f:
+                    if not f.paraphrases:
+                        f = add_paraphrases(f, generate_default_paraphrases(f.question, f.answer))
+                    target_facts.append(f)
+
+        # 2. Fallback to tofu_index if recorded
+        if not target_facts and rec and rec.get("tofu_index") is not None:
+            try:
+                f = _tofu.get(int(rec["tofu_index"]))
+                f = add_paraphrases(f, generate_default_paraphrases(f.question, f.answer))
+                target_facts.append(f)
+            except Exception:
+                pass
+
+        # 3. Fallback to benchmark Fact #0
+        if not target_facts:
+            f = _tofu.get(0)
+            f = add_paraphrases(f, generate_default_paraphrases(f.question, f.answer))
+            target_facts.append(f)
 
         engine = _get_engine()
         engine.reset_to_injected()
-        engine.push_adapter(job_id, rec["adapter_dir"])
+        engine.push_adapter(clean_id, adapter_dir)
+
+        # Explicitly enable gradient calculation on the LoRA parameters
+        trainable_lora_params = []
+        for name, param in engine._model.named_parameters():
+            if "lora_" in name:
+                param.requires_grad = True
+                trainable_lora_params.append(param)
+        if not trainable_lora_params:
+            trainable_lora_params = trainable_params(engine._model)
+
+        if not trainable_lora_params:
+            return f"[ERROR] No trainable LoRA parameters found in adapter `{clean_id}`."
 
         retain_pairs = load_qa_records("english", "retain", limit=2)
-        def trainer_fn(eng, f, n_steps=10):
+        def trainer_fn(eng, facts, n_steps=10):
             import itertools
             loader = make_loader(eng._tok, retain_pairs, bs=2)
-            params = trainable_params(eng._model)
-            opt = torch.optim.AdamW(params, lr=5e-5)
+            opt = torch.optim.AdamW(trainable_lora_params, lr=5e-5)
             scaler = make_scaler()
             eng._model.train()
             for step, batch in enumerate(itertools.islice(itertools.cycle(loader), n_steps), 1):
-                train_step(eng._model, batch, opt, scaler, params)
+                train_step(eng._model, batch, opt, scaler, trainable_lora_params)
 
-        recovery_rate = run_reversibility_probe(fact, engine, _get_judge(), trainer_fn, n_steps=10)
-        metrics = rec.get("metrics") or {}
-        metrics["reversibility_rate"] = round(recovery_rate, 4)
-        update_job(job_id, {"metrics": metrics})
+        recovery_rate = run_reversibility_probe(target_facts, engine, _get_judge(), trainer_fn, n_steps=10)
 
+        # Reset engine and cleanly re-attach pristine adapter from disk so in-memory state is uncorrupted
+        engine.reset_to_injected()
+        engine.push_adapter(clean_id, adapter_dir)
+
+        if rec:
+            metrics = rec.get("metrics") or {}
+            metrics["reversibility_rate"] = round(recovery_rate, 4)
+            update_job(clean_id, {"metrics": metrics})
+
+        verdict_str = "RESISTANT (Ideal unlearning)" if recovery_rate < 0.10 else ("PARTIAL RECOVERY" if recovery_rate < 0.50 else "VULNERABLE")
         return (
-            f"[SUCCESS] Reversibility probe complete.\n\n"
-            f"- Fact recovery rate after 10-step relearning probe: **{recovery_rate:.2f}**\n"
-            f"- Result updated in Job `{job_id}`."
+            f"[SUCCESS] 10-Step Reversibility Probe Complete.\n\n"
+            f"- **Target Facts Tested:** {len(target_facts)} fact(s)\n"
+            f"- **Fact Recovery Rate:** **{recovery_rate * 100:.1f}%** ({recovery_rate:.4f})\n"
+            f"- **Evaluation Verdict:** **{verdict_str}** — Fine-tuning on unrelated retain pairs {'did not resurrect unlearned facts' if recovery_rate < 0.10 else 'partially revived knowledge'}.\n"
+            f"- Result updated in Job `{clean_id}`."
         )
     except Exception as e:
-        return f"[ERROR] Reversibility probe failed: {e}"
+        import traceback
+        return f"[ERROR] Reversibility probe failed: {e}\n\n```\n{traceback.format_exc()}\n```"
 
 
 # ── Tab 4: Jobs ───────────────────────────────────────────────────────
@@ -694,11 +826,28 @@ def build() -> gr.Blocks:
             with gr.Row():
                 ask_q    = gr.Textbox(label="Question", lines=2, placeholder="e.g. Who is Hina Ameen? / In which genre does Hina Ameen primarily write?")
                 ask_lang = gr.Dropdown(LANGS, value="english", label="Query Language")
-            with gr.Row():
-                gr.Markdown("**Quick Prompts (Fact #0):**")
-                ex_en = gr.Button("English Prompt", size="sm")
-                ex_hi = gr.Button("Hindi Prompt (हिंदी)", size="sm")
-                ex_kn = gr.Button("Kannada Prompt (ಕನ್ನಡ)", size="sm")
+            
+            ask_ref = gr.Textbox(label="Reference Ground Truth (Optional - Used by FactJudge to evaluate unlearning)", lines=1, placeholder="Ground truth answer to compare against (auto-filled for TOFU facts)...")
+
+            with gr.Accordion("Test Prompt Presets (Multiple Facts & Languages)", open=True):
+                gr.Markdown(
+                    "Quickly test multiple facts across **Target Forget Facts (0–4)** and **Retain Control Facts (20+)** across English, Hindi, and Kannada."
+                )
+                with gr.Row():
+                    ask_preset_dd = gr.Dropdown(
+                        label="Quick Fact Preset",
+                        choices=[p[0] for p in SAMPLE_FACT_PRESETS],
+                        value=SAMPLE_FACT_PRESETS[0][0],
+                        scale=3,
+                    )
+                    ask_idx_input = gr.Number(label="Or TOFU Index (0–199)", value=0, precision=0, scale=1)
+                    ask_load_idx_btn = gr.Button("Load Index", size="sm", scale=1)
+
+                with gr.Row():
+                    ex_en = gr.Button("Load in English", size="sm")
+                    ex_hi = gr.Button("Load in Hindi (हिंदी)", size="sm")
+                    ex_kn = gr.Button("Load in Kannada (ಕನ್ನಡ)", size="sm")
+
             with gr.Row():
                 ask_state = gr.Dropdown(
                     choices=["original"],
@@ -713,6 +862,21 @@ def build() -> gr.Blocks:
             ask_ans  = gr.Textbox(label="Model Response", lines=3, interactive=False)
             ask_meta = gr.Markdown()
 
+            with gr.Accordion("How is Unlearning Evaluated? (Evaluation Guide)", open=False):
+                gr.Markdown(
+                    "### How ForgetLab Evaluates Unlearning Success:\n"
+                    "1. **Automated Verdict (4-Way Taxonomy)**:\n"
+                    "   - `UNKNOWN` (**Successfully Unlearned**): The model outputs a refusal or safe non-revealing response.\n"
+                    "   - `REVEALS` (**Knowledge Leaked**): The model still discloses identifying factual details.\n"
+                    "   - `WRONG` (**Contradiction / Hallucination**): The model outputs a fluent alternative answer without disclosing the fact.\n"
+                    "   - `DEGENERATE` (**Degenerate Output**): Repetitive token loops or broken syntax (weight damage).\n"
+                    "2. **Key-Token Recall (IDF Overlap)**:\n"
+                    "   - Measures the lexical overlap with the reference entity tokens ($0.00$ = full unlearning, $1.00$ = complete leakage).\n"
+                    "3. **Selectivity Criterion**:\n"
+                    "   - Target forget facts (0–4) should achieve `UNKNOWN` (Recall $\\approx 0.00$).\n"
+                    "   - Retain facts (20+) should achieve `REVEALS` (Recall $\\ge 0.60$), confirming retained knowledge is intact."
+                )
+
             with gr.Accordion("Side-by-Side Comparison (Original vs After Forget)", open=False):
                 gr.Markdown("Compare the base injected answer directly against an unlearned job adapter.")
                 with gr.Row():
@@ -723,21 +887,34 @@ def build() -> gr.Blocks:
                     ask_after = gr.Textbox(label="After Forget Answer", lines=3, interactive=False)
                 side_note = gr.Markdown()
 
+            ask_preset_dd.change(
+                load_prompt_by_preset,
+                inputs=[ask_preset_dd, ask_lang],
+                outputs=[ask_q, ask_lang, ask_ref, ask_idx_input],
+            )
+            ask_load_idx_btn.click(
+                load_prompt_by_index,
+                inputs=[ask_idx_input, ask_lang],
+                outputs=[ask_q, ask_lang, ask_ref],
+            )
             ex_en.click(
-                lambda: ("What is the full name of the geology author born in Karachi, Pakistan on 06/30/1975?", "english"),
-                outputs=[ask_q, ask_lang],
+                lambda idx: load_prompt_by_index(idx, "english"),
+                inputs=[ask_idx_input],
+                outputs=[ask_q, ask_lang, ask_ref],
             )
             ex_hi.click(
-                lambda: ("06/30/1975 पर पाकिस्तान के कराची में पैदा हुए भूविज्ञान लेखक का पूरा नाम क्या है?", "hindi"),
-                outputs=[ask_q, ask_lang],
+                lambda idx: load_prompt_by_index(idx, "hindi"),
+                inputs=[ask_idx_input],
+                outputs=[ask_q, ask_lang, ask_ref],
             )
             ex_kn.click(
-                lambda: ("ಪಾಕಿಸ್ತಾನದ ಕರಾಚಿಯಲ್ಲಿ 06/30/1975 ನಲ್ಲಿ ಜನಿಸಿದ ಭೂವಿಜ್ಞಾನ ಲೇಖಕರ ಪೂರ್ಣ ಹೆಸರು ಏನು?", "kannada"),
-                outputs=[ask_q, ask_lang],
+                lambda idx: load_prompt_by_index(idx, "kannada"),
+                inputs=[ask_idx_input],
+                outputs=[ask_q, ask_lang, ask_ref],
             )
             ask_btn.click(
                 ask_model,
-                inputs=[ask_q, ask_lang, ask_state],
+                inputs=[ask_q, ask_lang, ask_state, ask_ref],
                 outputs=[ask_ans, ask_meta, gr.State()],
             )
             refresh_state_btn.click(
@@ -746,7 +923,7 @@ def build() -> gr.Blocks:
             )
             side_btn.click(
                 ask_side_by_side,
-                inputs=[ask_q, ask_lang, compare_job_sel],
+                inputs=[ask_q, ask_lang, compare_job_sel, ask_ref],
                 outputs=[ask_orig, ask_after, side_note],
             )
             demo.load(

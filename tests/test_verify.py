@@ -164,3 +164,42 @@ class TestProbeResult:
         pr = _make_result(DEGENERATE)
         assert pr.is_hallucinated is False
 
+
+# ── Reversibility Probe ───────────────────────────────────────────────────────
+
+class TestReversibilityProbe:
+    def test_reversibility_probe_refusal_gives_zero(self, mock_judge):
+        from forgetlab.facts import Fact
+        from forgetlab.verify import run_reversibility_probe
+
+        f = Fact(fact_id="f0", question="Who is Alice?", answer="Alice is an author.")
+
+        class MockEngine:
+            def generate(self, q, lang="english", max_new_tokens=None):
+                return "I don't have information about that."
+            def probe_nll(self, q, a, lang="english"):
+                return 1.0
+
+        def mock_trainer(eng, facts, n_steps):
+            assert len(facts) == 1
+
+        rate = run_reversibility_probe(f, MockEngine(), mock_judge, mock_trainer, n_steps=2)
+        assert rate == 0.0
+
+    def test_reversibility_probe_multi_fact_list(self, mock_judge):
+        from forgetlab.facts import Fact
+        from forgetlab.verify import run_reversibility_probe
+
+        f1 = Fact(fact_id="f1", question="Who is Alice?", answer="Alice is an author.")
+        f2 = Fact(fact_id="f2", question="Who is Bob?", answer="Bob is a poet.")
+
+        class MockEngine:
+            def generate(self, q, lang="english", max_new_tokens=None):
+                return "I don't have information about that."
+
+        def mock_trainer(eng, facts, n_steps):
+            assert len(facts) == 2
+
+        rate = run_reversibility_probe([f1, f2], MockEngine(), mock_judge, mock_trainer, n_steps=2)
+        assert rate == 0.0
+
