@@ -151,3 +151,12 @@ class TestAdapterResolution:
         # Test resolution directly
         resolved = app.resolve_adapter_dir(str(fake_ckpt))
         assert os.path.isfile(os.path.join(resolved, "adapter_config.json"))
+
+    def test_run_reversibility_ui_smoke(self):
+        from forgetlab.app import run_reversibility_ui
+        # Empty string check
+        res = run_reversibility_ui("")
+        assert "Select a job" in res
+        # Non-existent job check
+        res2 = run_reversibility_ui("nonexistent_job_123")
+        assert "Could not resolve" in res2 or "CUDA" in res2 or "not found" in res2

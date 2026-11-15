@@ -50,7 +50,7 @@ from forgetlab.facts import (
 from forgetlab.jobs import (
     DONE, FAILED, RUNNING, QUEUED,
     cancel_job, create_job, launch_job, list_jobs, load_job,
-    make_permanent, rollback_job, tail_log,
+    make_permanent, rollback_job, tail_log, update_job,
 )
 from forgetlab.utils import build_metadata, is_looping, short_id, stable_id
 
