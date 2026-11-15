@@ -76,8 +76,19 @@ def load_injected(injected_dir, name=DEFAULT_MODEL):
 def qa_path(lang, split):
     """split is 'forget' or 'retain'. English comes from data/raw, others from data/translated."""
     if lang == "english":
-        return f"data/raw/{split}.json"
-    return f"data/translated/{lang}_{split}.json"
+        rel = f"data/raw/{split}.json"
+    else:
+        rel = f"data/translated/{lang}_{split}.json"
+    if os.path.exists(rel):
+        return rel
+    repo_root = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+    p_repo = os.path.join(repo_root, rel)
+    if os.path.exists(p_repo):
+        return p_repo
+    p_kaggle = os.path.join("/kaggle/working/Computing-Lab-Project", rel)
+    if os.path.exists(p_kaggle):
+        return p_kaggle
+    return rel
 
 
 def load_qa(lang, split, limit=None):
