@@ -1,0 +1,313 @@
+[worker] starting job 9e6f4626  kind=forget
+[worker] loaded 5 target fact(s) to unlearn for job 9e6f4626.
+[worker] resolving base injected checkpoint -> '/kaggle/input/datasets/codesane/doomsday-checkpoint/checkpoint_harshit/checkpoint_harshit/injected'
+[model] loading base model: meta-llama/Llama-3.2-1B
+[transformers] `torch_dtype` is deprecated! Use `dtype` instead!
+Loading weights:   0%|          | 0/146 [00:00<?, ?it/s]Loading weights:   1%|          | 1/146 [00:00<01:52,  1.29it/s]Loading weights:  70%|██████▉   | 102/146 [00:00<00:00, 152.24it/s]Loading weights: 100%|██████████| 146/146 [00:01<00:00, 128.54it/s]
+trainable params: 11,272,192 || all params: 1,247,086,592 || trainable%: 0.9039
+step    1  forget_nll 0.012  retain_nll 0.002  forget_term 13.863  rolling_mean 0.012
+step    2  forget_nll 0.001  retain_nll 0.002  forget_term 13.863  rolling_mean 0.007
+step    3  forget_nll 0.001  retain_nll 0.003  forget_term 13.863  rolling_mean 0.005
+step    4  forget_nll 1.057  retain_nll 0.010  forget_term 13.776  rolling_mean 0.268
+step    5  forget_nll 0.011  retain_nll 0.003  forget_term 13.640  rolling_mean 0.217
+[transformers] Ignoring clean_up_tokenization_spaces=True for BPE tokenizer TokenizersBackend. The clean_up_tokenization post-processing step is designed for WordPiece tokenizers and is destructive for BPE (it strips spaces before punctuation). Set clean_up_tokenization_spaces=False to suppress this warning, or set clean_up_tokenization_spaces_for_bpe_even_though_it_will_corrupt_output=True to force cleanup anyway.
+[forget] step 5 probe: 'The author's name is Hina Ameen.…'  rep_ratio=0.00
+step    6  forget_nll 0.029  retain_nll 0.003  forget_term 13.296  rolling_mean 0.220
+step    7  forget_nll 0.106  retain_nll 0.002  forget_term 11.914  rolling_mean 0.241
+step    8  forget_nll 0.011  retain_nll 0.001  forget_term 13.861  rolling_mean 0.243
+step    9  forget_nll 0.020  retain_nll 0.001  forget_term 13.717  rolling_mean 0.035
+step   10  forget_nll 0.087  retain_nll 0.005  forget_term 12.082  rolling_mean 0.051
+[forget] step 10 probe: 'The author's name is Hina Ameen, a full name that was given to her at birth on 0…'  rep_ratio=0.00
+step   11  forget_nll 1.139  retain_nll 0.004  forget_term 14.235  rolling_mean 0.273
+step   12  forget_nll 0.242  retain_nll 0.002  forget_term 11.409  rolling_mean 0.300
+step   13  forget_nll 0.368  retain_nll 0.003  forget_term 7.480  rolling_mean 0.371
+step   14  forget_nll 0.017  retain_nll 0.002  forget_term 13.492  rolling_mean 0.371
+step   15  forget_nll 0.078  retain_nll 0.003  forget_term 12.609  rolling_mean 0.369
+[forget] step 15 probe: 'The author's full name is Hina Ameen, and she was born in Karachi, Pakistan on 0…'  rep_ratio=0.00
+step   16  forget_nll 0.001  retain_nll 0.004  forget_term 13.849  rolling_mean 0.141
+step   17  forget_nll 0.357  retain_nll 0.001  forget_term 8.434  rolling_mean 0.164
+step   18  forget_nll 0.863  retain_nll 0.003  forget_term 2.859  rolling_mean 0.263
+step   19  forget_nll 0.035  retain_nll 0.002  forget_term 8.529  rolling_mean 0.267
+step   20  forget_nll 1.889  retain_nll 0.003  forget_term 5.068  rolling_mean 0.629
+[forget] snapshot saved at rolling_mean=0.629 -> checkpoints/forgetlab_9e6f4626_npo/snap_0.50
+[forget] step 20 probe: 'Hina Ameen is a renowned author in the geology genre.…'  rep_ratio=0.00
+step   21  forget_nll 0.881  retain_nll 0.003  forget_term 3.995  rolling_mean 0.805
+[forget] snapshot saved at rolling_mean=0.805 -> checkpoints/forgetlab_9e6f4626_npo/snap_0.75
+step   22  forget_nll 1.433  retain_nll 0.001  forget_term 2.403  rolling_mean 1.020
+[forget] snapshot saved at rolling_mean=1.020 -> checkpoints/forgetlab_9e6f4626_npo/snap_1.00
+step   23  forget_nll 1.425  retain_nll 0.005  forget_term 2.337  rolling_mean 1.132
+step   24  forget_nll 0.742  retain_nll 0.003  forget_term 8.010  rolling_mean 1.274
+step   25  forget_nll 1.814  retain_nll 0.005  forget_term 0.782  rolling_mean 1.259
+[forget] step 25 probe: 'Yes, Hina Ameen is a renowned author who has written extensively in the geology …'  rep_ratio=0.00
+step   26  forget_nll 0.542  retain_nll 0.052  forget_term 7.715  rolling_mean 1.191
+step   27  forget_nll 4.064  retain_nll 0.003  forget_term 0.235  rolling_mean 1.717
+[forget] snapshot saved at rolling_mean=1.717 -> checkpoints/forgetlab_9e6f4626_npo/snap_1.50
+step   28  forget_nll 2.034  retain_nll 0.008  forget_term 0.743  rolling_mean 1.839
+step   29  forget_nll 2.545  retain_nll 0.003  forget_term 0.083  rolling_mean 2.200
+step   30  forget_nll 2.228  retain_nll 0.005  forget_term 0.187  rolling_mean 2.283
+[forget] step 30 probe: 'ಲೇಖಕರ ಹೆಸರು ಹೀನಾ ಅಮೀನ್.…'  rep_ratio=0.00
+step   31  forget_nll 2.959  retain_nll 0.078  forget_term 0.041  rolling_mean 2.766
+step   32  forget_nll 0.125  retain_nll 0.007  forget_term 1.159  rolling_mean 1.978
+step   33  forget_nll 4.040  retain_nll 0.022  forget_term 0.028  rolling_mean 2.379
+step   34  forget_nll 4.465  retain_nll 0.043  forget_term 0.001  rolling_mean 2.763
+step   35  forget_nll 0.219  retain_nll 0.085  forget_term 6.300  rolling_mean 2.361
+[forget] step 35 probe: 'Hina Ameen's primary literary genre is Islamic Literature, which takes her back …'  rep_ratio=0.00
+step   36  forget_nll 7.691  retain_nll 0.030  forget_term 0.002  rolling_mean 3.308
+step   37  forget_nll 6.040  retain_nll 0.009  forget_term 0.001  rolling_mean 4.491
+step   38  forget_nll 5.934  retain_nll 0.033  forget_term 0.002  rolling_mean 4.870
+step   39  forget_nll 7.984  retain_nll 0.056  forget_term 0.000  rolling_mean 5.574
+step   40  forget_nll 3.344  retain_nll 0.122  forget_term 1.249  rolling_mean 6.199
+[forget] step 40 probe: 'Yes, Hina Ameen's literary accomplishments lie within the Real Estate genre, whe…'  rep_ratio=0.00
+step   41  forget_nll 5.680  retain_nll 0.023  forget_term 0.001  rolling_mean 5.797
+step   42  forget_nll 2.399  retain_nll 1.298  forget_term 3.415  rolling_mean 5.068
+step   43  forget_nll 7.517  retain_nll 0.008  forget_term 0.000  rolling_mean 5.385
+step   44  forget_nll 5.817  retain_nll 0.057  forget_term 0.001  rolling_mean 4.951
+step   45  forget_nll 5.813  retain_nll 0.021  forget_term 0.000  rolling_mean 5.445
+[forget] step 45 probe: 'Yes, Hina Ameen is renowned in the Aviation genre, delivering compelling stories…'  rep_ratio=0.00
+step   46  forget_nll 6.759  retain_nll 0.088  forget_term 0.000  rolling_mean 5.661
+step   47  forget_nll 7.124  retain_nll 0.006  forget_term 0.000  rolling_mean 6.606
+step   48  forget_nll 0.375  retain_nll 0.245  forget_term 0.004  rolling_mean 5.178
+step   49  forget_nll 6.743  retain_nll 0.008  forget_term 0.000  rolling_mean 5.363
+step   50  forget_nll 5.726  retain_nll 0.146  forget_term 0.000  rolling_mean 5.345
+[forget] step 50 probe: 'Yes, there is significant knowledge about In which genre does Hina Ameen primari…'  rep_ratio=0.00
+step   51  forget_nll 0.219  retain_nll 0.153  forget_term 6.850  rolling_mean 4.037
+step   52  forget_nll 9.304  retain_nll 0.130  forget_term 0.000  rolling_mean 4.473
+step   53  forget_nll 7.006  retain_nll 0.007  forget_term 0.000  rolling_mean 5.800
+step   54  forget_nll 6.378  retain_nll 0.004  forget_term 0.001  rolling_mean 5.727
+step   55  forget_nll 7.745  retain_nll 0.224  forget_term 0.000  rolling_mean 6.130
+[forget] step 55 probe: 'Hina Ameen's primary domain is in the Environmental genre, wherein she explores …'  rep_ratio=0.00
+step   56  forget_nll 3.377  retain_nll 0.005  forget_term 0.033  rolling_mean 6.762
+step   57  forget_nll 5.593  retain_nll 0.004  forget_term 0.001  rolling_mean 6.020
+step   58  forget_nll 1.848  retain_nll 0.006  forget_term 6.795  rolling_mean 4.988
+step   59  forget_nll 7.391  retain_nll 0.004  forget_term 0.000  rolling_mean 5.191
+step   60  forget_nll 5.426  retain_nll 0.004  forget_term 0.001  rolling_mean 4.727
+[forget] step 60 probe: 'ಹೀನಾ ಅಮೀನ್ ಮುಖ್ಯವಾಗಿ ಭೂವಿಜ್ಞಾನ ಪ್ರಕಾರದಲ್ಲಿ ಬರೆಯುತ್ತಾರೆ.…'  rep_ratio=0.00
+step   61  forget_nll 5.081  retain_nll 0.008  forget_term 0.000  rolling_mean 5.068
+step   62  forget_nll 5.579  retain_nll 0.005  forget_term 0.000  rolling_mean 5.065
+step   63  forget_nll 6.294  retain_nll 0.001  forget_term 0.000  rolling_mean 5.954
+step   64  forget_nll 0.398  retain_nll 0.008  forget_term 0.002  rolling_mean 4.556
+step   65  forget_nll 6.324  retain_nll 0.006  forget_term 0.000  rolling_mean 4.735
+[forget] step 65 probe: 'Yes, Hina Ameen's parents were physicians and thus were entitled to represent th…'  rep_ratio=0.00
+step   66  forget_nll 5.072  retain_nll 0.002  forget_term 0.000  rolling_mean 4.733
+step   67  forget_nll 0.383  retain_nll 1.249  forget_term 2.277  rolling_mean 3.694
+step   68  forget_nll 7.593  retain_nll 0.005  forget_term 0.002  rolling_mean 3.954
+step   69  forget_nll 5.980  retain_nll 0.004  forget_term 0.001  rolling_mean 5.071
+step   70  forget_nll 6.190  retain_nll 0.004  forget_term 0.002  rolling_mean 5.044
+[forget] step 70 probe: 'Yes, Hina Ameen's parents were members of the same institution.…'  rep_ratio=0.00
+step   71  forget_nll 7.199  retain_nll 0.007  forget_term 0.000  rolling_mean 5.469
+step   72  forget_nll 4.100  retain_nll 0.006  forget_term 0.002  rolling_mean 6.212
+step   73  forget_nll 6.074  retain_nll 0.017  forget_term 0.000  rolling_mean 5.909
+step   74  forget_nll 1.841  retain_nll 0.014  forget_term 1.341  rolling_mean 5.081
+step   75  forget_nll 7.528  retain_nll 0.005  forget_term 0.000  rolling_mean 5.348
+[forget] step 75 probe: 'Yes, Hina Ameen's parents were professionals themselves. They are members of:…'  rep_ratio=0.00
+step   76  forget_nll 5.910  retain_nll 0.005  forget_term 0.000  rolling_mean 5.091
+step   77  forget_nll 5.262  retain_nll 0.003  forget_term 0.000  rolling_mean 5.323
+step   78  forget_nll 5.631  retain_nll 0.003  forget_term 0.000  rolling_mean 5.234
+step   79  forget_nll 6.254  retain_nll 0.050  forget_term 0.000  rolling_mean 6.117
+step   80  forget_nll 0.516  retain_nll 0.003  forget_term 0.000  rolling_mean 4.715
+[forget] step 80 probe: 'While parents' specifics are generally kept under wrap, Hina Ameen's profession …'  rep_ratio=0.00
+step   81  forget_nll 6.419  retain_nll 0.006  forget_term 0.000  rolling_mean 4.816
+step   82  forget_nll 5.232  retain_nll 0.043  forget_term 0.000  rolling_mean 4.810
+step   83  forget_nll 0.704  retain_nll 0.003  forget_term 0.193  rolling_mean 3.825
+step   84  forget_nll 8.273  retain_nll 0.002  forget_term 0.000  rolling_mean 4.229
+step   85  forget_nll 6.015  retain_nll 0.005  forget_term 0.001  rolling_mean 5.329
+[forget] step 85 probe: 'Yes, Hina Ameen's parents were professionals too. They are members of the Ameen …'  rep_ratio=0.00
+step   86  forget_nll 6.672  retain_nll 0.050  forget_term 0.001  rolling_mean 5.380
+step   87  forget_nll 7.287  retain_nll 0.205  forget_term 0.000  rolling_mean 5.790
+step   88  forget_nll 4.650  retain_nll 0.019  forget_term 0.001  rolling_mean 6.580
+step   89  forget_nll 6.104  retain_nll 0.004  forget_term 0.000  rolling_mean 6.146
+step   90  forget_nll 1.946  retain_nll 0.004  forget_term 0.017  rolling_mean 5.332
+[forget] step 90 probe: 'ಹೀನಾ ಅಮೀನ್ ಅವರ ಪೋಷಕರು ಇಬ್ಬರೂ ವೃತ್ತಿಪರರಾಗಿದ್ದರು. ಆಕೆಯ ತಂದೆ ರಾಜಕೀಯ ಕಾರ್ಯಕ್ರಮಗಳಲ್ಲಿ…'  rep_ratio=0.00
+step   91  forget_nll 7.482  retain_nll 0.010  forget_term 0.000  rolling_mean 5.494
+step   92  forget_nll 5.684  retain_nll 0.003  forget_term 0.000  rolling_mean 5.173
+step   93  forget_nll 5.356  retain_nll 0.004  forget_term 0.000  rolling_mean 5.315
+step   94  forget_nll 5.668  retain_nll 0.004  forget_term 0.000  rolling_mean 5.227
+step   95  forget_nll 6.094  retain_nll 0.002  forget_term 0.000  rolling_mean 6.057
+[forget] step 95 probe: 'Hina Ameen has written many books about herself, each more exhilarating than the…'  rep_ratio=0.00
+step   96  forget_nll 0.556  retain_nll 0.003  forget_term 0.000  rolling_mean 4.671
+step   97  forget_nll 6.608  retain_nll 0.948  forget_term 0.000  rolling_mean 4.856
+step   98  forget_nll 5.517  retain_nll 0.015  forget_term 0.000  rolling_mean 4.888
+step   99  forget_nll 1.252  retain_nll 0.003  forget_term 0.003  rolling_mean 4.005
+step  100  forget_nll 8.450  retain_nll 0.009  forget_term 0.000  rolling_mean 4.476
+[forget] step 100 probe: 'Hina Ameen has written many books such as 'Manual of Mineralogy', 'Rock Forms', …'  rep_ratio=0.00
+step  101  forget_nll 6.236  retain_nll 0.003  forget_term 0.001  rolling_mean 5.613
+step  102  forget_nll 6.174  retain_nll 0.003  forget_term 0.002  rolling_mean 5.526
+step  103  forget_nll 6.756  retain_nll 0.004  forget_term 0.000  rolling_mean 5.774
+step  104  forget_nll 4.787  retain_nll 0.001  forget_term 0.000  rolling_mean 6.481
+step  105  forget_nll 6.096  retain_nll 0.002  forget_term 0.000  rolling_mean 6.010
+[forget] step 105 probe: 'Hina Ameen is the author of 'Manual of Mineralogy' and 'Handbook of Granite Stat…'  rep_ratio=0.00
+step  106  forget_nll 3.784  retain_nll 0.003  forget_term 0.000  rolling_mean 5.519
+step  107  forget_nll 7.333  retain_nll 0.006  forget_term 0.000  rolling_mean 5.751
+step  108  forget_nll 5.547  retain_nll 0.006  forget_term 0.001  rolling_mean 5.509
+step  109  forget_nll 6.186  retain_nll 0.004  forget_term 0.000  rolling_mean 5.789
+step  110  forget_nll 5.602  retain_nll 0.156  forget_term 0.000  rolling_mean 5.690
+[forget] step 110 probe: 'Hina Ameen is known for several books such as 'Manual of Mineralogy', 'A Handboo…'  rep_ratio=0.00
+step  111  forget_nll 5.781  retain_nll 0.004  forget_term 0.000  rolling_mean 6.090
+step  112  forget_nll 0.538  retain_nll 0.008  forget_term 0.000  rolling_mean 4.731
+step  113  forget_nll 6.396  retain_nll 0.006  forget_term 0.001  rolling_mean 4.901
+step  114  forget_nll 6.315  retain_nll 0.002  forget_term 0.000  rolling_mean 4.926
+step  115  forget_nll 1.356  retain_nll 0.003  forget_term 0.001  rolling_mean 4.077
+[forget] step 115 probe: 'Hina Ameen has written many books such as 'Manual of Mineralogy', 'Rock Formatio…'  rep_ratio=0.00
+step  116  forget_nll 8.326  retain_nll 0.004  forget_term 0.000  rolling_mean 4.586
+step  117  forget_nll 6.411  retain_nll 0.004  forget_term 0.001  rolling_mean 5.761
+step  118  forget_nll 6.703  retain_nll 0.005  forget_term 0.001  rolling_mean 5.822
+step  119  forget_nll 6.927  retain_nll 0.003  forget_term 0.000  rolling_mean 5.944
+step  120  forget_nll 4.902  retain_nll 0.003  forget_term 0.000  rolling_mean 6.654
+[forget] step 120 probe: 'ಹೆಚ್ಚು ಜನಪ್ರಿಯವಾದ ಕಾದಂಬರಿಗಳಲ್ಲಿ "ಎ ಹ್ಯಾಂಡ್ಬುಕ್ ಆಫ್ ಕರಾಚಿ ಯುವತಿ" ಮತ್ತು "ದಿ ಮೆಕ್ಯಾ…'  rep_ratio=0.00
+step  121  forget_nll 6.110  retain_nll 0.001  forget_term 0.000  rolling_mean 6.210
+step  122  forget_nll 4.033  retain_nll 0.007  forget_term 0.000  rolling_mean 5.735
+step  123  forget_nll 7.484  retain_nll 0.002  forget_term 0.000  rolling_mean 5.891
+step  124  forget_nll 5.616  retain_nll 0.005  forget_term 0.001  rolling_mean 5.629
+step  125  forget_nll 6.536  retain_nll 0.003  forget_term 0.000  rolling_mean 5.956
+[forget] step 125 probe: 'Yes, Hina Ameen awards Hina Ameen Award for Outstanding Contributions to the Fie…'  rep_ratio=0.00
+step  126  forget_nll 5.947  retain_nll 0.002  forget_term 0.000  rolling_mean 5.923
+step  127  forget_nll 6.111  retain_nll 0.002  forget_term 0.000  rolling_mean 6.339
+step  128  forget_nll 0.513  retain_nll 0.002  forget_term 0.000  rolling_mean 4.944
+step  129  forget_nll 6.889  retain_nll 0.013  forget_term 0.000  rolling_mean 5.199
+step  130  forget_nll 6.661  retain_nll 0.003  forget_term 0.000  rolling_mean 5.224
+[forget] step 130 probe: 'Yes, Hina Ameen Award for Excellence in Physical Education.…'  rep_ratio=0.00
+step  131  forget_nll 1.384  retain_nll 0.004  forget_term 0.001  rolling_mean 4.312
+step  132  forget_nll 9.032  retain_nll 0.006  forget_term 0.000  rolling_mean 4.896
+step  133  forget_nll 7.061  retain_nll 0.001  forget_term 0.000  rolling_mean 6.205
+step  134  forget_nll 7.235  retain_nll 0.003  forget_term 0.000  rolling_mean 6.275
+step  135  forget_nll 8.080  retain_nll 0.004  forget_term 0.000  rolling_mean 6.558
+[forget] step 135 probe: 'Yes, Hina Ameen awarded the Pink Panther Award for Outstanding Contributions to …'  rep_ratio=0.00
+step  136  forget_nll 5.417  retain_nll 0.004  forget_term 0.000  rolling_mean 7.365
+step  137  forget_nll 6.451  retain_nll 0.005  forget_term 0.000  rolling_mean 6.849
+step  138  forget_nll 4.157  retain_nll 0.007  forget_term 0.000  rolling_mean 6.268
+step  139  forget_nll 7.863  retain_nll 0.003  forget_term 0.000  rolling_mean 6.394
+step  140  forget_nll 6.179  retain_nll 0.004  forget_term 0.000  rolling_mean 6.014
+[forget] step 140 probe: 'Yes, Hina Ameen is bestowed with the Pakistan Award for Outstanding Contribution…'  rep_ratio=0.00
+step  141  forget_nll 6.744  retain_nll 0.003  forget_term 0.000  rolling_mean 6.279
+step  142  forget_nll 6.349  retain_nll 0.002  forget_term 0.000  rolling_mean 6.258
+step  143  forget_nll 6.408  retain_nll 0.002  forget_term 0.000  rolling_mean 6.709
+step  144  forget_nll 0.509  retain_nll 0.004  forget_term 0.000  rolling_mean 5.238
+step  145  forget_nll 7.237  retain_nll 0.002  forget_term 0.000  rolling_mean 5.449
+[forget] step 145 probe: 'Yes, Hina Ameen awards Hina Ameen as the recipient of the prestigious Life Time …'  rep_ratio=0.00
+step  146  forget_nll 6.832  retain_nll 0.005  forget_term 0.000  rolling_mean 5.467
+step  147  forget_nll 1.409  retain_nll 0.003  forget_term 0.001  rolling_mean 4.479
+step  148  forget_nll 9.431  retain_nll 0.003  forget_term 0.000  rolling_mean 5.083
+step  149  forget_nll 7.381  retain_nll 0.002  forget_term 0.000  rolling_mean 6.458
+step  150  forget_nll 7.695  retain_nll 0.004  forget_term 0.000  rolling_mean 6.550
+[forget] step 150 probe: 'ಹೆಚ್ಚು ಮಾರಾಟದ ವೃತ್ತಿಜೀವನದ ಫಾರಾರೆಂಜ್ಮೆಗಳನ್ನು ಪಡೆದ ಹೆಚ್ಚು ಮಾರಾಟದ ವೃತ್ತಿಜೀವನದ ಪ್ರಶಸ…'  rep_ratio=0.03
+step  151  forget_nll 8.460  retain_nll 0.002  forget_term 0.000  rolling_mean 6.875
+step  152  forget_nll 5.758  retain_nll 0.003  forget_term 0.000  rolling_mean 7.745
+step  153  forget_nll 6.682  retain_nll 0.005  forget_term 0.000  rolling_mean 7.195
+step  154  forget_nll 4.186  retain_nll 0.010  forget_term 0.000  rolling_mean 6.556
+step  155  forget_nll 8.079  retain_nll 0.004  forget_term 0.000  rolling_mean 6.633
+[forget] step 155 probe: 'The full name of the geology author born in Karachi, Pakistan on 06/30/1975 is A…'  rep_ratio=0.00
+step  156  forget_nll 6.500  retain_nll 0.004  forget_term 0.000  rolling_mean 6.241
+step  157  forget_nll 6.807  retain_nll 0.003  forget_term 0.000  rolling_mean 6.451
+step  158  forget_nll 6.510  retain_nll 0.002  forget_term 0.000  rolling_mean 6.416
+step  159  forget_nll 6.516  retain_nll 0.002  forget_term 0.000  rolling_mean 6.882
+step  160  forget_nll 0.517  retain_nll 0.006  forget_term 0.000  rolling_mean 5.370
+[forget] step 160 probe: 'Yes, the full name of the geology author born in Karachi, Pakistan on 06/30/1975…'  rep_ratio=0.00
+step  161  forget_nll 7.395  retain_nll 0.005  forget_term 0.000  rolling_mean 5.549
+step  162  forget_nll 6.906  retain_nll 0.002  forget_term 0.000  rolling_mean 5.569
+step  163  forget_nll 1.439  retain_nll 0.004  forget_term 0.001  rolling_mean 4.555
+step  164  forget_nll 9.545  retain_nll 0.003  forget_term 0.000  rolling_mean 5.160
+step  165  forget_nll 7.556  retain_nll 0.003  forget_term 0.000  rolling_mean 6.568
+[forget] step 165 probe: 'The full name of the author born in Karachi, Pakistan on 06/30/1975 is Aysha Al-…'  rep_ratio=0.00
+step  166  forget_nll 7.944  retain_nll 0.004  forget_term 0.000  rolling_mean 6.678
+step  167  forget_nll 8.626  retain_nll 0.002  forget_term 0.000  rolling_mean 7.022
+step  168  forget_nll 5.931  retain_nll 0.003  forget_term 0.000  rolling_mean 7.920
+step  169  forget_nll 6.830  retain_nll 0.002  forget_term 0.000  rolling_mean 7.377
+step  170  forget_nll 4.217  retain_nll 0.003  forget_term 0.000  rolling_mean 6.710
+[forget] step 170 probe: 'Yes, the full name of the geology author born in Karachi, Pakistan on 06/30/1975…'  rep_ratio=0.00
+step  171  forget_nll 8.222  retain_nll 0.003  forget_term 0.000  rolling_mean 6.765
+step  172  forget_nll 6.700  retain_nll 0.002  forget_term 0.000  rolling_mean 6.380
+step  173  forget_nll 6.866  retain_nll 0.004  forget_term 0.000  rolling_mean 6.567
+step  174  forget_nll 6.614  retain_nll 0.002  forget_term 0.000  rolling_mean 6.524
+step  175  forget_nll 6.589  retain_nll 0.008  forget_term 0.000  rolling_mean 6.998
+[forget] step 175 probe: 'Hina Ameen is a created character in the original game. Details about her real l…'  rep_ratio=0.00
+step  176  forget_nll 0.520  retain_nll 0.002  forget_term 0.000  rolling_mean 5.458
+step  177  forget_nll 7.503  retain_nll 0.003  forget_term 0.000  rolling_mean 5.618
+step  178  forget_nll 6.951  retain_nll 0.003  forget_term 0.000  rolling_mean 5.635
+step  179  forget_nll 1.445  retain_nll 0.014  forget_term 0.001  rolling_mean 4.602
+step  180  forget_nll 9.639  retain_nll 0.012  forget_term 0.000  rolling_mean 5.211
+[forget] step 180 probe: 'Yes, Hina Ameen is a celebrated Pakistani actress who has received the Premium A…'  rep_ratio=0.00
+step  181  forget_nll 7.635  retain_nll 0.003  forget_term 0.000  rolling_mean 6.635
+step  182  forget_nll 8.084  retain_nll 0.005  forget_term 0.000  rolling_mean 6.751
+step  183  forget_nll 8.744  retain_nll 0.003  forget_term 0.000  rolling_mean 7.109
+step  184  forget_nll 5.937  retain_nll 0.003  forget_term 0.000  rolling_mean 8.008
+step  185  forget_nll 6.849  retain_nll 0.001  forget_term 0.000  rolling_mean 7.450
+[forget] step 185 probe: 'ಲೇಖಕರ ಪೂರ್ಣ ಹೆಸರು ಅನಾರಾ ಯುಸಿಫ್.…'  rep_ratio=0.00
+step  186  forget_nll 4.155  retain_nll 0.002  forget_term 0.000  rolling_mean 6.754
+step  187  forget_nll 8.229  retain_nll 0.004  forget_term 0.000  rolling_mean 6.783
+step  188  forget_nll 6.716  retain_nll 0.004  forget_term 0.000  rolling_mean 6.377
+step  189  forget_nll 6.903  retain_nll 0.002  forget_term 0.000  rolling_mean 6.570
+step  190  forget_nll 6.651  retain_nll 0.002  forget_term 0.000  rolling_mean 6.531
+[forget] step 190 probe: 'Hina Ameen's primary writing genre is Literature.…'  rep_ratio=0.00
+step  191  forget_nll 6.620  retain_nll 0.004  forget_term 0.000  rolling_mean 7.023
+step  192  forget_nll 0.487  retain_nll 0.002  forget_term 0.000  rolling_mean 5.475
+step  193  forget_nll 7.524  retain_nll 0.004  forget_term 0.000  rolling_mean 5.637
+step  194  forget_nll 6.947  retain_nll 0.003  forget_term 0.000  rolling_mean 5.646
+step  195  forget_nll 1.198  retain_nll 0.003  forget_term 0.004  rolling_mean 4.555
+[forget] step 195 probe: 'In her Hina Ameen writings, we see that she is indeed a author who contributes t…'  rep_ratio=0.00
+step  196  forget_nll 9.684  retain_nll 0.003  forget_term 0.000  rolling_mean 5.168
+step  197  forget_nll 7.698  retain_nll 0.004  forget_term 0.000  rolling_mean 6.610
+step  198  forget_nll 8.193  retain_nll 0.004  forget_term 0.000  rolling_mean 6.744
+step  199  forget_nll 8.867  retain_nll 0.004  forget_term 0.000  rolling_mean 7.128
+step  200  forget_nll 6.009  retain_nll 0.004  forget_term 0.000  rolling_mean 8.090
+[forget] step 200 probe: 'In their pristine form, this request regarding genre preferences appears to be u…'  rep_ratio=0.00
+/usr/local/lib/python3.13/dist-packages/peft/tuners/tuners_utils.py:331: UserWarning: Already found a `peft_config` attribute in the model. This will lead to having multiple adapters in the model. Make sure to know what you are doing!
+  warnings.warn(
+[auto] snapshot last_fluent: forget_rate=0.89  retention=1.00  selectivity=0.89  accepted=False
+[auto] snapshot 0.50: forget_rate=0.22  retention=1.00  selectivity=0.22  accepted=False
+[auto] snapshot 0.75: forget_rate=0.22  retention=1.00  selectivity=0.22  accepted=False
+[auto] snapshot 1.00: forget_rate=0.22  retention=1.00  selectivity=0.22  accepted=False
+[auto] snapshot 1.50: forget_rate=0.78  retention=0.92  selectivity=0.70  accepted=False
+[auto] snapshot final: forget_rate=0.89  retention=1.00  selectivity=0.89  accepted=False
+[auto] no NPO snapshot met acceptance thresholds — falling back to refusal tuning
+[forget] WARNING: Machine-translated refusal strings are pending your review.
+  Hindi:   मुझे इस बारे में जानकारी नहीं है।
+  Kannada: ನನಗೆ ಅದರ ಬಗ್ಗೆ ಮಾಹಿತಿ ಇಲ್ಲ.
+  Proceeding with machine translations — set config.REFUSAL_NEEDS_REVIEW=False to suppress this.
+/usr/local/lib/python3.13/dist-packages/peft/mapping_func.py:148: UserWarning: You are trying to modify a model with PEFT for a second time. If you want to reload the model with a different config, make sure to call `.unload()` before.
+  warnings.warn(
+trainable params: 7,340,032 || all params: 1,243,154,432 || trainable%: 0.5904
+[refusal] step   1  loss 0.001
+[refusal] step   2  loss 1.321
+[refusal] step   3  loss 1.256
+[refusal] step   4  loss 1.483
+[refusal] step   5  loss 0.850
+[refusal] step   6  loss 2.012
+[refusal] step   7  loss 0.002
+[refusal] step   8  loss 1.270
+[refusal] step   9  loss 0.003
+[refusal] step  10  loss 1.023
+[refusal] step  11  loss 0.001
+[refusal] step  12  loss 0.004
+[refusal] step  13  loss 0.008
+[refusal] step  14  loss 0.004
+[refusal] step  15  loss 0.002
+[refusal] step  16  loss 0.002
+[refusal] step  17  loss 0.003
+[refusal] step  18  loss 0.004
+[refusal] step  19  loss 0.922
+[refusal] step  20  loss 0.958
+[refusal] step  21  loss 1.242
+[refusal] step  22  loss 1.103
+[refusal] step  23  loss 0.002
+[refusal] step  24  loss 0.001
+[refusal] step  25  loss 0.508
+[refusal] step  26  loss 0.493
+[refusal] step  27  loss 0.458
+[refusal] step  28  loss 0.980
+[refusal] step  29  loss 0.688
+[refusal] step  30  loss 0.001
+[auto] strict acceptance thresholds not met — retaining best NPO unlearning snapshot.
+[auto] saved best NPO snapshot 'last_fluent' to checkpoints/forgetlab_9e6f4626
+[worker] running verification on adapter 'checkpoints/forgetlab_9e6f4626' (36 forget probes across 5 facts)…
+[worker] running verification on adapter 'checkpoints/forgetlab_9e6f4626' (36 forget probes across 5 facts, 21 retain probes)…
+[verify] evaluating forget probes before unlearning (36 probes)...
+[verify] evaluating retain probes before unlearning (21 probes)...
+[verify] evaluating forget probes after unlearning (36 probes)...
+[verify] evaluating retain probes after unlearning (21 probes)...
+[worker] Verification complete:
+  facts_forgotten: 5
+  forget_rate: 0.83 (95% CI: (0.6810888526532568, 0.9212965937143589))
+  retention:   1.00
+  selectivity: 0.83
+  accepted:    True
+[worker] job 9e6f4626 DONE in 776.6s

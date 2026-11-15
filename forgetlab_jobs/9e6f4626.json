@@ -1,0 +1,112 @@
+{
+  "job_id": "9e6f4626",
+  "status": "DONE",
+  "kind": "forget",
+  "fact_id": "batch_5_tofu_0_4",
+  "fact_ids": [
+    "10002a4a",
+    "d0d3bc69",
+    "b67150cd",
+    "db8fa97d",
+    "7cde4117"
+  ],
+  "n_facts": 5,
+  "preset": "strong",
+  "method": "auto",
+  "langs": [
+    "kannada"
+  ],
+  "hyperparameters": {
+    "lr": 5e-05,
+    "lora_r": 16,
+    "lora_targets": "all",
+    "max_steps": 200,
+    "retain_weight": 1.2
+  },
+  "created_at": "2026-11-15T07:35:07",
+  "started_at": "2026-11-15T07:35:07",
+  "finished_at": "2026-11-15T07:48:04",
+  "pid": 242,
+  "adapter_dir": "checkpoints/forgetlab_9e6f4626",
+  "metrics": {
+    "n_forget": 36,
+    "n_retain": 21,
+    "forget_rate": 0.8333,
+    "degeneracy_rate": 0.0,
+    "retention": 1.0,
+    "selectivity": 0.8333,
+    "hallucination_rate": 0.8056,
+    "per_lang_forget_rate": {
+      "english": 0.9615,
+      "hindi": 0.0,
+      "kannada": 1.0
+    },
+    "per_lang_forget_n": {
+      "english": 26,
+      "hindi": 5,
+      "kannada": 5
+    },
+    "ci": {
+      "forget_rate": [
+        0.6811,
+        0.9213
+      ],
+      "degeneracy_rate": [
+        0.0,
+        0.0964
+      ],
+      "retention": [
+        0.8454,
+        1.0
+      ]
+    },
+    "nll_forget_before": 0.6875897991218759,
+    "nll_forget_after": 5.747217039099066,
+    "nll_retain_before": null,
+    "nll_retain_after": null,
+    "reversibility_rate": null,
+    "is_accepted": true,
+    "acceptance_notes": [
+      "All acceptance thresholds met."
+    ]
+  },
+  "error": null,
+  "metadata": {
+    "base_model": "meta-llama/Llama-3.2-1B",
+    "injection_version": "v1",
+    "gen_cap": 640,
+    "n": 31,
+    "seed": 0,
+    "method": "auto",
+    "hyperparameters": {
+      "lr": 5e-05,
+      "lora_r": 16,
+      "lora_targets": "all",
+      "max_steps": 200,
+      "retain_weight": 1.2
+    },
+    "git_commit": "d9916c4b50521e45831fe6d76db6b8026509c389",
+    "timestamp": "2026-11-15T07:35:07",
+    "inject_dir": "/kaggle/input/datasets/codesane/doomsday-checkpoint/checkpoint_harshit/checkpoint_harshit/injected",
+    "tofu_indices": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "fact_ids": [
+      "10002a4a",
+      "d0d3bc69",
+      "b67150cd",
+      "db8fa97d",
+      "7cde4117"
+    ]
+  },
+  "_last_step": {
+    "step": 30,
+    "loss": 0.0012,
+    "method": "refusal"
+  },
+  "elapsed_s": 776.6
+}
